@@ -1,0 +1,172 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "cli": {
+    "schematicCollections": [
+      "@tailormap-viewer/schematics"
+    ],
+    "analytics": false
+  },
+  "projects": {
+    "app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/app",
+      "sourceRoot": "projects/app/src",
+      "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "nl": {
+            "translation": [
+              "node_modules/@tailormap-viewer/core/assets/locale/messages.core.nl.xlf",
+              "node_modules/@tailormap-viewer/shared/assets/locale/messages.shared.nl.xlf",
+              "node_modules/@tailormap-admin/admin-core/assets/locale/messages.admin-core.nl.xlf"
+            ]
+          }
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "options": {
+            "outputPath": "dist/app",
+            "index": "projects/app/src/index.html",
+            "main": "projects/app/src/main.ts",
+            "polyfills": ["projects/app/src/polyfills.ts"],
+            "tsConfig": "projects/app/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "."
+              },
+              { "glob": "version.json", "input": "generated", "output": "." },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@tailormap-viewer/core/assets/icons",
+                "output": "icons"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@tailormap-admin/admin-core/assets/icons",
+                "output": "icons"
+              }
+            ],
+            "styles": [
+              "node_modules/@tailormap-viewer/core/assets/custom-theme.scss",
+              "node_modules/@tailormap-viewer/core/assets/tailormap-styles.css"
+            ],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "xml-utils",
+              "pbf",
+              "html2canvas",
+              "core-js",
+              "raf",
+              "rgbcolor",
+              "lru-cache",
+              "web-worker",
+              "dompurify",
+              "rbush",
+              "cssesc",
+              "font-family-papandreou",
+              "earcut",
+              "svgpath",
+              "lerc",
+              "color-name"
+            ],
+            "i18nMissingTranslation": "error"
+          },
+          "configurations": {
+            "nl": {
+              "localize": ["nl"]
+            },
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3.5mb",
+                  "maximumError": "4mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kb",
+                  "maximumError": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/app/src/environments/environment.ts",
+                  "with": "projects/app/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "sourceMap": {
+                "styles": false,
+                "scripts": true,
+                "vendor": true,
+                "hidden": false
+              }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "app:build:production"
+            },
+            "development": {
+              "buildTarget": "app:build:development"
+            },
+            "nl": {
+              "buildTarget": "app:build:development,nl"
+            }
+          },
+          "options": {
+            "proxyConfig": "proxy.config.js"
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
+          "configurations": {},
+          "options": {
+            "browserTarget": "app:build",
+            "format": "xlf",
+            "outputPath": "locale",
+            "sourceFile": "messages.en.xlf",
+            "verbose": false,
+            "resetTranslationState": false,
+            "sort": "idAsc",
+            "targetFiles": [
+              "messages.nl.xlf"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/app/**/*.ts",
+              "projects/app/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
