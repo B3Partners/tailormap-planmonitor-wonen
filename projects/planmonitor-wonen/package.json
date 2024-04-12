@@ -1,0 +1,16 @@
+{
+  "name": "@b3p/planmonitor-wonen",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@tailormap-viewer/shared": "^11.3.0",
+    "@tailormap-viewer/map": "^11.3.0",
+    "@tailormap-viewer/api": "^11.3.0",
+    "@tailormap-viewer/core": "^11.3.0",
+    "@tailormap-admin/admin-core": "^11.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

@@ -167,6 +167,37 @@
           }
         }
       }
+    },
+    "planmonitor-wonen": {
+      "projectType": "library",
+      "root": "projects/planmonitor-wonen",
+      "sourceRoot": "projects/planmonitor-wonen/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/planmonitor-wonen/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/planmonitor-wonen/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/planmonitor-wonen/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/planmonitor-wonen/src/test.ts",
+            "tsConfig": "projects/planmonitor-wonen/tsconfig.spec.json",
+            "karmaConfig": "projects/planmonitor-wonen/karma.conf.js"
+          }
+        }
+      }
     }
   }
 }

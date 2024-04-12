@@ -1,0 +1,15 @@
+export enum WoonmilieuABF13Enum {
+  CENTRUM_DORPS = 'Centrum-dorps',
+  CENTRUM_KLEINSTEDELIJK = 'Centrum-kleinstedelijk',
+  CENTRUM_STEDELIJK = 'Centrum-stedelijk',
+  CENTRUM_STEDELIJK_PLUS = 'Centrum-stedelijk-plus',
+  DORPS = 'Dorps',
+  GROEN_KLEINSTEDELIJK = 'Groen-kleinstedelijk',
+  GROEN_STEDELIJK = 'Groen-stedelijk',
+  KLEINSTEDELIJK = 'Kleinstedelijk',
+  LANDELIJK_BEREIKBAAR = 'Landelijk bereikbaar',
+  LANDELIJK_PERIFEER = 'Landelijk perifeer',
+  STEDELIJK_NAOORLOGS_COMPACT = 'Stedelijk naoorlogs compact',
+  STEDELIJK_NAOORLOGS_GRONDGEBONDEN = 'Stedelijk naoorlogs grondgebonden',
+  STEDELIJK_VOOROORLOGS = 'Stedelijk vooroorlogs',
+}
