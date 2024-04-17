@@ -14,8 +14,8 @@ export interface PlanregistratieModel {
   GEOM: string;
   Creator: string;
   Created: string | Date;
-  Editor: string;
-  Edited: string | Date;
+  Editor: string | null;
+  Edited: string | Date | null;
   Plannaam: string;
   Provincie: string;
   Gemeente: string;

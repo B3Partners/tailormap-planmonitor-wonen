@@ -196,6 +196,15 @@
             "tsConfig": "projects/planmonitor-wonen/tsconfig.spec.json",
             "karmaConfig": "projects/planmonitor-wonen/karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/planmonitor-wonen/**/*.ts",
+              "projects/planmonitor-wonen/**/*.html"
+            ]
+          }
         }
       }
     }

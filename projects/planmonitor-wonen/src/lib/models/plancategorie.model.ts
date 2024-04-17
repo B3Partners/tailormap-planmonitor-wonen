@@ -14,6 +14,6 @@ export interface PlancategorieModel {
   Woningtype: WoningtypeEnum;
   Betaalbaarheid: BetaalbaarheidEnum;
   Creator: string;
-  Edited: string | Date;
-  Editor: string;
+  Edited: string | Date | null;
+  Editor: string | null;
 }

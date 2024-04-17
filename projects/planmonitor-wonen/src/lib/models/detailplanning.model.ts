@@ -3,8 +3,8 @@ export interface DetailplanningModel {
   ID: string;
   Created: string | Date;
   Creator: string;
-  Editor: string;
-  Edited: string | Date;
+  Editor: string | null;
+  Edited: string | Date | null;
   Jaartal: number;
   Aantal_Gepland: number;
 }

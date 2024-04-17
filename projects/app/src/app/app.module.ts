@@ -6,6 +6,7 @@ import { CoreModule } from "@tailormap-viewer/core";
 import { SharedModule } from "@tailormap-viewer/shared";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { environment } from '../environments/environment';
+import { PlanmonitorWonenModule } from '@b3p/planmonitor-wonen';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { environment } from '../environments/environment';
       viewerBaseUrl: environment.viewerBaseUrl,
     }),
     SharedModule,
+    PlanmonitorWonenModule,
     ...environment.imports,
   ],
   providers: [],
