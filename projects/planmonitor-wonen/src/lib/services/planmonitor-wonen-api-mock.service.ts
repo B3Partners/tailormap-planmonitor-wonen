@@ -53,7 +53,7 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
       Created: "2024-04-17",
       Editor: "test",
       Edited: "2024-04-17",
-      Plannaam: "Plan 1",
+      Plannaam: "Plan 2",
       Provincie: "Zeeland",
       Gemeente: "Vlissingen",
       Regio: "Walcheren",

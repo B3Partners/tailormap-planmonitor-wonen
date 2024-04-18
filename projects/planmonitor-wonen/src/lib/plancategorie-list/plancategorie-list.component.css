@@ -1,0 +1,116 @@
+mat-table {
+  min-width: min-content;
+}
+
+.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  padding: 0 8px;
+}
+
+mat-row, mat-footer-row {
+  min-height: 2em;
+}
+
+.number-column {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.table-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.mat-column-categorie {
+  padding-left: 5px;
+  min-width: 200px;
+  max-width: 200px;
+  width: 200px;
+}
+
+.mat-column-groepnaam {
+  min-width: 200px;
+  max-width: 200px;
+  width: 200px;
+}
+
+.mat-column-totalen {
+  min-width: 60px;
+  max-width: 60px;
+  width: 60px;
+}
+
+.mat-column-total_check,
+.mat-column-years_check {
+  min-width: 60px;
+  max-width: 60px;
+  width: 60px;
+}
+
+.mat-column-gerealiseerd {
+  min-width: 100px;
+  max-width: 100px;
+  width: 100px;
+}
+
+.mat-column-restcapaciteit {
+  min-width: 110px;
+  max-width: 110px;
+  width: 110px;
+}
+
+.year_field {
+  -moz-appearance: textfield; /* Firefox */
+  margin: 0;
+  height: 100%;
+  border: 1px solid var(--border-color);
+  border-top: 0;
+  border-bottom: 0;
+  text-align: right;
+  width: 80px;
+}
+
+.year_field::-webkit-outer-spin-button,
+.year_field::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.year {
+  min-width: 80px;
+  max-width: 80px;
+  width: 80px;
+  padding: 0;
+}
+
+.group-nieuwbouw .mat-column-categorie,
+.group-nieuwbouw .mat-column-groepnaam {
+  background-color: #DB803D;
+}
+
+.group-woningtype .mat-column-categorie,
+.group-woningtype .mat-column-groepnaam {
+  background-color: #689BD2;
+}
+
+.group-wonen-en-zorg .mat-column-categorie,
+.group-wonen-en-zorg .mat-column-groepnaam {
+  background-color: #E041FB;
+}
+
+.group-flexwoningen .mat-column-categorie,
+.group-flexwoningen .mat-column-groepnaam {
+  background-color: #FFFC44;
+}
+
+.group-betaalbaarheid .mat-column-categorie,
+.group-betaalbaarheid .mat-column-groepnaam {
+  background-color: #84A951;
+}
+
+.group-sloop .mat-column-categorie,
+.group-sloop .mat-column-groepnaam {
+  background-color: #F6BF34;
+}

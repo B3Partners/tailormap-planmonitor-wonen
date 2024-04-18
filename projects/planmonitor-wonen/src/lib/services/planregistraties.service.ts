@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from './planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiServiceModel } from './planmonitor-wonen-api.service.model';
-import { BehaviorSubject, catchError, Observable, of, take } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, take, tap } from 'rxjs';
 import { PlanregistratieModel } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 
@@ -36,6 +36,26 @@ export class PlanregistratiesService {
     this.selectedPlanregistratie.next(registratie || null);
   }
 
+  public updatePlan$(plan: PlanregistratieModel) {
+    // Save to backend
+    return of(plan)
+      .pipe(
+        tap(updatedPlan => {
+          const currentPlans = [...this.planRegistraties.value];
+          const idx = currentPlans.findIndex(p => p.ID === updatedPlan.ID);
+          if (idx === -1) {
+            currentPlans.push(updatedPlan);
+          } else {
+            currentPlans[idx] = updatedPlan;
+          }
+          this.planRegistraties.next(currentPlans);
+          if (this.selectedPlanregistratie.value?.ID === updatedPlan.ID) {
+            this.selectedPlanregistratie.next(updatedPlan);
+          }
+        }),
+      );
+  }
+
   private loadRegistraties() {
     this.registratiesLoadStatus = LoadingStateEnum.LOADING;
     this.api.getPlanregistraties$()
@@ -46,6 +66,9 @@ export class PlanregistratiesService {
       .subscribe(registraties => {
         this.registratiesLoadStatus = registraties === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.planRegistraties.next(registraties || []);
+        if (registraties) {
+          this.setSelectedPlanregistratie(registraties[0].ID);
+        }
       });
   }
 

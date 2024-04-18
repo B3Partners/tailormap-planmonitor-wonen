@@ -1,0 +1,11 @@
+.form-field__columns {
+  align-items: flex-start;
+}
+
+.column {
+  flex: 1;
+}
+
+.column + .column {
+  margin-left: 16px;
+}

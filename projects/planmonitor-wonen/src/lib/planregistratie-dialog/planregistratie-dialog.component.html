@@ -1,0 +1,31 @@
+<tm-dialog [open]="dialogOpen$ | async"
+           [openFromRight]="true"
+           [widthMargin]="panelWidthMargin"
+           [width]="panelWidth"
+           class="planregistratie-dialog"
+           (closeDialog)="closeDialog()"
+           [allowCollapse]="true"
+           [collapsed]="dialogCollapsed$ | async"
+           (expandCollapseDialog)="expandCollapseDialog()"
+           [dialogTitle]="(dialogTitle$ | async) ?? ''">
+  @if (selectedPlan$ | async; as selectedPlan) {
+    <div class="form">
+      <div class="content">
+        <div class="metadata-form">
+          <lib-planregistratie-form [planregistratie]="selectedPlan"
+                                    (planregistratieChanged)="planregistratieChanged($event)"
+                                    (planregistratieValidChanged)="planregistratieValidChanged($event)"></lib-planregistratie-form>
+        </div>
+        <div class="details-form">
+          <lib-plancategorie-list></lib-plancategorie-list>
+        </div>
+      </div>
+      <div class="buttons">
+        <button (click)="save()"
+                [disabled]="!formValid || !formChanged"
+                color="primary"
+                mat-flat-button>Opslaan</button>
+      </div>
+    </div>
+  }
+</tm-dialog>

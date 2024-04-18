@@ -1,0 +1,167 @@
+<div class="form" [formGroup]="planregistratieForm">
+
+  <div class="form-field__columns">
+    <div class="column">
+      <mat-form-field>
+        <mat-label>Plannaam</mat-label>
+        <input matInput formControlName="plannaam" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Provincie</mat-label>
+        <input matInput formControlName="provincie" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Gemeente</mat-label>
+        <input matInput formControlName="gemeente" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Regio</mat-label>
+        <input matInput formControlName="regio" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Plaatsnaam</mat-label>
+        <input matInput formControlName="plaatsnaam" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Vertrouwelijkheid</mat-label>
+        <mat-select formControlName="vertrouwelijkheid">
+          <mat-option></mat-option>
+          @for (item of lists.vertrouwelijkheid; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Opdrachtgever</mat-label>
+        <mat-select formControlName="opdrachtgever_type">
+          <mat-option></mat-option>
+          @for (item of lists.opdrachtgever; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Opdrachtgever Naam</mat-label>
+        <input matInput formControlName="opdrachtgever_naam" />
+      </mat-form-field>
+    </div>
+    <div class="column">
+
+      <mat-form-field>
+        <mat-label>Jaar Start Project</mat-label>
+        <input matInput formControlName="jaar_start_project" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Oplevering Eerste</mat-label>
+        <input matInput formControlName="oplevering_eerste" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Oplevering Laatste</mat-label>
+        <input matInput formControlName="oplevering_laatste" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Opmerkingen</mat-label>
+        <input matInput formControlName="opmerkingen" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Plantype</mat-label>
+        <mat-select formControlName="plantype">
+          <mat-option></mat-option>
+          @for (item of lists.plantype; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Bestemmingsplan</mat-label>
+        <input matInput formControlName="bestemmingsplan" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Status Project</mat-label>
+        <mat-select formControlName="status_project">
+          <mat-option></mat-option>
+          @for (item of lists.projectstatus; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Status Planologisch</mat-label>
+        <mat-select formControlName="status_planologisch">
+          <mat-option></mat-option>
+          @for (item of lists.statusPlanologisch; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Knelpunten Meerkeuze</mat-label>
+        <mat-select formControlName="knelpunten_meerkeuze">
+          <mat-option></mat-option>
+          @for (item of lists.knelpuntenMeerkeuze; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="column">
+
+      <mat-form-field>
+        <mat-label>Regionale Planlijst</mat-label>
+        <mat-select formControlName="regionale_planlijst">
+          <mat-option></mat-option>
+          @for (item of lists.eigendom; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Toelichting Knelpunten</mat-label>
+        <mat-select formControlName="toelichting_knelpunten">
+          <mat-option></mat-option>
+          @for (item of lists.knelpuntenPlantype; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Flexwoningen</mat-label>
+        <input matInput formControlName="flexwoningen" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Levensloopbestendig Ja</mat-label>
+        <input matInput formControlName="levensloopbestendig_ja" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Levensloopbestendig Nee</mat-label>
+        <input matInput formControlName="levensloopbestendig_nee" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Beoogd Woonmilieu Abf 5</mat-label>
+        <mat-select formControlName="beoogd_woonmilieu_abf5">
+          <mat-option></mat-option>
+          @for (item of lists.woonmilieuAbf5; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Beoogd Woonmilieu Abf 13</mat-label>
+        <mat-select formControlName="beoogd_woonmilieu_abf13">
+          <mat-option></mat-option>
+          @for (item of lists.woonmilieuAbf13; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Aantal Studentenwoningen</mat-label>
+        <input matInput formControlName="aantal_studentenwoningen" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Toelichting Kwalitatief</mat-label>
+        <input matInput formControlName="toelichting_kwalitatief" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>

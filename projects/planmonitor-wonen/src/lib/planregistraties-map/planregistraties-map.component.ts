@@ -11,12 +11,12 @@ import { PlantypeHelper } from '../helpers/plantype.helper';
 type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'GEOM'> & { selected?: boolean };
 
 @Component({
-  selector: 'lib-planmonitor-wonen-features',
-  templateUrl: './planmonitor-wonen-features.component.html',
-  styleUrls: ['./planmonitor-wonen-features.component.css'],
+  selector: 'lib-planregistraties-map',
+  templateUrl: './planregistraties-map.component.html',
+  styleUrls: ['./planregistraties-map.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlanmonitorWonenFeaturesComponent implements OnInit {
+export class PlanregistratiesMapComponent implements OnInit {
 
   private static LAYER_ID = 'planregistraties-layer';
   private static PRIMARY_COLOR = '';
@@ -29,7 +29,7 @@ export class PlanmonitorWonenFeaturesComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    PlanmonitorWonenFeaturesComponent.PRIMARY_COLOR = CssHelper.getCssVariableValue('--primary-color').trim();
+    PlanregistratiesMapComponent.PRIMARY_COLOR = CssHelper.getCssVariableValue('--primary-color').trim();
     this.renderFeatures();
     this.createSelectTool();
     this.toggleSelectTool();
@@ -49,17 +49,18 @@ export class PlanmonitorWonenFeaturesComponent implements OnInit {
         };
       })));
     this.mapService.renderFeatures$<PlanregistratieFeatureAttributes>(
-      PlanmonitorWonenFeaturesComponent.LAYER_ID,
+      PlanregistratiesMapComponent.LAYER_ID,
       planregistratieFeatures$,
-      feature => PlanmonitorWonenFeaturesComponent.getFeatureStyle(feature),
+      feature => PlanregistratiesMapComponent.getFeatureStyle(feature),
+      { }
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   private createSelectTool() {
     this.mapService.createTool$<SelectToolModel<PlanregistratieFeatureAttributes>, SelectToolConfigModel<PlanregistratieFeatureAttributes>>({
       type: ToolTypeEnum.Select,
-      layers: [PlanmonitorWonenFeaturesComponent.LAYER_ID],
-      style: feature => PlanmonitorWonenFeaturesComponent.getFeatureStyle(feature, true),
+      layers: [PlanregistratiesMapComponent.LAYER_ID],
+      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature, true),
     })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -97,7 +98,7 @@ export class PlanmonitorWonenFeaturesComponent implements OnInit {
     const selected = feature.attributes.selected || alwaysHighlighted;
     return {
       zIndex: selected ? 9999 : 9998,
-      strokeColor: selected ? PlanmonitorWonenFeaturesComponent.PRIMARY_COLOR : 'rgb(0, 0, 0)',
+      strokeColor: selected ? PlanregistratiesMapComponent.PRIMARY_COLOR : 'rgb(0, 0, 0)',
       strokeWidth: selected ? 6 : 1,
       fillColor: PlantypeHelper.getPlantypeColor(feature.attributes.Plantype),
       fillOpacity: 50,
