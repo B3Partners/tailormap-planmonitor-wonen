@@ -6,7 +6,7 @@ export * from './eigendom.enum';
 export * from './gerealiseerd.enum';
 export * from './knelpunten-meerkeuze.enum';
 export * from './knelpunten-plantype.enum';
-export * from './levensloop.enum';
+export * from './wonen-en-zorg.enum';
 export * from './opdrachtgever.enum';
 export * from './plancategorie.model';
 export * from './planmonitor-wonen-component-id';

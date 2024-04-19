@@ -7,4 +7,5 @@ export interface DetailplanningModel {
   Edited: string | Date | null;
   Jaartal: number;
   Aantal_Gepland: number;
+  IsNew?: boolean;
 }

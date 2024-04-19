@@ -20,7 +20,25 @@ module.exports = {
         "tsconfigRootDir": __dirname
       },
       "rules": {
-        "no-restricted-imports": ["error", getInvalidImportsRule("@b3p/planmonitor-wonen")]
+        "no-restricted-imports": ["error", getInvalidImportsRule("@b3p/planmonitor-wonen")],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "variable",
+            "format": [
+              "camelCase",
+              "UPPER_CASE"
+            ]
+          },
+          {
+            "selector": [
+              "objectLiteralProperty",
+              "classProperty"
+            ],
+            "format": null,
+            "leadingUnderscore": "allowSingleOrDouble"
+          }
+        ],
       }
     },
     {

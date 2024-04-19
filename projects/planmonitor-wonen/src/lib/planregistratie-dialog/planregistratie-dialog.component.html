@@ -12,9 +12,16 @@
     <div class="form">
       <div class="content">
         <div class="metadata-form">
-          <lib-planregistratie-form [planregistratie]="selectedPlan"
-                                    (planregistratieChanged)="planregistratieChanged($event)"
-                                    (planregistratieValidChanged)="planregistratieValidChanged($event)"></lib-planregistratie-form>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{selectedPlan.Plannaam}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <lib-planregistratie-form [planregistratie]="selectedPlan"
+                                      (planregistratieChanged)="planregistratieChanged($event)"
+                                      (planregistratieValidChanged)="planregistratieValidChanged($event)"></lib-planregistratie-form>
+          </mat-expansion-panel>
         </div>
         <div class="details-form">
           <lib-plancategorie-list></lib-plancategorie-list>

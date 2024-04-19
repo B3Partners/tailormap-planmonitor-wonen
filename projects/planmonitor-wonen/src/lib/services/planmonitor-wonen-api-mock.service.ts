@@ -1,13 +1,13 @@
 /* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { PlanmonitorWonenApiServiceModel } from './planmonitor-wonen-api.service.model';
 import { Observable, of } from 'rxjs';
 import {
-  BetaalbaarheidEnum, ClassificatieEnum, DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, LevensloopEnum,
+  DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum,
   OpdrachtgeverEnum, PlancategorieModel, PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum,
   VertrouwelijkheidEnum, WoningtypeEnum, WoonmilieuABF13Enum, WoonmilieuABF5Enum,
 } from '../models';
 import { Injectable } from '@angular/core';
+import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 
 @Injectable()
 export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServiceModel {
@@ -85,15 +85,15 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
   public getPlancategorieen$(id: string): Observable<PlancategorieModel[]> {
     if (id === "2") {
       return of([
-        { ID: "2_1", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.EENGEZINS, Created: "2024-02-15", Creator: "test", Edited: null, Editor: "test", Betaalbaarheid: BetaalbaarheidEnum.KOOP_GOEDKOPE_KOOP, Classificatie: ClassificatieEnum.BOUW, Levensloop_Bestendigheid: LevensloopEnum.NULTREDEN, Totaal_Gepland: 80, Totaal_Gerealiseerd: 20 },
-        { ID: "2_2", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.EENGEZINS, Created: "2024-02-15", Creator: "test", Edited: null, Editor: "test", Betaalbaarheid: BetaalbaarheidEnum.HUUR_GOEDKOPE_HUUR, Classificatie: ClassificatieEnum.BOUW, Levensloop_Bestendigheid: LevensloopEnum.ONBEKEND, Totaal_Gepland: 50, Totaal_Gerealiseerd: 10 },
-        { ID: "2_3", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.EENGEZINS, Created: "2024-02-15", Creator: "test", Edited: null, Editor: "test", Betaalbaarheid: BetaalbaarheidEnum.HUUR_DURE_HUUR, Classificatie: ClassificatieEnum.BOUW, Levensloop_Bestendigheid: LevensloopEnum.GECLUSTERD, Totaal_Gepland: 25, Totaal_Gerealiseerd: 15 },
+        { ...PlancategorieHelper.getNewPlancategorie(), ID: "2_1", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 20 },
+        { ...PlancategorieHelper.getNewPlancategorie(), ID: "2_2", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 50, Totaal_Gerealiseerd: 10 },
+        { ...PlancategorieHelper.getNewPlancategorie(), ID: "2_3", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 25, Totaal_Gerealiseerd: 15 },
       ]);
     }
     return of([
-      { ID: "1_1", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Created: "2024-04-17", Creator: "test", Edited: null, Editor: "test", Betaalbaarheid: BetaalbaarheidEnum.HUUR_DURE_HUUR, Classificatie: ClassificatieEnum.BOUW, Levensloop_Bestendigheid: LevensloopEnum.NULTREDEN, Totaal_Gepland: 120, Totaal_Gerealiseerd: 0 },
-      { ID: "1_2", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Created: "2024-04-17", Creator: "test", Edited: null, Editor: "test", Betaalbaarheid: BetaalbaarheidEnum.KOOP_TUSSEN_355_K_EN_5_K, Classificatie: ClassificatieEnum.BOUW, Levensloop_Bestendigheid: LevensloopEnum.ONBEKEND, Totaal_Gepland: 80, Totaal_Gerealiseerd: 0 },
-      { ID: "1_3", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Created: "2024-04-17", Creator: "test", Edited: null, Editor: "test", Betaalbaarheid: BetaalbaarheidEnum.KOOP_ONBEKEND, Classificatie: ClassificatieEnum.BOUW, Levensloop_Bestendigheid: LevensloopEnum.GECLUSTERD, Totaal_Gepland: 10, Totaal_Gerealiseerd: 0 },
+      { ...PlancategorieHelper.getNewPlancategorie(), ID: "1_1", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 120, Totaal_Gerealiseerd: 0 },
+      { ...PlancategorieHelper.getNewPlancategorie(), ID: "1_2", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 0 },
+      { ...PlancategorieHelper.getNewPlancategorie(), ID: "1_3", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 10, Totaal_Gerealiseerd: 0 },
     ]);
   }
 

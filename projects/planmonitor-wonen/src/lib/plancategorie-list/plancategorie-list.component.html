@@ -1,52 +1,64 @@
-<div class="table-wrapper">
-  <mat-table [dataSource]="tableData" [trackBy]="trackByRowId">
+@if (tableData !== null) {
+  <div class="table-wrapper">
+    <mat-table [dataSource]="tableData" [trackBy]="trackByRowId">
 
-    <ng-container matColumnDef="categorie" [sticky]="true">
-      <mat-header-cell *matHeaderCellDef></mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.categorie}}</mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="label" [sticky]="true">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.label}}</mat-cell>
+      </ng-container>
 
-    <ng-container matColumnDef="groepnaam" [sticky]="true">
-      <mat-header-cell *matHeaderCellDef>Groepnaam</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.groepnaam}}</mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="groeplabel" [sticky]="true">
+        <mat-header-cell *matHeaderCellDef>Groepnaam</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.groeplabel}}</mat-cell>
+      </ng-container>
 
-    <ng-container matColumnDef="totalen">
-      <mat-header-cell *matHeaderCellDef>Totalen</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="number-column">{{element.totalen}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="total_check">
-      <mat-header-cell *matHeaderCellDef>Check</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="number-column">{{element.total_check}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="gerealiseerd">
-      <mat-header-cell *matHeaderCellDef>Gerealiseerd</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="number-column">{{element.gerealiseerd}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="restcapaciteit">
-      <mat-header-cell *matHeaderCellDef>Restcapaciteit</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="number-column">{{element.restcapaciteit}}</mat-cell>
-    </ng-container>
-
-    @for (year of yearRange; track $index) {
-      <ng-container [matColumnDef]="'year_' + year">
-        <mat-header-cell *matHeaderCellDef>{{year}}</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="year">
-          <input type="number" class="year_field" [value]="element['year_' + year]" (change)="updateField($event, element.id, year)" />
+      <ng-container matColumnDef="totalen">
+        <mat-header-cell *matHeaderCellDef  class="number-column">Totalen</mat-header-cell>
+        <mat-cell *matCellDef="let row" class="number-column number-input-cell">
+          <input type="number" class="number-input" [value]="row.totalen" (change)="updateCategorieField($event, row.id, 'Totaal_Gepland')" />
         </mat-cell>
       </ng-container>
-    }
 
-    <ng-container matColumnDef="years_check">
-      <mat-header-cell *matHeaderCellDef>Check</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="number-column">{{element.years_check}}</mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="total_check">
+        <mat-header-cell *matHeaderCellDef  class="number-column">Check</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  class="number-column"
+                  [class.check-success]="row.total_check === 0"
+                  [class.check-failed]="row.total_check !== 0">{{row.total_check}}</mat-cell>
+      </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" [class]="row.cls"></mat-row>
+      <ng-container matColumnDef="gerealiseerd">
+        <mat-header-cell *matHeaderCellDef  class="number-column">Gerealiseerd</mat-header-cell>
+        <mat-cell *matCellDef="let row" class="number-column number-input-cell">
+          <input type="number" class="number-input" [value]="row.gerealiseerd" (change)="updateCategorieField($event, row.id, 'Totaal_Gerealiseerd')" />
+        </mat-cell>
+      </ng-container>
 
-  </mat-table>
-</div>
+      <ng-container matColumnDef="restcapaciteit">
+        <mat-header-cell *matHeaderCellDef  class="number-column">Restcapaciteit</mat-header-cell>
+        <mat-cell *matCellDef="let row" class="number-column">{{row.restcapaciteit}}</mat-cell>
+      </ng-container>
+
+      @for (year of yearRange; track $index) {
+        <ng-container [matColumnDef]="'year_' + year">
+          <mat-header-cell *matHeaderCellDef class="number-column">{{year}}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="year number-input-cell">
+            <input type="number" class="number-input" [value]="row['year_' + year]" (change)="updateDetailField($event, row.id, year)" />
+          </mat-cell>
+        </ng-container>
+      }
+
+      <ng-container matColumnDef="years_check">
+        <mat-header-cell *matHeaderCellDef  class="number-column">Check</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+                  class="number-column"
+                  [class.check-success]="row.years_check === 0"
+                  [class.check-failed]="row.years_check !== 0">{{row.years_check}}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" [class]="row.cls"></mat-row>
+
+    </mat-table>
+  </div>
+}
