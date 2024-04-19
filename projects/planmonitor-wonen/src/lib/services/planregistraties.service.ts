@@ -66,9 +66,9 @@ export class PlanregistratiesService {
       .subscribe(registraties => {
         this.registratiesLoadStatus = registraties === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.planRegistraties.next(registraties || []);
-        if (registraties) {
-          this.setSelectedPlanregistratie(registraties[0].ID);
-        }
+        // if (registraties) {
+        //   this.setSelectedPlanregistratie(registraties[0].ID);
+        // }
       });
   }
 
