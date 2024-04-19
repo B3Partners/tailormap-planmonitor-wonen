@@ -32,7 +32,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     PlanregistratiesMapComponent.PRIMARY_COLOR = CssHelper.getCssVariableValue('--primary-color').trim();
     this.renderFeatures();
     this.createSelectTool();
-    this.toggleSelectTool();
+    // this.toggleSelectTool();
   }
 
   private renderFeatures() {
@@ -52,7 +52,6 @@ export class PlanregistratiesMapComponent implements OnInit {
       PlanregistratiesMapComponent.LAYER_ID,
       planregistratieFeatures$,
       feature => PlanregistratiesMapComponent.getFeatureStyle(feature),
-      { }
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
