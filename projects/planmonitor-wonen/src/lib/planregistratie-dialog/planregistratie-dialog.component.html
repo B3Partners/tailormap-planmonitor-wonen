@@ -12,10 +12,10 @@
     <div class="form">
       <div class="content">
         <div class="metadata-form">
-          <mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                {{selectedPlan.Plannaam}}
+                <strong>{{selectedPlan.Plannaam}}</strong>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <lib-planregistratie-form [planregistratie]="selectedPlan"

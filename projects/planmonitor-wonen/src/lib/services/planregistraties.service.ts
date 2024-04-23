@@ -85,9 +85,9 @@ export class PlanregistratiesService {
       .subscribe(registraties => {
         this.registratiesLoadStatus = registraties === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.planRegistraties.next(registraties || []);
-        if (registraties) {
-          this.setSelectedPlanregistratie(registraties[0].ID);
-        }
+        // if (registraties) {
+        //   this.setSelectedPlanregistratie(registraties[0].ID);
+        // }
       });
   }
 
@@ -99,7 +99,7 @@ export class PlanregistratiesService {
         catchError(() => of(null)),
       )
       .subscribe(categorieen => {
-        console.log(categorieen);
+        // console.log(categorieen);
         this.categorieenLoadStatus = categorieen === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.selectedPlanCategorieen.next(categorieen);
       });
@@ -113,7 +113,7 @@ export class PlanregistratiesService {
         catchError(() => of(null)),
       )
       .subscribe(detailPlanningen => {
-        console.log(detailPlanningen);
+        // console.log(detailPlanningen);
         this.detailPlanningenLoadStatus = detailPlanningen === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.selectedDetailplanningen.next(detailPlanningen || []);
       });

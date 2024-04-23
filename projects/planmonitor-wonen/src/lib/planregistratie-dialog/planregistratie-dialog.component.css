@@ -32,6 +32,14 @@
   justify-content: stretch;
 }
 
+.metadata-form {
+  padding-bottom: 20px;
+}
+
+mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
+  --mat-expansion-header-expanded-state-height: 40px;
+}
+
 .details-form {
   flex: 1;
   overflow: hidden;

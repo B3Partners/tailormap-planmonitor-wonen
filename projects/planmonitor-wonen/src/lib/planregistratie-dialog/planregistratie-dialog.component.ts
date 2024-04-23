@@ -30,7 +30,7 @@ export class PlanregistratieDialogComponent {
 
   @HostListener('window:resize', ['$event'])
   public onResize() {
-    this.panelWidth = (BrowserHelper.getScreenWith() * 0.5) - this.panelWidthMargin;
+    this.panelWidth = (BrowserHelper.getScreenWith() * 0.7) - this.panelWidthMargin;
   }
 
   constructor(

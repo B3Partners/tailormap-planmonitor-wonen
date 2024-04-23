@@ -96,6 +96,10 @@ mat-row, mat-footer-row {
   background-color: #E52C18;
 }
 
+.info-cell {
+  background-color: #ccc;
+}
+
 .group-nieuwbouw .mat-column-label,
 .group-nieuwbouw .mat-column-groeplabel {
   background-color: #DB803D;

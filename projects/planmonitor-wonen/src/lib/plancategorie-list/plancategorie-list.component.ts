@@ -121,7 +121,7 @@ export class PlancategorieListComponent implements OnInit {
       };
       const rowTotaal = PlancategorieListComponent.getTotalForRow(row);
       row.years_check = restcapaciteit - rowTotaal;
-      groupTotals.set(categorieRow.field, (groupTotals.get(categorieRow.field) || 0) + rowTotaal);
+      groupTotals.set(categorieRow.field, (groupTotals.get(categorieRow.field) || 0) + totalen);
       return row;
     });
     this.tableData = rows.map(row => {
