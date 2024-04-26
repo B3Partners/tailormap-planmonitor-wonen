@@ -42,8 +42,8 @@
       @for (year of yearRange; track $index) {
         <ng-container [matColumnDef]="'year_' + year">
           <mat-header-cell *matHeaderCellDef class="number-column">{{year}}</mat-header-cell>
-          <mat-cell *matCellDef="let row" class="year number-input-cell">
-            <input type="number" class="number-input" [value]="row['year_' + year]" (change)="updateDetailField($event, row.id, year)" />
+          <mat-cell *matCellDef="let row; let i = index;" class="year number-input-cell">
+            <input type="number" class="number-input" [class]="'year_' + year + '_' + i" [value]="row['year_' + year]" (change)="updateDetailField($event, row.id, year)" />
           </mat-cell>
         </ng-container>
       }

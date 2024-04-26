@@ -23,10 +23,7 @@ export class PlanregistratieDialogComponent {
   private dialogCollapsed = new BehaviorSubject(false);
   public dialogCollapsed$ = this.dialogCollapsed.asObservable();
 
-  public formValid = false;
-
-  public formChanged = false;
-  private updatedPlan: PlanregistratieModel | null = null;
+  public disableSave$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
   public onResize() {
@@ -41,35 +38,31 @@ export class PlanregistratieDialogComponent {
     this.dialogTitle$ = this.selectedPlan$.pipe(map(plan => {
       return plan ? `Planregistratie ${plan.Plannaam}` : 'Planregistratie';
     }));
+    this.disableSave$ = this.planregistratieService.hasValidChangedPlan$()
+      .pipe(map(validPlan => !validPlan));
     this.onResize();
   }
 
   public closeDialog() {
-    this.planregistratieService.setSelectedPlanregistratie(null);
+    this.cancel();
   }
 
   public expandCollapseDialog() {
     this.dialogCollapsed.next(!this.dialogCollapsed.value);
   }
 
-  public planregistratieValidChanged(valid: boolean) {
-    this.formValid = valid;
-  }
-
-  public planregistratieChanged(updatedPlan: PlanregistratieModel | null) {
-    this.formChanged = true;
-    this.updatedPlan = updatedPlan;
+  public planregistratieChanged(updatedPlan: Partial<PlanregistratieModel> | null) {
+    this.planregistratieService.updatePlan(updatedPlan);
   }
 
   public save() {
-    if (this.updatedPlan === null) {
-      return;
-    }
-    this.planregistratieService.updatePlan$(this.updatedPlan)
-      .subscribe(() => {
-        this.formChanged = false;
-        this.updatedPlan = null;
-      });
+    this.planregistratieService.save$().subscribe(_success => {
+      console.log('Saved', _success);
+    });
+  }
+
+  public cancel() {
+    this.planregistratieService.cancelChanges();
   }
 
 }

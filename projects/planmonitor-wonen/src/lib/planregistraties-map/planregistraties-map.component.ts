@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-import { MapService, MapStyleModel, SelectToolConfigModel, SelectToolModel, ToolTypeEnum } from '@tailormap-viewer/map';
-import { combineLatest, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
+import {
+  MapService, MapStyleModel, ModifyEnableToolArguments, ModifyToolConfigModel, ModifyToolModel, SelectToolConfigModel, SelectToolModel,
+  ToolTypeEnum,
+} from '@tailormap-viewer/map';
+import { combineLatest, distinctUntilChanged, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
 import { PlanregistratieModel } from '../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PlanregistratiesService } from '../services/planregistraties.service';
@@ -21,6 +24,7 @@ export class PlanregistratiesMapComponent implements OnInit {
   private static LAYER_ID = 'planregistraties-layer';
   private static PRIMARY_COLOR = '';
   private selectTool: SelectToolModel | undefined;
+  private modifyTool: ModifyToolModel | undefined;
 
   constructor(
     private planregistratieService: PlanregistratiesService,
@@ -32,7 +36,8 @@ export class PlanregistratiesMapComponent implements OnInit {
     PlanregistratiesMapComponent.PRIMARY_COLOR = CssHelper.getCssVariableValue('--primary-color').trim();
     this.renderFeatures();
     this.createSelectTool();
-    // this.toggleSelectTool();
+    this.createModifyTool();
+    this.toggleTools();
   }
 
   private renderFeatures() {
@@ -41,17 +46,20 @@ export class PlanregistratiesMapComponent implements OnInit {
       this.planregistratieService.getSelectedPlanregistratie$(),
     ])
       .pipe(map(([ registraties, selectedPlan ]) => registraties.map(registratie => {
-        const { GEOM, ...attributes } = registratie;
+        const planRegistratie = selectedPlan !== null && selectedPlan.ID === registratie.ID
+          ? selectedPlan
+          : registratie;
+        const { GEOM, ...attributes } = planRegistratie;
         return {
-          __fid: registratie.ID,
+          __fid: planRegistratie.ID,
           geometry: GEOM,
-          attributes: { ...attributes, selected: registratie.ID === selectedPlan?.ID },
+          attributes: { ...attributes, selected: planRegistratie.ID === selectedPlan?.ID },
         };
       })));
     this.mapService.renderFeatures$<PlanregistratieFeatureAttributes>(
       PlanregistratiesMapComponent.LAYER_ID,
       planregistratieFeatures$,
-      feature => PlanregistratiesMapComponent.getFeatureStyle(feature),
+      feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes),
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
@@ -59,7 +67,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.mapService.createTool$<SelectToolModel<PlanregistratieFeatureAttributes>, SelectToolConfigModel<PlanregistratieFeatureAttributes>>({
       type: ToolTypeEnum.Select,
       layers: [PlanregistratiesMapComponent.LAYER_ID],
-      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature, true),
+      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes, true),
     })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -75,34 +83,70 @@ export class PlanregistratiesMapComponent implements OnInit {
       });
   }
 
-  private toggleSelectTool() {
+  private createModifyTool() {
+    this.mapService.createTool$<ModifyToolModel, ModifyToolConfigModel>({ type: ToolTypeEnum.Modify })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        tap(({ tool }) => {
+          this.modifyTool = tool;
+        }),
+        switchMap(({ tool }) => tool.featureModified$),
+      )
+      .subscribe(updatedGeometry => {
+        this.planregistratieService.setSelectedPlanregistratieGeometry(updatedGeometry);
+      });
+  }
+
+  private toggleTools() {
     this.planregistratieService.getSelectedPlanregistratie$()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
+        distinctUntilChanged((prev, current) => prev?.ID === current?.ID),
         withLatestFrom(this.mapService.getToolManager$()),
       )
-      .subscribe(([ plan, toolManager ]) => {
+      .subscribe(([ selectedPlan, toolManager ]) => {
+        if (!this.modifyTool || !this.selectTool) {
+          return;
+        }
+        if (!selectedPlan) {
+          toolManager.disableTool(this.modifyTool.id, true);
+          toolManager.enableTool(this.selectTool.id, true);
+        } else {
+          toolManager.disableTool(this.modifyTool.id, true);
+          toolManager.enableTool<ModifyEnableToolArguments>(this.modifyTool.id, false, {
+            geometry: selectedPlan.GEOM,
+            style: PlanregistratiesMapComponent.getFeatureStyle(selectedPlan, true),
+          });
+        }
+      });
+    this.planregistratieService.hasChanges$()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        distinctUntilChanged(),
+        withLatestFrom(this.mapService.getToolManager$()),
+      )
+      .subscribe(([ hasChanges, toolManager ]) => {
         if (!this.selectTool) {
           return;
         }
-        if (plan) {
-          toolManager.disableTool(this.selectTool.id);
+        if (hasChanges) {
+          toolManager.disableTool(this.selectTool.id, true);
         } else {
-          toolManager.enableTool(this.selectTool.id, true);
+          toolManager.enableTool(this.selectTool.id, false);
         }
       });
   }
 
-  private static getFeatureStyle(feature: FeatureModel<PlanregistratieFeatureAttributes>, alwaysHighlighted = false): MapStyleModel {
-    const selected = feature.attributes.selected || alwaysHighlighted;
+  private static getFeatureStyle(attributes: PlanregistratieFeatureAttributes, alwaysHighlighted = false): MapStyleModel {
+    const selected = attributes.selected || alwaysHighlighted;
     return {
       zIndex: selected ? 9999 : 9998,
       strokeColor: selected ? PlanregistratiesMapComponent.PRIMARY_COLOR : 'rgb(0, 0, 0)',
       strokeWidth: selected ? 6 : 1,
-      fillColor: PlantypeHelper.getPlantypeColor(feature.attributes.Plantype),
+      fillColor: PlantypeHelper.getPlantypeColor(attributes.Plantype),
       fillOpacity: 50,
       pointType: 'square',
-      pointFillColor: PlantypeHelper.getPlantypeColor(feature.attributes.Plantype),
+      pointFillColor: PlantypeHelper.getPlantypeColor(attributes.Plantype),
       styleKey: 'planmonitor-highlight-style',
     };
   }

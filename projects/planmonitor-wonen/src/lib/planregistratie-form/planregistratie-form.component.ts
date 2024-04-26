@@ -70,10 +70,7 @@ export class PlanregistratieFormComponent implements OnInit {
   };
 
   @Output()
-  public planregistratieChanged = new EventEmitter<PlanregistratieModel | null>();
-
-  @Output()
-  public planregistratieValidChanged = new EventEmitter<boolean>();
+  public planregistratieChanged = new EventEmitter<Partial<PlanregistratieModel> | null>();
 
   constructor(
     private destroyRef: DestroyRef,
@@ -86,7 +83,6 @@ export class PlanregistratieFormComponent implements OnInit {
         debounceTime(250),
       )
       .subscribe(values => {
-        this.planregistratieValidChanged.emit(this.planregistratieForm.valid);
         this.planregistratieChanged.emit(this.parseForm(values));
       });
   }
@@ -119,10 +115,10 @@ export class PlanregistratieFormComponent implements OnInit {
       beoogd_woonmilieu_abf13: planregistratie ? planregistratie.Beoogd_Woonmilieu_ABF13 : null,
       aantal_studentenwoningen: planregistratie ? planregistratie.Aantal_Studentenwoningen : null,
       toelichting_kwalitatief: planregistratie ? planregistratie.Toelichting_Kwalitatief : '',
-    });
+    }, { emitEvent: false });
   }
 
-  private parseForm(values: typeof this.planregistratieForm.value): PlanregistratieModel | null {
+  private parseForm(values: typeof this.planregistratieForm.value): Partial<PlanregistratieModel> | null {
     if (!this.planregistratie) {
       return null;
     }
@@ -144,11 +140,9 @@ export class PlanregistratieFormComponent implements OnInit {
       || typeof values.beoogd_woonmilieu_abf13 === "undefined" || values.beoogd_woonmilieu_abf13 === null
       || typeof values.aantal_studentenwoningen === "undefined" || values.aantal_studentenwoningen === null
     ) {
-      this.planregistratieValidChanged.emit(false);
       return null;
     }
     return {
-      ...this.planregistratie,
       Plannaam: values.plannaam ?? '',
       Provincie: values.provincie ?? '',
       Gemeente: values.gemeente ?? '',

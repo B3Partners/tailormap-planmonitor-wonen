@@ -19,8 +19,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <lib-planregistratie-form [planregistratie]="selectedPlan"
-                                      (planregistratieChanged)="planregistratieChanged($event)"
-                                      (planregistratieValidChanged)="planregistratieValidChanged($event)"></lib-planregistratie-form>
+                                      (planregistratieChanged)="planregistratieChanged($event)"></lib-planregistratie-form>
           </mat-expansion-panel>
         </div>
         <div class="details-form">
@@ -28,8 +27,9 @@
         </div>
       </div>
       <div class="buttons">
+        <button (click)="cancel()" mat-flat-button>Annuleren</button>
         <button (click)="save()"
-                [disabled]="!formValid || !formChanged"
+                [disabled]="disableSave$ | async"
                 color="primary"
                 mat-flat-button>Opslaan</button>
       </div>

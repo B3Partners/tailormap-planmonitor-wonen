@@ -1,30 +1,63 @@
 import { Inject, Injectable } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from './planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiServiceModel } from './planmonitor-wonen-api.service.model';
-import { BehaviorSubject, catchError, Observable, of, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, debounceTime, forkJoin, map, Observable, of, take, tap } from 'rxjs';
 import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 import { nanoid } from 'nanoid';
+import { CategorieTableRowModel } from '../models/categorie-table-row.model';
+import { PlanValidationHelper } from '../helpers/plan-validation.helper';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlanregistratiesService {
 
+  private showLogging = true;
+
   private planRegistraties = new BehaviorSubject<PlanregistratieModel[]>([]);
 
   private selectedPlanregistratie = new BehaviorSubject<PlanregistratieModel | null>(null);
   private selectedPlanCategorieen = new BehaviorSubject<PlancategorieModel[] | null>(null);
   private selectedDetailplanningen = new BehaviorSubject<DetailplanningModel[] | null>(null);
+  private selectedCategorieTable = new BehaviorSubject<CategorieTableRowModel[] | null>(null);
 
   private registratiesLoadStatus: LoadingStateEnum = LoadingStateEnum.INITIAL;
   private categorieenLoadStatus: LoadingStateEnum = LoadingStateEnum.INITIAL;
-  private detailPlanningenLoadStatus: LoadingStateEnum = LoadingStateEnum.INITIAL;
+
+  public validChangedPlan$: Observable<boolean>;
+  private hasTableChanges = new BehaviorSubject<boolean>(false);
+  private hasFormChanges = new BehaviorSubject<boolean>(false);
 
   constructor(
     @Inject(PLANMONITOR_WONEN_API_SERVICE) private api: PlanmonitorWonenApiServiceModel,
   ) {
+    combineLatest([
+      this.getSelectedPlanCategorieen$(),
+      this.getSelectedDetailplanningen$(),
+    ])
+      .pipe(debounceTime(10))
+      .subscribe(([ planCategorieen, detailPlanningen ]) => {
+        if (planCategorieen === null || detailPlanningen === null) {
+          this.selectedCategorieTable.next(null);
+          return;
+        }
+        const table = PlancategorieHelper.getPlancategorieTable(planCategorieen, detailPlanningen);
+        this.log('Recreated table', table, 'source data', planCategorieen, detailPlanningen);
+        this.selectedCategorieTable.next(table);
+      });
+    this.validChangedPlan$ = combineLatest([
+      this.selectedPlanregistratie.asObservable(),
+      this.selectedCategorieTable.asObservable(),
+    ]).pipe(
+      map(([ updatedPlan, categorieTable ]) => {
+        if (updatedPlan === null || categorieTable === null || (!this.hasTableChanges.value && !this.hasFormChanges.value)) {
+          return false;
+        }
+        return PlanValidationHelper.validatePlan(updatedPlan) && categorieTable.every(row => row.valid);
+      }),
+    );
   }
 
   public getPlanregistraties$() {
@@ -46,33 +79,31 @@ export class PlanregistratiesService {
     return this.selectedDetailplanningen.asObservable();
   }
 
-  public setSelectedPlanregistratie(id: string | null) {
-    const registratie = id === null ? null : this.planRegistraties.value.find(p => p.ID === id);
-    if (registratie) {
-      this.loadPlancategorieen(registratie.ID);
-      this.loadDetailplanningen(registratie.ID);
-    }
-    this.selectedPlanregistratie.next(registratie || null);
+  public getSelectedCategorieTable$(): Observable<CategorieTableRowModel[] | null> {
+    return this.selectedCategorieTable.asObservable();
   }
 
-  public updatePlan$(plan: PlanregistratieModel) {
-    // Save to backend
-    return of(plan)
-      .pipe(
-        tap(updatedPlan => {
-          const currentPlans = [...this.planRegistraties.value];
-          const idx = currentPlans.findIndex(p => p.ID === updatedPlan.ID);
-          if (idx === -1) {
-            currentPlans.push(updatedPlan);
-          } else {
-            currentPlans[idx] = updatedPlan;
-          }
-          this.planRegistraties.next(currentPlans);
-          if (this.selectedPlanregistratie.value?.ID === updatedPlan.ID) {
-            this.selectedPlanregistratie.next(updatedPlan);
-          }
-        }),
-      );
+  public hasValidChangedPlan$() {
+    return this.validChangedPlan$;
+  }
+
+  public hasChanges$() {
+    return combineLatest([
+      this.hasTableChanges.asObservable(),
+      this.hasFormChanges.asObservable(),
+    ]).pipe(map(([ tableChanges, formChanges ]) => tableChanges || formChanges));
+  }
+
+  public setSelectedPlanregistratie(id: string | null) {
+    const registratie = id === null ? null : this.planRegistraties.value.find(p => p.ID === id);
+    this.selectedPlanregistratie.next(registratie || null);
+    this.selectedPlanCategorieen.next(null);
+    this.selectedDetailplanningen.next(null);
+    if (registratie) {
+      this.loadPlancategorieen(registratie.ID);
+    }
+    this.hasFormChanges.next(false);
+    this.hasTableChanges.next(false);
   }
 
   private loadRegistraties() {
@@ -85,113 +116,182 @@ export class PlanregistratiesService {
       .subscribe(registraties => {
         this.registratiesLoadStatus = registraties === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.planRegistraties.next(registraties || []);
-        // if (registraties) {
-        //   this.setSelectedPlanregistratie(registraties[0].ID);
-        // }
       });
   }
 
   private loadPlancategorieen(registratieId: string) {
     this.categorieenLoadStatus = LoadingStateEnum.LOADING;
-    this.api.getPlancategorieen$(registratieId)
+    forkJoin([
+      this.api.getPlancategorieen$(registratieId).pipe(catchError(() => of(null))),
+      this.api.getPlanDetailplanningen$(registratieId).pipe(catchError(() => of(null))),
+    ])
       .pipe(
         take(1),
-        catchError(() => of(null)),
       )
-      .subscribe(categorieen => {
-        // console.log(categorieen);
-        this.categorieenLoadStatus = categorieen === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
+      .subscribe(([ categorieen, detailPlanningen ]) => {
+        this.categorieenLoadStatus = categorieen === null || detailPlanningen === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.selectedPlanCategorieen.next(categorieen);
-      });
-  }
-
-  private loadDetailplanningen(registratieId: string) {
-    this.detailPlanningenLoadStatus = LoadingStateEnum.LOADING;
-    this.api.getPlanDetailplanningen$(registratieId)
-      .pipe(
-        take(1),
-        catchError(() => of(null)),
-      )
-      .subscribe(detailPlanningen => {
-        // console.log(detailPlanningen);
-        this.detailPlanningenLoadStatus = detailPlanningen === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
         this.selectedDetailplanningen.next(detailPlanningen || []);
       });
   }
 
-  public updateCategorieField(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string, field: keyof PlancategorieModel, value: number) {
+  public updatePlan(plan: Partial<PlanregistratieModel> | null) {
+    this.log('Update Planregistratie', plan);
+    // TODO: Fix this method for when we create new plannen
+    if (plan === null || this.selectedPlanregistratie.value === null) {
+      this.hasFormChanges.next(false);
+      return;
+    }
+    this.hasFormChanges.next(true);
+    this.selectedPlanregistratie.next({
+      ...this.selectedPlanregistratie.value,
+      ...plan,
+    });
+  }
+
+  public save$() {
+    const updatedPlan = this.selectedPlanregistratie.value;
+    if (updatedPlan === null) {
+      return of(false);
+    }
+    return of(updatedPlan)
+      .pipe(
+        tap(plan => {
+          const currentPlans = [...this.planRegistraties.value];
+          const idx = currentPlans.findIndex(p => p.ID === plan.ID);
+          if (idx === -1) {
+            currentPlans.push(plan);
+          } else {
+            currentPlans[idx] = plan;
+          }
+          this.planRegistraties.next(currentPlans);
+          if (this.selectedPlanregistratie.value?.ID === plan.ID) {
+            this.selectedPlanregistratie.next(plan);
+          }
+        }),
+        map(() => true),
+      );
+  }
+
+  public cancelChanges() {
+    this.setSelectedPlanregistratie(null);
+  }
+
+  public updateCategorieField(
+    categorieGroep: keyof PlancategorieModel,
+    categorieGroepValue: string,
+    field: keyof PlancategorieModel,
+    value: number,
+  ): PlancategorieModel | null {
+    this.log('Update PlancategorieModel', categorieGroep, categorieGroepValue, field, value);
     const planregistratie = this.selectedPlanregistratie.value;
     if (!planregistratie) {
       return null;
     }
     const categorieen = this.selectedPlanCategorieen.value || [];
-    const idx = (categorieen || []).findIndex(p => p[categorieGroep] === categorieGroepValue);
+    const idx = this.findPlancategorieIndex(categorieGroep, categorieGroepValue);
     if (idx === -1) {
-      const newCategorie: PlancategorieModel = {
-        ...PlancategorieHelper.getNewPlancategorie(),
+      const newCategorie = PlancategorieHelper.getNewPlancategorie({
         ID: nanoid(),
         IsNew: true,
         Planregistratie_ID: planregistratie.ID,
         [categorieGroep]: categorieGroepValue,
         [field]: value,
-      };
+      });
       this.selectedPlanCategorieen.next([
         ...categorieen,
         newCategorie,
       ]);
+      this.hasTableChanges.next(true);
+      this.log('Update PlancategorieModel - categorie does not exist, adding new categorie', newCategorie);
       return newCategorie;
-    } else {
-      const updatedCategorie: PlancategorieModel = {
-        ...categorieen[idx],
-        [field]: value,
-      };
-      this.selectedPlanCategorieen.next([
-        ...categorieen.slice(0, idx),
-        updatedCategorie,
-        ...categorieen.slice(idx + 1),
-      ]);
-      return updatedCategorie;
     }
+    const updatedCategorie: PlancategorieModel = {
+      ...categorieen[idx],
+      [field]: value,
+    };
+    this.selectedPlanCategorieen.next([
+      ...categorieen.slice(0, idx),
+      updatedCategorie,
+      ...categorieen.slice(idx + 1),
+    ]);
+    this.log('Update PlancategorieModel - updating existing categorie', updatedCategorie);
+    this.hasTableChanges.next(true);
+    return updatedCategorie;
   }
 
-  public updateDetailplanning(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string, year: number, value: number) {
+  public updateDetailplanning(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string, year: number, value: number): DetailplanningModel | null {
+    this.log('Update DetailplanningModel', categorieGroep, categorieGroepValue, year, value);
     const planregistratie = this.selectedPlanregistratie.value;
     if (!planregistratie) {
-      return;
+      return null;
     }
-    const categorieen = this.selectedPlanCategorieen.value || [];
-    const categorie = categorieen.find(p => p[categorieGroep] === categorieGroepValue)
+    const categorie = this.findPlancategorie(categorieGroep, categorieGroepValue)
       || this.updateCategorieField(categorieGroep, categorieGroepValue, 'Totaal_Gepland', 0);
+    this.log('Update DetailplanningModel - found categorie', categorie);
     if (categorie === null) {
-      return;
+      return null;
     }
     const details = this.selectedDetailplanningen.value || [];
-    const idx = (details || []).findIndex(p => p.Jaartal === year);
+    const idx = (details || []).findIndex(p => {
+      return p.Jaartal === year && p.Plancategorie_ID === categorie.ID;
+    });
     if (idx === -1) {
+      const newDetailplanning: DetailplanningModel = {
+        ID: nanoid(),
+        IsNew: true,
+        Plancategorie_ID: categorie.ID,
+        Jaartal: year,
+        Aantal_Gepland: value,
+        Created: new Date(),
+        Creator: '',
+        Editor: null,
+        Edited: null,
+      };
       this.selectedDetailplanningen.next([
         ...details,
-        {
-          ID: nanoid(),
-          IsNew: true,
-          Plancategorie_ID: categorie.ID,
-          Jaartal: year,
-          Aantal_Gepland: value,
-          Created: new Date(),
-          Creator: '',
-          Editor: null,
-          Edited: null,
-        },
+        newDetailplanning,
       ]);
-    } else {
-      this.selectedDetailplanningen.next([
-        ...details.slice(0, idx),
-        {
-          ...details[idx],
-          Aantal_Gepland: value,
-        },
-        ...details.slice(idx + 1),
-      ]);
+      this.hasTableChanges.next(true);
+      this.log('Update DetailplanningModel - planning does not exist, adding new planning', newDetailplanning);
+      return newDetailplanning;
     }
+    const updatedDetailplanning: DetailplanningModel = {
+      ...details[idx],
+      Aantal_Gepland: value,
+    };
+    this.selectedDetailplanningen.next([
+      ...details.slice(0, idx),
+      updatedDetailplanning,
+      ...details.slice(idx + 1),
+    ]);
+    this.hasTableChanges.next(true);
+    this.log('Update DetailplanningModel - updating existing planning', updatedDetailplanning);
+    return updatedDetailplanning;
+  }
+
+  public setSelectedPlanregistratieGeometry(updatedGeometry: string) {
+    this.updatePlan({ GEOM: updatedGeometry });
+  }
+
+  private findPlancategorieIndex(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string): number {
+    const categorieen = this.selectedPlanCategorieen.value || [];
+    return (categorieen || []).findIndex(p => p[categorieGroep] === categorieGroepValue);
+  }
+
+  private findPlancategorie(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string): PlancategorieModel | null {
+    const idx = this.findPlancategorieIndex(categorieGroep, categorieGroepValue);
+    if (idx === -1) {
+      return null;
+    }
+    return (this.selectedPlanCategorieen.value || [])[idx] || null;
+  }
+
+  private log(...logs: any) {
+    if (!this.showLogging) {
+      return;
+    }
+    console.log(...logs);
   }
 
 }
