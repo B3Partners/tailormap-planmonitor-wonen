@@ -3,7 +3,9 @@
     <mat-table [dataSource]="tableData" [trackBy]="trackByRowId">
 
       <ng-container matColumnDef="label" [sticky]="true">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>
+          <button mat-button (click)="createExport()">Exporteer naar Excel</button>
+        </mat-header-cell>
         <mat-cell *matCellDef="let row">{{row.label}}</mat-cell>
       </ng-container>
 

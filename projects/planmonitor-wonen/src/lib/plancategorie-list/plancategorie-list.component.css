@@ -19,6 +19,10 @@ mat-header-cell {
   border-right: 1px solid var(--border-color);
 }
 
+mat-header-cell button {
+  --base-button-height: 24px;
+}
+
 .number-column {
   text-align: right;
   justify-content: flex-end;
