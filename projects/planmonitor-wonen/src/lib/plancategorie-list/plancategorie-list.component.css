@@ -11,6 +11,14 @@ mat-row, mat-footer-row {
   min-height: 2em;
 }
 
+mat-header-row {
+  min-height: 32px;
+}
+
+mat-header-cell {
+  border-right: 1px solid var(--border-color);
+}
+
 .number-column {
   text-align: right;
   justify-content: flex-end;
@@ -36,9 +44,9 @@ mat-row, mat-footer-row {
 }
 
 .mat-column-totalen {
-  min-width: 60px;
-  max-width: 60px;
-  width: 60px;
+  min-width: 80px;
+  max-width: 80px;
+  width: 80px;
 }
 
 .mat-column-total_check,
@@ -62,17 +70,17 @@ mat-row, mat-footer-row {
 
 .number-input-cell {
   padding: 0;
+  border-right: 1px solid var(--border-color);
 }
 
 .number-input {
   -moz-appearance: textfield; /* Firefox */
   margin: 0;
   height: 100%;
-  border: 1px solid var(--border-color);
-  border-top: 0;
-  border-bottom: 0;
+  border: 0 none;
   text-align: right;
   width: 100%;
+  padding: 0 8px;
 }
 
 .number-input::-webkit-outer-spin-button,
@@ -86,6 +94,18 @@ mat-row, mat-footer-row {
   min-width: 80px;
   max-width: 80px;
   width: 80px;
+}
+
+.year-group {
+  min-width: 120px;
+  max-width: 120px;
+  width: 120px;
+  padding: 0 4px;
+  border-right: 1px solid var(--border-color);
+}
+
+.expand-collapse-container {
+  position: relative;
 }
 
 .check-success {
@@ -128,4 +148,22 @@ mat-row, mat-footer-row {
 .group-sloop .mat-column-label,
 .group-sloop .mat-column-groeplabel {
   background-color: #F6BF34;
+}
+
+.expand-collapse {
+  position: absolute;
+  height: 24px;
+  bottom: 4px;
+  width: 24px;
+  min-width: auto;
+  left: 0;
+}
+
+.expand-collapse mat-icon {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  margin-right: 0;
+  --mdc-icon-button-icon-size: 16px;
+  min-width: 16px;
 }

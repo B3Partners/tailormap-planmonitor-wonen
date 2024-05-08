@@ -90,6 +90,18 @@ export class PlancategorieHelper {
         year_2031: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2031, detailPlanningen) ?? '',
         year_2032: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2032, detailPlanningen) ?? '',
         year_2033: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2033, detailPlanningen) ?? '',
+        year_2034: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2034, detailPlanningen) ?? '',
+        year_2035: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2035, detailPlanningen) ?? '',
+        year_2036: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2036, detailPlanningen) ?? '',
+        year_2037: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2037, detailPlanningen) ?? '',
+        year_2038: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2038, detailPlanningen) ?? '',
+        year_2039: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2039, detailPlanningen) ?? '',
+        year_2040: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2040, detailPlanningen) ?? '',
+        year_2041: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2041, detailPlanningen) ?? '',
+        year_2042: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2042, detailPlanningen) ?? '',
+        year_2043: PlancategorieHelper.getDetailplanningGeplandForYear(planCategorie, 2043, detailPlanningen) ?? '',
+        year_2034_2038: 0,
+        year_2039_2043: 0,
         years_check: 0,
         valid: false,
       };
@@ -98,6 +110,8 @@ export class PlancategorieHelper {
       }
       const rowTotaal = PlancategorieHelper.getTotalForRow(row);
       row.years_check = restcapaciteit - rowTotaal;
+      row.year_2034_2038 = PlancategorieHelper.getTotalFor20342038(row);
+      row.year_2039_2043 = PlancategorieHelper.getTotalFor20392043(row);
       groupTotals.set(categorieRow.field, (groupTotals.get(categorieRow.field) || 0) + totalen);
       return row;
     });
@@ -155,7 +169,25 @@ export class PlancategorieHelper {
       (typeof row.year_2030 === 'number' ? row.year_2030 : 0) +
       (typeof row.year_2031 === 'number' ? row.year_2031 : 0) +
       (typeof row.year_2032 === 'number' ? row.year_2032 : 0) +
-      (typeof row.year_2033 === 'number' ? row.year_2033 : 0);
+      (typeof row.year_2033 === 'number' ? row.year_2033 : 0) +
+      PlancategorieHelper.getTotalFor20342038(row) +
+      PlancategorieHelper.getTotalFor20392043(row);
+  }
+
+  private static getTotalFor20342038(row: CategorieTableRowModel) {
+    return (typeof row.year_2034 === 'number' ? row.year_2034 : 0) +
+      (typeof row.year_2035 === 'number' ? row.year_2035 : 0) +
+      (typeof row.year_2036 === 'number' ? row.year_2036 : 0) +
+      (typeof row.year_2037 === 'number' ? row.year_2037 : 0) +
+      (typeof row.year_2038 === 'number' ? row.year_2038 : 0);
+  }
+
+  private static getTotalFor20392043(row: CategorieTableRowModel) {
+    return (typeof row.year_2039 === 'number' ? row.year_2039 : 0) +
+    (typeof row.year_2040 === 'number' ? row.year_2040 : 0) +
+    (typeof row.year_2041 === 'number' ? row.year_2041 : 0) +
+    (typeof row.year_2042 === 'number' ? row.year_2042 : 0) +
+    (typeof row.year_2043 === 'number' ? row.year_2043 : 0);
   }
 
 }

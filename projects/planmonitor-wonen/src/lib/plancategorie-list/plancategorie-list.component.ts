@@ -14,7 +14,10 @@ const INTEGER_REGEX = /^\d+$/;
 })
 export class PlancategorieListComponent implements OnInit {
 
-  public yearRange = [ 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033 ];
+  public expanded = false;
+
+  public yearColumns = [ 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042 ];
+
   public displayedColumns: string[] = [
     'label',
     'groeplabel',
@@ -32,8 +35,26 @@ export class PlancategorieListComponent implements OnInit {
     'year_2031',
     'year_2032',
     'year_2033',
+    'year_2034_2038',
+    'year_2039_2043',
     'years_check',
   ];
+
+  public displayedColumnsExpanded = [
+    ...this.displayedColumns.slice(0, -3),
+    'year_2034',
+    'year_2035',
+    'year_2036',
+    'year_2037',
+    'year_2038',
+    'year_2039',
+    'year_2040',
+    'year_2041',
+    'year_2042',
+    'year_2043',
+    'years_check',
+  ];
+
 
   public tableData: CategorieTableRowModel[] | null = null;
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
@@ -77,6 +98,10 @@ export class PlancategorieListComponent implements OnInit {
       return { row: null, value: 0 };
     }
     return { row, value: +target.value };
+  }
+
+  public toggleExpanded() {
+    this.expanded = !this.expanded;
   }
 
 }
