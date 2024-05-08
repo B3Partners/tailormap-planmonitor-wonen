@@ -3,6 +3,7 @@ import { PlanregistratiesService } from '../services/planregistraties.service';
 import { PlancategorieModel } from '../models';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 
 const INTEGER_REGEX = /^\d+$/;
 
@@ -15,46 +16,9 @@ const INTEGER_REGEX = /^\d+$/;
 export class PlancategorieListComponent implements OnInit {
 
   public expanded = false;
-
   public yearColumns = [ 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042 ];
-
-  public displayedColumns: string[] = [
-    'label',
-    'groeplabel',
-    'totalen',
-    'total_check',
-    'gerealiseerd',
-    'restcapaciteit',
-    'year_2024',
-    'year_2025',
-    'year_2026',
-    'year_2027',
-    'year_2028',
-    'year_2029',
-    'year_2030',
-    'year_2031',
-    'year_2032',
-    'year_2033',
-    'year_2034_2038',
-    'year_2039_2043',
-    'years_check',
-  ];
-
-  public displayedColumnsExpanded = [
-    ...this.displayedColumns.slice(0, -3),
-    'year_2034',
-    'year_2035',
-    'year_2036',
-    'year_2037',
-    'year_2038',
-    'year_2039',
-    'year_2040',
-    'year_2041',
-    'year_2042',
-    'year_2043',
-    'years_check',
-  ];
-
+  public displayedColumns: string[] = PlancategorieHelper.categorieColumns;
+  public displayedColumnsExpanded = PlancategorieHelper.expandedCategorieColumns;
 
   public tableData: CategorieTableRowModel[] | null = null;
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
@@ -102,6 +66,10 @@ export class PlancategorieListComponent implements OnInit {
 
   public toggleExpanded() {
     this.expanded = !this.expanded;
+  }
+
+  public createExport() {
+    this.planregistratieService.export();
   }
 
 }

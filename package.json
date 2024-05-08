@@ -40,6 +40,7 @@
     "@tailormap-viewer/map": "^11.3.0",
     "@tailormap-viewer/shared": "^11.3.0",
     "@tinyhttp/content-disposition": "^2.1.0",
+    "exceljs": "^4.4.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jsts": "^2.10.0",

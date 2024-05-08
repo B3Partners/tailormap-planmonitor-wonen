@@ -14,6 +14,43 @@ export interface CategorieRowModel {
 
 export class PlancategorieHelper {
 
+  public static categorieColumns: string[] = [
+    'label',
+    'groeplabel',
+    'totalen',
+    'total_check',
+    'gerealiseerd',
+    'restcapaciteit',
+    'year_2024',
+    'year_2025',
+    'year_2026',
+    'year_2027',
+    'year_2028',
+    'year_2029',
+    'year_2030',
+    'year_2031',
+    'year_2032',
+    'year_2033',
+    'year_2034_2038',
+    'year_2039_2043',
+    'years_check',
+  ];
+
+  public static expandedCategorieColumns = [
+    ...PlancategorieHelper.categorieColumns.slice(0, -3),
+    'year_2034',
+    'year_2035',
+    'year_2036',
+    'year_2037',
+    'year_2038',
+    'year_2039',
+    'year_2040',
+    'year_2041',
+    'year_2042',
+    'year_2043',
+    'years_check',
+  ];
+
   public static categorieen: CategorieRowModel[] = [
     { id: 'nieuwbouw-nieuwbouw', label: 'Nieuwbouw', groepnaam: 'nieuwbouw', field: "Nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW },
     { id: 'woningtype-eengezins', label: 'Eengezins', groepnaam: 'woningtype', field: 'Woningtype', fieldValue: WoningtypeEnum.EENGEZINS },

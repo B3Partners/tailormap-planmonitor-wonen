@@ -12,6 +12,7 @@ import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 import { nanoid } from 'nanoid';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { PlanValidationHelper } from '../helpers/plan-validation.helper';
+import { PlanregistratieExportHelper } from '../helpers/planregistratie-export.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -150,6 +151,18 @@ export class PlanregistratiesService {
         this.selectedPlanCategorieen.next(categorieen);
         this.selectedDetailplanningen.next(detailPlanningen || []);
       });
+  }
+
+  public export() {
+    const currentReg = this.selectedPlanregistratie.value;
+    const table = this.selectedCategorieTable.value;
+    if (!currentReg || !table) {
+      return;
+    }
+    PlanregistratieExportHelper.createExcelExport(
+      currentReg.Plannaam,
+      table,
+    );
   }
 
   public updatePlan(plan: Partial<PlanregistratieModel> | null) {
