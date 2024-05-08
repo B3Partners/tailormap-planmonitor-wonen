@@ -92,15 +92,18 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
         PlancategorieHelper.getNewPlancategorie({ ID: "2_3", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 25, Totaal_Gerealiseerd: 15 }),
       ]);
     }
-    return of([
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_NieuwbouwEnum_NIEUWBOUW", Planregistratie_ID: "1",	Nieuwbouw: NieuwbouwEnum.NIEUWBOUW, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_EENGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 120, Totaal_Gerealiseerd: 0 }),
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_MEERGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 0 }),
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_ONBEKEND", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 10, Totaal_Gerealiseerd: 0 }),
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_FlexwoningenEnum_FLEXWONINGEN", Planregistratie_ID: "1",	Flexwoningen: FlexwoningenEnum.FLEXWONINGEN, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_WonenEnZorgEnum_ZORGGESCHIKT", Planregistratie_ID: "1",	WonenenZorg: WonenEnZorgEnum.ZORGGESCHIKT, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-      PlancategorieHelper.getNewPlancategorie({ ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR", Planregistratie_ID: "1",	Betaalbaarheid: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-    ]);
+    if (id === "1") {
+      return of([
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_NieuwbouwEnum_NIEUWBOUW", Planregistratie_ID: "1",	Nieuwbouw: NieuwbouwEnum.NIEUWBOUW, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_EENGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 120, Totaal_Gerealiseerd: 0 }),
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_MEERGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 0 }),
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_ONBEKEND", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 10, Totaal_Gerealiseerd: 0 }),
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_FlexwoningenEnum_FLEXWONINGEN", Planregistratie_ID: "1",	Flexwoningen: FlexwoningenEnum.FLEXWONINGEN, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_WonenEnZorgEnum_ZORGGESCHIKT", Planregistratie_ID: "1",	WonenenZorg: WonenEnZorgEnum.ZORGGESCHIKT, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlancategorieHelper.getNewPlancategorie({ ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR", Planregistratie_ID: "1",	Betaalbaarheid: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+      ]);
+    }
+    return of([]);
   }
 
   public getPlanDetailplanningen$(id: string): Observable<DetailplanningModel[]> {
@@ -111,15 +114,18 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
         { ID: "2_3_3", Planregistratie_ID: "2",	Creator: "test", Created: "2024-02-15", Edited: null, Editor: null, Aantal_Gepland: 25, Jaartal: 2026, Plancategorie_ID: "2_3" },
       ]);
     }
-    return of([
-      { ID: "1_NieuwbouwEnum_NIEUWBOUW_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_NieuwbouwEnum_NIEUWBOUW" },
-      { ID: "1_WoningtypeEnum_EENGEZINS_detail", Planregistratie_ID: "1",	Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 120, Jaartal: 2026, Plancategorie_ID: "1_WoningtypeEnum_EENGEZINS" },
-      { ID: "1_WoningtypeEnum_MEERGEZINS_detail", Planregistratie_ID: "1",	Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 80, Jaartal: 2027, Plancategorie_ID: "1_WoningtypeEnum_MEERGEZINS" },
-      { ID: "1_WoningtypeEnum_ONBEKEND_detail", Planregistratie_ID: "1",	Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 10, Jaartal: 2028, Plancategorie_ID: "1_WoningtypeEnum_ONBEKEND" },
-      { ID: "1_FlexwoningenEnum_FLEXWONINGEN_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_FlexwoningenEnum_FLEXWONINGEN" },
-      { ID: "1_WonenEnZorgEnum_ZORGGESCHIKT_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_WonenEnZorgEnum_ZORGGESCHIKT" },
-      { ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR" },
-    ]);
+    if (id === "1") {
+      return of([
+        { ID: "1_NieuwbouwEnum_NIEUWBOUW_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_NieuwbouwEnum_NIEUWBOUW" },
+        { ID: "1_WoningtypeEnum_EENGEZINS_detail", Planregistratie_ID: "1",	Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 120, Jaartal: 2026, Plancategorie_ID: "1_WoningtypeEnum_EENGEZINS" },
+        { ID: "1_WoningtypeEnum_MEERGEZINS_detail", Planregistratie_ID: "1",	Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 80, Jaartal: 2027, Plancategorie_ID: "1_WoningtypeEnum_MEERGEZINS" },
+        { ID: "1_WoningtypeEnum_ONBEKEND_detail", Planregistratie_ID: "1",	Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 10, Jaartal: 2028, Plancategorie_ID: "1_WoningtypeEnum_ONBEKEND" },
+        { ID: "1_FlexwoningenEnum_FLEXWONINGEN_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_FlexwoningenEnum_FLEXWONINGEN" },
+        { ID: "1_WonenEnZorgEnum_ZORGGESCHIKT_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_WonenEnZorgEnum_ZORGGESCHIKT" },
+        { ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR" },
+      ]);
+    }
+    return of([]);
   }
 
 }

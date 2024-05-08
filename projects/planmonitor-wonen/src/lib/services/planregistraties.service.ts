@@ -1,8 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
-import { PLANMONITOR_WONEN_API_SERVICE } from './planmonitor-wonen-api.service.injection-token';
-import { PlanmonitorWonenApiServiceModel } from './planmonitor-wonen-api.service.model';
+import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
+import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.service.model';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, forkJoin, map, Observable, of, take, tap } from 'rxjs';
-import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
+import {
+  DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum, PlancategorieModel,
+  PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WoonmilieuABF13Enum,
+  WoonmilieuABF5Enum,
+} from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 import { nanoid } from 'nanoid';
@@ -29,6 +33,7 @@ export class PlanregistratiesService {
   public validChangedPlan$: Observable<boolean>;
   private hasTableChanges = new BehaviorSubject<boolean>(false);
   private hasFormChanges = new BehaviorSubject<boolean>(false);
+  private creatingNewPlan = new BehaviorSubject<boolean>(false);
 
   constructor(
     @Inject(PLANMONITOR_WONEN_API_SERVICE) private api: PlanmonitorWonenApiServiceModel,
@@ -94,6 +99,10 @@ export class PlanregistratiesService {
     ]).pipe(map(([ tableChanges, formChanges ]) => tableChanges || formChanges));
   }
 
+  public isCreatingNewPlan$(): Observable<boolean> {
+    return this.creatingNewPlan.asObservable();
+  }
+
   public setSelectedPlanregistratie(id: string | null) {
     const registratie = id === null ? null : this.planRegistraties.value.find(p => p.ID === id);
     this.selectedPlanregistratie.next(registratie || null);
@@ -104,6 +113,14 @@ export class PlanregistratiesService {
     }
     this.hasFormChanges.next(false);
     this.hasTableChanges.next(false);
+    this.creatingNewPlan.next(false);
+  }
+
+  public setCreateNewPlan(createNewPlan: boolean) {
+    if (createNewPlan) {
+      this.setSelectedPlanregistratie(null);
+    }
+    this.creatingNewPlan.next(createNewPlan);
   }
 
   private loadRegistraties() {
@@ -147,6 +164,49 @@ export class PlanregistratiesService {
       ...this.selectedPlanregistratie.value,
       ...plan,
     });
+  }
+
+  public setNewFeatureGeometry(geometry: string) {
+    const newPlan: PlanregistratieModel = {
+      ID: nanoid(),
+      GEOM: geometry,
+      Created: new Date(),
+      Creator: "",
+      Edited: null,
+      Editor: null,
+      Opdrachtgever_Naam: "",
+      Plannaam: "",
+      Bestemmingsplan: "",
+      Gemeente: "",
+      Regio: "",
+      Plaatsnaam: "",
+      Provincie: "",
+      Opmerkingen: "",
+      Levensloopbestendig_Ja: 0,
+      Levensloopbestendig_Nee: 0,
+      Oplevering_Eerste: 0,
+      Oplevering_Laatste: 0,
+      Flexwoningen: 0,
+      Aantal_Studentenwoningen: 0,
+      Jaar_Start_Project: (new Date()).getFullYear(),
+      Plantype: PlantypeEnum.UITBREIDING_UITLEG,
+      Beoogd_Woonmilieu_ABF13: WoonmilieuABF13Enum.DORPS,
+      Beoogd_Woonmilieu_ABF5: WoonmilieuABF5Enum.DORPS,
+      Opdrachtgever_Type: OpdrachtgeverEnum.GEMEENTE,
+      Knelpunten_Meerkeuze: KnelpuntenMeerkeuzeEnum.ANDERS,
+      Regionale_Planlijst: EigendomEnum.ONBEKEND,
+      Vertrouwelijkheid: VertrouwelijkheidEnum.GEMEENTE,
+      Status_Planologisch: StatusPlanologischEnum.IN_VOORBEREIDING,
+      Status_Project: ProjectstatusEnum.ONBEKEND,
+      Toelichting_Knelpunten: KnelpuntenPlantypeEnum.ONBEKEND,
+      Toelichting_Kwalitatief: "",
+      IsNew: true,
+    };
+    this.planRegistraties.next([
+      ...this.planRegistraties.value,
+      newPlan,
+    ]);
+    this.setSelectedPlanregistratie(newPlan.ID);
   }
 
   public save$() {

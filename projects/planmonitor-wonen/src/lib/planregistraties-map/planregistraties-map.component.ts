@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular/core';
 import {
-  MapService, MapStyleModel, ModifyEnableToolArguments, ModifyToolConfigModel, ModifyToolModel, SelectToolConfigModel, SelectToolModel,
-  ToolTypeEnum,
+  DrawingEnableToolArguments,
+  DrawingToolConfigModel, DrawingToolModel, MapService, MapStyleModel, ModifyEnableToolArguments, ModifyToolConfigModel, ModifyToolModel,
+  SelectToolConfigModel, SelectToolModel, ToolTypeEnum,
 } from '@tailormap-viewer/map';
 import { combineLatest, distinctUntilChanged, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
-import { PlanregistratieModel } from '../models';
+import { PlanregistratieModel, PlantypeEnum } from '../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { CssHelper } from '@tailormap-viewer/shared';
@@ -25,6 +26,7 @@ export class PlanregistratiesMapComponent implements OnInit {
   private static PRIMARY_COLOR = '';
   private selectTool: SelectToolModel | undefined;
   private modifyTool: ModifyToolModel | undefined;
+  private addFeatureTool: DrawingToolModel | undefined;
 
   constructor(
     private planregistratieService: PlanregistratiesService,
@@ -37,6 +39,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.renderFeatures();
     this.createSelectTool();
     this.createModifyTool();
+    this.createAddFeatureTool();
     this.toggleTools();
   }
 
@@ -59,7 +62,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.mapService.renderFeatures$<PlanregistratieFeatureAttributes>(
       PlanregistratiesMapComponent.LAYER_ID,
       planregistratieFeatures$,
-      feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes),
+      feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.Plantype, feature.attributes.selected),
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
@@ -67,7 +70,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.mapService.createTool$<SelectToolModel<PlanregistratieFeatureAttributes>, SelectToolConfigModel<PlanregistratieFeatureAttributes>>({
       type: ToolTypeEnum.Select,
       layers: [PlanregistratiesMapComponent.LAYER_ID],
-      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes, true),
+      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.Plantype, true),
     })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -97,6 +100,21 @@ export class PlanregistratiesMapComponent implements OnInit {
       });
   }
 
+  private createAddFeatureTool() {
+    this.mapService.createTool$<DrawingToolModel, DrawingToolConfigModel>({
+      type: ToolTypeEnum.Draw,
+      style: PlanregistratiesMapComponent.getFeatureStyle(PlantypeEnum.UITBREIDING_OVERIG),
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        tap(({ tool }) => this.addFeatureTool = tool),
+        switchMap(({ tool }) => tool.drawEnd$),
+      )
+      .subscribe(drawEvent => {
+        this.planregistratieService.setNewFeatureGeometry(drawEvent.geometry);
+      });
+  }
+
   private toggleTools() {
     this.planregistratieService.getSelectedPlanregistratie$()
       .pipe(
@@ -115,8 +133,24 @@ export class PlanregistratiesMapComponent implements OnInit {
           toolManager.disableTool(this.modifyTool.id, true);
           toolManager.enableTool<ModifyEnableToolArguments>(this.modifyTool.id, false, {
             geometry: selectedPlan.GEOM,
-            style: PlanregistratiesMapComponent.getFeatureStyle(selectedPlan, true),
+            style: PlanregistratiesMapComponent.getFeatureStyle(selectedPlan.Plantype, true),
           });
+        }
+      });
+    this.planregistratieService.isCreatingNewPlan$()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        distinctUntilChanged(),
+        withLatestFrom(this.mapService.getToolManager$()),
+      )
+      .subscribe(([ isCreatingNew, toolManager ]) => {
+        if (!this.addFeatureTool) {
+          return;
+        }
+        if (isCreatingNew) {
+          toolManager.enableTool<DrawingEnableToolArguments>(this.addFeatureTool.id, true, { type: 'area' });
+        } else {
+          toolManager.disableTool(this.addFeatureTool.id, false);
         }
       });
     this.planregistratieService.hasChanges$()
@@ -137,16 +171,16 @@ export class PlanregistratiesMapComponent implements OnInit {
       });
   }
 
-  private static getFeatureStyle(attributes: PlanregistratieFeatureAttributes, alwaysHighlighted = false): MapStyleModel {
-    const selected = attributes.selected || alwaysHighlighted;
+  private static getFeatureStyle(planType: PlantypeEnum, selected = false): MapStyleModel {
+    // const selected = attributes.selected || alwaysHighlighted;
     return {
       zIndex: selected ? 9999 : 9998,
       strokeColor: selected ? PlanregistratiesMapComponent.PRIMARY_COLOR : 'rgb(0, 0, 0)',
       strokeWidth: selected ? 6 : 1,
-      fillColor: PlantypeHelper.getPlantypeColor(attributes.Plantype),
+      fillColor: PlantypeHelper.getPlantypeColor(planType),
       fillOpacity: 50,
       pointType: 'square',
-      pointFillColor: PlantypeHelper.getPlantypeColor(attributes.Plantype),
+      pointFillColor: PlantypeHelper.getPlantypeColor(planType),
       styleKey: 'planmonitor-highlight-style',
     };
   }
