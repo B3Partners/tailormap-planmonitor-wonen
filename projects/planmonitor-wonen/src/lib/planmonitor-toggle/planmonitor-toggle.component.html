@@ -1,4 +1,7 @@
-<mat-button-toggle-group (change)="toggleChanged($event)" [value]="activeToggle$ | async">
+<mat-button-toggle-group *ngIf="toolActive$"
+                         (change)="toggleChanged($event)"
+                         [value]="activeToggle$ | async"
+                         [hideSingleSelectionIndicator]="true">
   <mat-button-toggle value="create">Plan intekenen</mat-button-toggle>
   <mat-button-toggle value="edit">Plan bewerken</mat-button-toggle>
 </mat-button-toggle-group>

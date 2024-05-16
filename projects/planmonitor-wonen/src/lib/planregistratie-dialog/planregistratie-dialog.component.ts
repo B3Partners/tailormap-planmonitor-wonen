@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, tap } from 'rxjs';
 import { BrowserHelper, CssHelper } from '@tailormap-viewer/shared';
 import { PlanregistratieModel } from '../models';
 
@@ -34,7 +34,11 @@ export class PlanregistratieDialogComponent {
     private planregistratieService: PlanregistratiesService,
   ) {
     this.selectedPlan$ = this.planregistratieService.getSelectedPlanregistratie$();
-    this.dialogOpen$ = this.selectedPlan$.pipe(map(plan => !!plan));
+    this.dialogOpen$ = this.selectedPlan$
+      .pipe(
+        map(plan => !!plan),
+        tap(isOpen => document.body.classList.toggle('planmonitor-wonen-dialog-open', isOpen)),
+      );
     this.dialogTitle$ = this.selectedPlan$.pipe(map(plan => {
       return plan ? `Planregistratie ${plan.Plannaam}` : 'Planregistratie';
     }));

@@ -1,3 +1,7 @@
+::ng-deep .planmonitor-wonen-dialog-open .map-controls-right {
+  transform: translate(calc((var(--dialog-width-right) + var(--body-margin)) * -1), calc(var(--body-margin) + var(--map-control-size) + var(--body-margin)));
+}
+
 .planregistratie-dialog ::ng-deep .dialog {
   left: auto;
   right: var(--body-margin);

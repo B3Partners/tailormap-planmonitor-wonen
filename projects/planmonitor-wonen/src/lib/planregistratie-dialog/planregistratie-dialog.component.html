@@ -7,6 +7,7 @@
            [allowCollapse]="true"
            [collapsed]="dialogCollapsed$ | async"
            (expandCollapseDialog)="expandCollapseDialog()"
+           [allowFullscreen]="true"
            [dialogTitle]="(dialogTitle$ | async) ?? ''">
   @if (selectedPlan$ | async; as selectedPlan) {
     <div class="form">
