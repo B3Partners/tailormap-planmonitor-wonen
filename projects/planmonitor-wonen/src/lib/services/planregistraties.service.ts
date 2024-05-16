@@ -2,24 +2,28 @@ import { Inject, Injectable } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.service.model';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, forkJoin, map, Observable, of, take, tap } from 'rxjs';
+<<<<<<< HEAD
 import {
   DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum, PlancategorieModel,
   PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WoonmilieuAbf13Enum,
   WoonmilieuAbf5Enum,
 } from '../models';
+=======
+import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
+>>>>>>> main
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
-import { nanoid } from 'nanoid';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { PlanValidationHelper } from '../helpers/plan-validation.helper';
 import { PlanregistratieExportHelper } from '../helpers/planregistratie-export.helper';
+import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlanregistratiesService {
 
-  private showLogging = true;
+  private showLogging = false;
 
   private planRegistraties = new BehaviorSubject<PlanregistratieModel[]>([]);
 
@@ -180,41 +184,7 @@ export class PlanregistratiesService {
   }
 
   public setNewFeatureGeometry(geometry: string) {
-    const newPlan: PlanregistratieModel = {
-      id: nanoid(),
-      geometrie: geometry,
-      createdAt: new Date(),
-      creator: "",
-      editedAt: null,
-      editor: null,
-      opdrachtgeverNaam: "",
-      planNaam: "",
-      bestemmingsplan: "",
-      gemeente: "",
-      regio: "",
-      plaatsnaam: "",
-      provincie: "",
-      opmerkingen: "",
-      levensloopbestendigJa: 0,
-      levensloopbestendigNee: 0,
-      opleveringEerste: 0,
-      opleveringLaatste: 0,
-      flexwoningen: 0,
-      aantalStudentenwoningen: 0,
-      jaarStartProject: (new Date()).getFullYear(),
-      plantype: PlantypeEnum.UITBREIDING_UITLEG,
-      beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum.DORPS,
-      beoogdWoonmilieuAbf5: WoonmilieuAbf5Enum.DORPS,
-      opdrachtgeverType: OpdrachtgeverEnum.GEMEENTE,
-      knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum.ANDERS,
-      regionalePlanlijst: EigendomEnum.ONBEKEND,
-      vertrouwelijkheid: VertrouwelijkheidEnum.GEMEENTE,
-      statusPlanologisch: StatusPlanologischEnum.IN_VOORBEREIDING,
-      statusProject: ProjectstatusEnum.ONBEKEND,
-      toelichtingKnelpunten: KnelpuntenPlantypeEnum.ONBEKEND,
-      toelichtingKwalitatief: "",
-      IsNew: true,
-    };
+    const newPlan = PlanMonitorModelHelper.getNewPlanregistratie({ geometrie: geometry });
     this.planRegistraties.next([
       ...this.planRegistraties.value,
       newPlan,
@@ -264,8 +234,7 @@ export class PlanregistratiesService {
     const categorieen = this.selectedPlanCategorieen.value || [];
     const idx = this.findPlancategorieIndex(categorieGroep, categorieGroepValue);
     if (idx === -1) {
-      const newCategorie = PlancategorieHelper.getNewPlancategorie({
-        ID: nanoid(),
+      const newCategorie = PlanMonitorModelHelper.getNewPlancategorie({
         IsNew: true,
         Planregistratie_ID: planregistratie.id,
         [categorieGroep]: categorieGroepValue,
@@ -310,17 +279,11 @@ export class PlanregistratiesService {
       return p.Jaartal === year && p.Plancategorie_ID === categorie.ID;
     });
     if (idx === -1) {
-      const newDetailplanning: DetailplanningModel = {
-        ID: nanoid(),
-        IsNew: true,
+      const newDetailplanning = PlanMonitorModelHelper.getNewDetailplanning({
         Plancategorie_ID: categorie.ID,
         Jaartal: year,
         Aantal_Gepland: value,
-        Created: new Date(),
-        Creator: '',
-        Editor: null,
-        Edited: null,
-      };
+      });
       this.selectedDetailplanningen.next([
         ...details,
         newDetailplanning,

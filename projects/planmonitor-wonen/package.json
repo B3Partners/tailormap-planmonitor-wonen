@@ -4,14 +4,15 @@
   "peerDependencies": {
     "@angular/common": "^17.0.0",
     "@angular/core": "^17.0.0",
-    "@tailormap-viewer/shared": "^11.3.0",
-    "@tailormap-viewer/map": "^11.3.0",
-    "@tailormap-viewer/api": "^11.3.0",
-    "@tailormap-viewer/core": "^11.3.0",
-    "@tailormap-admin/admin-core": "^11.3.0"
+    "@tailormap-viewer/shared": "^11.3.1-1",
+    "@tailormap-viewer/map": "^11.3.1-1",
+    "@tailormap-viewer/api": "^11.3.1-1",
+    "@tailormap-viewer/core": "^11.3.1-1",
+    "@tailormap-admin/admin-core": "^11.3.1-1"
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "@lukeed/uuid": "^2.0.1"
   }
 }
