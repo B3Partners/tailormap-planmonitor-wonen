@@ -5,7 +5,6 @@ import { PLANMONITOR_WONEN_COMPONENT_ID } from './models/planmonitor-wonen-compo
 import { PlanregistratiesMapComponent } from './planregistraties-map/planregistraties-map.component';
 import { ComponentRegistrationService } from '@tailormap-viewer/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from './api/planmonitor-wonen-api.service.injection-token';
-import { PlanmonitorWonenApiMockService } from './api/planmonitor-wonen-api-mock.service';
 import { PlanregistratieDialogComponent } from './planregistratie-dialog/planregistratie-dialog.component';
 import { SharedModule } from '@tailormap-viewer/shared';
 import { PlanregistratieFormComponent } from './planregistratie-form/planregistratie-form.component';
