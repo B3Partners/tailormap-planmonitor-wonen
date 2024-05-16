@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "@lukeed/uuid": "^2.0.1"
   }
 }

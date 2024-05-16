@@ -76,23 +76,7 @@ export class PlancategorieHelper {
     { id: 'sloop-sloop', label: 'Sloop', groepnaam: 'sloop', field: 'Sloop', fieldValue: SloopEnum.SLOOP },
   ];
 
-  public static getNewPlancategorie(initialData: Partial<PlancategorieModel> & Pick<PlancategorieModel, 'ID' | 'Planregistratie_ID'>): PlancategorieModel {
-    return {
-      Woningtype: null,
-      Nieuwbouw: null,
-      Sloop: null,
-      Betaalbaarheid: null,
-      Flexwoningen: null,
-      WonenenZorg: null,
-      Totaal_Gepland: 0,
-      Totaal_Gerealiseerd: 0,
-      Creator: null,
-      Created: null,
-      Editor: null,
-      Edited: null,
-      ...initialData,
-    };
-  }
+
 
   public static getPlancategorieTable(
     planCategorieen: PlancategorieModel[],

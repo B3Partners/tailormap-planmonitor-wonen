@@ -2,17 +2,13 @@ import { Inject, Injectable } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.service.model';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, forkJoin, map, Observable, of, take, tap } from 'rxjs';
-import {
-  DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum, PlancategorieModel,
-  PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WoonmilieuABF13Enum,
-  WoonmilieuABF5Enum,
-} from '../models';
+import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
-import { nanoid } from 'nanoid';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { PlanValidationHelper } from '../helpers/plan-validation.helper';
 import { PlanregistratieExportHelper } from '../helpers/planregistratie-export.helper';
+import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -180,41 +176,7 @@ export class PlanregistratiesService {
   }
 
   public setNewFeatureGeometry(geometry: string) {
-    const newPlan: PlanregistratieModel = {
-      ID: nanoid(),
-      GEOM: geometry,
-      Created: new Date(),
-      Creator: "",
-      Edited: null,
-      Editor: null,
-      Opdrachtgever_Naam: "",
-      Plannaam: "",
-      Bestemmingsplan: "",
-      Gemeente: "",
-      Regio: "",
-      Plaatsnaam: "",
-      Provincie: "",
-      Opmerkingen: "",
-      Levensloopbestendig_Ja: 0,
-      Levensloopbestendig_Nee: 0,
-      Oplevering_Eerste: 0,
-      Oplevering_Laatste: 0,
-      Flexwoningen: 0,
-      Aantal_Studentenwoningen: 0,
-      Jaar_Start_Project: (new Date()).getFullYear(),
-      Plantype: PlantypeEnum.UITBREIDING_UITLEG,
-      Beoogd_Woonmilieu_ABF13: WoonmilieuABF13Enum.DORPS,
-      Beoogd_Woonmilieu_ABF5: WoonmilieuABF5Enum.DORPS,
-      Opdrachtgever_Type: OpdrachtgeverEnum.GEMEENTE,
-      Knelpunten_Meerkeuze: KnelpuntenMeerkeuzeEnum.ANDERS,
-      Regionale_Planlijst: EigendomEnum.ONBEKEND,
-      Vertrouwelijkheid: VertrouwelijkheidEnum.GEMEENTE,
-      Status_Planologisch: StatusPlanologischEnum.IN_VOORBEREIDING,
-      Status_Project: ProjectstatusEnum.ONBEKEND,
-      Toelichting_Knelpunten: KnelpuntenPlantypeEnum.ONBEKEND,
-      Toelichting_Kwalitatief: "",
-      IsNew: true,
-    };
+    const newPlan = PlanMonitorModelHelper.getNewPlanregistratie({ GEOM: geometry });
     this.planRegistraties.next([
       ...this.planRegistraties.value,
       newPlan,
@@ -264,8 +226,7 @@ export class PlanregistratiesService {
     const categorieen = this.selectedPlanCategorieen.value || [];
     const idx = this.findPlancategorieIndex(categorieGroep, categorieGroepValue);
     if (idx === -1) {
-      const newCategorie = PlancategorieHelper.getNewPlancategorie({
-        ID: nanoid(),
+      const newCategorie = PlanMonitorModelHelper.getNewPlancategorie({
         IsNew: true,
         Planregistratie_ID: planregistratie.ID,
         [categorieGroep]: categorieGroepValue,
@@ -310,17 +271,11 @@ export class PlanregistratiesService {
       return p.Jaartal === year && p.Plancategorie_ID === categorie.ID;
     });
     if (idx === -1) {
-      const newDetailplanning: DetailplanningModel = {
-        ID: nanoid(),
-        IsNew: true,
+      const newDetailplanning = PlanMonitorModelHelper.getNewDetailplanning({
         Plancategorie_ID: categorie.ID,
         Jaartal: year,
         Aantal_Gepland: value,
-        Created: new Date(),
-        Creator: '',
-        Editor: null,
-        Edited: null,
-      };
+      });
       this.selectedDetailplanningen.next([
         ...details,
         newDetailplanning,

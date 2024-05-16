@@ -7,9 +7,9 @@ import {
   WoningtypeEnum, WoonmilieuABF13Enum, WoonmilieuABF5Enum,
 } from '../models';
 import { Injectable } from '@angular/core';
-import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 import { NieuwbouwEnum } from '../models/nieuwbouw.enum';
 import { FlexwoningenEnum } from '../models/flexwoningen.enum';
+import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 
 @Injectable()
 export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServiceModel {
@@ -87,20 +87,20 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
   public getPlancategorieen$(id: string): Observable<PlancategorieModel[]> {
     if (id === "2") {
       return of([
-        PlancategorieHelper.getNewPlancategorie({ ID: "2_1", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 20 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "2_2", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 50, Totaal_Gerealiseerd: 10 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "2_3", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 25, Totaal_Gerealiseerd: 15 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "2_1", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 20 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "2_2", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 50, Totaal_Gerealiseerd: 10 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "2_3", Planregistratie_ID: "2",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 25, Totaal_Gerealiseerd: 15 }),
       ]);
     }
     if (id === "1") {
       return of([
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_NieuwbouwEnum_NIEUWBOUW", Planregistratie_ID: "1",	Nieuwbouw: NieuwbouwEnum.NIEUWBOUW, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_EENGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 120, Totaal_Gerealiseerd: 0 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_MEERGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 0 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_ONBEKEND", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 10, Totaal_Gerealiseerd: 0 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_FlexwoningenEnum_FLEXWONINGEN", Planregistratie_ID: "1",	Flexwoningen: FlexwoningenEnum.FLEXWONINGEN, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_WonenEnZorgEnum_ZORGGESCHIKT", Planregistratie_ID: "1",	WonenenZorg: WonenEnZorgEnum.ZORGGESCHIKT, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
-        PlancategorieHelper.getNewPlancategorie({ ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR", Planregistratie_ID: "1",	Betaalbaarheid: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_NieuwbouwEnum_NIEUWBOUW", Planregistratie_ID: "1",	Nieuwbouw: NieuwbouwEnum.NIEUWBOUW, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_EENGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.EENGEZINS, Totaal_Gepland: 120, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_MEERGEZINS", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.MEERGEZINS, Totaal_Gepland: 80, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_WoningtypeEnum_ONBEKEND", Planregistratie_ID: "1",	Woningtype: WoningtypeEnum.ONBEKEND, Totaal_Gepland: 10, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_FlexwoningenEnum_FLEXWONINGEN", Planregistratie_ID: "1",	Flexwoningen: FlexwoningenEnum.FLEXWONINGEN, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_WonenEnZorgEnum_ZORGGESCHIKT", Planregistratie_ID: "1",	WonenenZorg: WonenEnZorgEnum.ZORGGESCHIKT, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
+        PlanMonitorModelHelper.getNewPlancategorie({ ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR", Planregistratie_ID: "1",	Betaalbaarheid: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR, Totaal_Gepland: 210, Totaal_Gerealiseerd: 0 }),
       ]);
     }
     return of([]);
