@@ -15,7 +15,7 @@ import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 })
 export class PlanregistratiesService {
 
-  private showLogging = true;
+  private showLogging = false;
 
   private planRegistraties = new BehaviorSubject<PlanregistratieModel[]>([]);
 
