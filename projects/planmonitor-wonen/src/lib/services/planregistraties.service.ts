@@ -4,8 +4,8 @@ import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.se
 import { BehaviorSubject, catchError, combineLatest, debounceTime, forkJoin, map, Observable, of, take, tap } from 'rxjs';
 import {
   DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum, PlancategorieModel,
-  PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WoonmilieuABF13Enum,
-  WoonmilieuABF5Enum,
+  PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WoonmilieuAbf13Enum,
+  WoonmilieuAbf5Enum,
 } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
@@ -105,12 +105,12 @@ export class PlanregistratiesService {
   }
 
   public setSelectedPlanregistratie(id: string | null) {
-    const registratie = id === null ? null : this.planRegistraties.value.find(p => p.ID === id);
+    const registratie = id === null ? null : this.planRegistraties.value.find(p => p.id === id);
     this.selectedPlanregistratie.next(registratie || null);
     this.selectedPlanCategorieen.next(null);
     this.selectedDetailplanningen.next(null);
     if (registratie) {
-      this.loadPlancategorieen(registratie.ID);
+      this.loadPlancategorieen(registratie.id);
     }
     this.hasFormChanges.next(false);
     this.hasTableChanges.next(false);
@@ -160,7 +160,7 @@ export class PlanregistratiesService {
       return;
     }
     PlanregistratieExportHelper.createExcelExport(
-      currentReg.Plannaam,
+      currentReg.planNaam,
       table,
     );
   }
@@ -181,45 +181,45 @@ export class PlanregistratiesService {
 
   public setNewFeatureGeometry(geometry: string) {
     const newPlan: PlanregistratieModel = {
-      ID: nanoid(),
-      GEOM: geometry,
-      Created: new Date(),
-      Creator: "",
-      Edited: null,
-      Editor: null,
-      Opdrachtgever_Naam: "",
-      Plannaam: "",
-      Bestemmingsplan: "",
-      Gemeente: "",
-      Regio: "",
-      Plaatsnaam: "",
-      Provincie: "",
-      Opmerkingen: "",
-      Levensloopbestendig_Ja: 0,
-      Levensloopbestendig_Nee: 0,
-      Oplevering_Eerste: 0,
-      Oplevering_Laatste: 0,
-      Flexwoningen: 0,
-      Aantal_Studentenwoningen: 0,
-      Jaar_Start_Project: (new Date()).getFullYear(),
-      Plantype: PlantypeEnum.UITBREIDING_UITLEG,
-      Beoogd_Woonmilieu_ABF13: WoonmilieuABF13Enum.DORPS,
-      Beoogd_Woonmilieu_ABF5: WoonmilieuABF5Enum.DORPS,
-      Opdrachtgever_Type: OpdrachtgeverEnum.GEMEENTE,
-      Knelpunten_Meerkeuze: KnelpuntenMeerkeuzeEnum.ANDERS,
-      Regionale_Planlijst: EigendomEnum.ONBEKEND,
-      Vertrouwelijkheid: VertrouwelijkheidEnum.GEMEENTE,
-      Status_Planologisch: StatusPlanologischEnum.IN_VOORBEREIDING,
-      Status_Project: ProjectstatusEnum.ONBEKEND,
-      Toelichting_Knelpunten: KnelpuntenPlantypeEnum.ONBEKEND,
-      Toelichting_Kwalitatief: "",
+      id: nanoid(),
+      geometrie: geometry,
+      createdAt: new Date(),
+      creator: "",
+      editedAt: null,
+      editor: null,
+      opdrachtgeverNaam: "",
+      planNaam: "",
+      bestemmingsplan: "",
+      gemeente: "",
+      regio: "",
+      plaatsnaam: "",
+      provincie: "",
+      opmerkingen: "",
+      levensloopbestendigJa: 0,
+      levensloopbestendigNee: 0,
+      opleveringEerste: 0,
+      opleveringLaatste: 0,
+      flexwoningen: 0,
+      aantalStudentenwoningen: 0,
+      jaarStartProject: (new Date()).getFullYear(),
+      plantype: PlantypeEnum.UITBREIDING_UITLEG,
+      beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum.DORPS,
+      beoogdWoonmilieuAbf5: WoonmilieuAbf5Enum.DORPS,
+      opdrachtgeverType: OpdrachtgeverEnum.GEMEENTE,
+      knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum.ANDERS,
+      regionalePlanlijst: EigendomEnum.ONBEKEND,
+      vertrouwelijkheid: VertrouwelijkheidEnum.GEMEENTE,
+      statusPlanologisch: StatusPlanologischEnum.IN_VOORBEREIDING,
+      statusProject: ProjectstatusEnum.ONBEKEND,
+      toelichtingKnelpunten: KnelpuntenPlantypeEnum.ONBEKEND,
+      toelichtingKwalitatief: "",
       IsNew: true,
     };
     this.planRegistraties.next([
       ...this.planRegistraties.value,
       newPlan,
     ]);
-    this.setSelectedPlanregistratie(newPlan.ID);
+    this.setSelectedPlanregistratie(newPlan.id);
   }
 
   public save$() {
@@ -231,14 +231,14 @@ export class PlanregistratiesService {
       .pipe(
         tap(plan => {
           const currentPlans = [...this.planRegistraties.value];
-          const idx = currentPlans.findIndex(p => p.ID === plan.ID);
+          const idx = currentPlans.findIndex(p => p.id === plan.id);
           if (idx === -1) {
             currentPlans.push(plan);
           } else {
             currentPlans[idx] = plan;
           }
           this.planRegistraties.next(currentPlans);
-          if (this.selectedPlanregistratie.value?.ID === plan.ID) {
+          if (this.selectedPlanregistratie.value?.id === plan.id) {
             this.selectedPlanregistratie.next(plan);
           }
         }),
@@ -267,7 +267,7 @@ export class PlanregistratiesService {
       const newCategorie = PlancategorieHelper.getNewPlancategorie({
         ID: nanoid(),
         IsNew: true,
-        Planregistratie_ID: planregistratie.ID,
+        Planregistratie_ID: planregistratie.id,
         [categorieGroep]: categorieGroepValue,
         [field]: value,
       });
@@ -344,7 +344,7 @@ export class PlanregistratiesService {
   }
 
   public setSelectedPlanregistratieGeometry(updatedGeometry: string) {
-    this.updatePlan({ GEOM: updatedGeometry });
+    this.updatePlan({ geometrie: updatedGeometry });
   }
 
   private findPlancategorieIndex(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string): number {

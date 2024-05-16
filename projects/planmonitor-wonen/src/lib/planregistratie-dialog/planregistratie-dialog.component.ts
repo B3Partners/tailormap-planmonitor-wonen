@@ -36,7 +36,7 @@ export class PlanregistratieDialogComponent {
     this.selectedPlan$ = this.planregistratieService.getSelectedPlanregistratie$();
     this.dialogOpen$ = this.selectedPlan$.pipe(map(plan => !!plan));
     this.dialogTitle$ = this.selectedPlan$.pipe(map(plan => {
-      return plan ? `Planregistratie ${plan.Plannaam}` : 'Planregistratie';
+      return plan ? `Planregistratie ${plan.planNaam}` : 'Planregistratie';
     }));
     this.disableSave$ = this.planregistratieService.hasValidChangedPlan$()
       .pipe(map(validPlan => !validPlan));

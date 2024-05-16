@@ -12,7 +12,7 @@ import { CssHelper } from '@tailormap-viewer/shared';
 import { FeatureModel } from '@tailormap-viewer/api';
 import { PlantypeHelper } from '../helpers/plantype.helper';
 
-type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'GEOM'> & { selected?: boolean };
+type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> & { selected?: boolean };
 
 @Component({
   selector: 'lib-planregistraties-map',
@@ -49,20 +49,20 @@ export class PlanregistratiesMapComponent implements OnInit {
       this.planregistratieService.getSelectedPlanregistratie$(),
     ])
       .pipe(map(([ registraties, selectedPlan ]) => registraties.map(registratie => {
-        const planRegistratie = selectedPlan !== null && selectedPlan.ID === registratie.ID
+        const planRegistratie = selectedPlan !== null && selectedPlan.id === registratie.id
           ? selectedPlan
           : registratie;
-        const { GEOM, ...attributes } = planRegistratie;
+        const { geometrie, ...attributes } = planRegistratie;
         return {
-          __fid: planRegistratie.ID,
-          geometry: GEOM,
-          attributes: { ...attributes, selected: planRegistratie.ID === selectedPlan?.ID },
+          __fid: planRegistratie.id,
+          geometry: geometrie,
+          attributes: { ...attributes, selected: planRegistratie.id === selectedPlan?.id },
         };
       })));
     this.mapService.renderFeatures$<PlanregistratieFeatureAttributes>(
       PlanregistratiesMapComponent.LAYER_ID,
       planregistratieFeatures$,
-      feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.Plantype, feature.attributes.selected),
+      feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.plantype, feature.attributes.selected),
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
@@ -70,7 +70,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.mapService.createTool$<SelectToolModel<PlanregistratieFeatureAttributes>, SelectToolConfigModel<PlanregistratieFeatureAttributes>>({
       type: ToolTypeEnum.Select,
       layers: [PlanregistratiesMapComponent.LAYER_ID],
-      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.Plantype, true),
+      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.plantype, true),
     })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -82,7 +82,7 @@ export class PlanregistratiesMapComponent implements OnInit {
       )
       .subscribe(selectedFeatures => {
         const selectedPlan = selectedFeatures && selectedFeatures.length > 0 && selectedFeatures[0] ? selectedFeatures[0].attributes : null;
-        this.planregistratieService.setSelectedPlanregistratie(selectedPlan?.ID || null);
+        this.planregistratieService.setSelectedPlanregistratie(selectedPlan?.id || null);
       });
   }
 
@@ -119,7 +119,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.planregistratieService.getSelectedPlanregistratie$()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        distinctUntilChanged((prev, current) => prev?.ID === current?.ID),
+        distinctUntilChanged((prev, current) => prev?.id === current?.id),
         withLatestFrom(this.mapService.getToolManager$()),
       )
       .subscribe(([ selectedPlan, toolManager ]) => {
@@ -132,8 +132,8 @@ export class PlanregistratiesMapComponent implements OnInit {
         } else {
           toolManager.disableTool(this.modifyTool.id, true);
           toolManager.enableTool<ModifyEnableToolArguments>(this.modifyTool.id, false, {
-            geometry: selectedPlan.GEOM,
-            style: PlanregistratiesMapComponent.getFeatureStyle(selectedPlan.Plantype, true),
+            geometry: selectedPlan.geometrie,
+            style: PlanregistratiesMapComponent.getFeatureStyle(selectedPlan.plantype, true),
           });
         }
       });

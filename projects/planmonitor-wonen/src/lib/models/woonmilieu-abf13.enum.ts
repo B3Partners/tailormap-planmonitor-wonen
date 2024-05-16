@@ -1,4 +1,4 @@
-export enum WoonmilieuABF13Enum {
+export enum WoonmilieuAbf13Enum {
   CENTRUM_DORPS = 'Centrum-dorps',
   CENTRUM_KLEINSTEDELIJK = 'Centrum-kleinstedelijk',
   CENTRUM_STEDELIJK = 'Centrum-stedelijk',
