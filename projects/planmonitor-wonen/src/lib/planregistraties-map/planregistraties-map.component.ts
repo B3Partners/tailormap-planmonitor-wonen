@@ -144,13 +144,15 @@ export class PlanregistratiesMapComponent implements OnInit {
         withLatestFrom(this.mapService.getToolManager$()),
       )
       .subscribe(([ isCreatingNew, toolManager ]) => {
-        if (!this.addFeatureTool) {
+        if (!this.addFeatureTool || !this.selectTool) {
           return;
         }
         if (isCreatingNew) {
+          toolManager.disableTool(this.selectTool.id, true);
           toolManager.enableTool<DrawingEnableToolArguments>(this.addFeatureTool.id, true, { type: 'area' });
         } else {
-          toolManager.disableTool(this.addFeatureTool.id, false);
+          toolManager.disableTool(this.addFeatureTool.id, true);
+          toolManager.enableTool(this.selectTool.id, false);
         }
       });
     this.planregistratieService.hasChanges$()
