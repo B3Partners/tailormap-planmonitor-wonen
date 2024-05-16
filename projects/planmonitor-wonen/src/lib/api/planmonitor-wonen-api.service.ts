@@ -10,7 +10,7 @@ import { PlanmonitorWonenApiServiceModel } from './planmonitor-wonen-api.service
 })
 export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceModel {
 
-  private apiBaseUrl = '/planmonitor-api/';
+  private apiBaseUrl = '/api/planmonitor-wonen';
 
   constructor(private http: HttpClient) {}
 

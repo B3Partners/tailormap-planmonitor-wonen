@@ -11,6 +11,7 @@ import { SharedModule } from '@tailormap-viewer/shared';
 import { PlanregistratieFormComponent } from './planregistratie-form/planregistratie-form.component';
 import { PlancategorieListComponent } from './plancategorie-list/plancategorie-list.component';
 import { PlanmonitorToggleComponent } from './planmonitor-toggle/planmonitor-toggle.component';
+import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service';
 
 
 
@@ -27,7 +28,7 @@ import { PlanmonitorToggleComponent } from './planmonitor-toggle/planmonitor-tog
     SharedModule,
   ],
   providers: [
-    { provide: PLANMONITOR_WONEN_API_SERVICE, useClass: PlanmonitorWonenApiMockService },
+    { provide: PLANMONITOR_WONEN_API_SERVICE, useClass: PlanmonitorWonenApiService },
   ],
 })
 export class PlanmonitorWonenModule {
