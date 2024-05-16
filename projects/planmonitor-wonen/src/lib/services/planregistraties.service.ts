@@ -2,15 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.service.model';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, forkJoin, map, Observable, of, take, tap } from 'rxjs';
-<<<<<<< HEAD
-import {
-  DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum, PlancategorieModel,
-  PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WoonmilieuAbf13Enum,
-  WoonmilieuAbf5Enum,
-} from '../models';
-=======
 import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
->>>>>>> main
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
