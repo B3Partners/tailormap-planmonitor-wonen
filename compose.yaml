@@ -34,9 +34,9 @@ services:
       - default
       - reverse-proxy
     labels:
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME:-pmw}.loadbalancer.server.port=8081"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-pmw}.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/api/planmonitor-wonen`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-pmw}.tls=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-pmw}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-pmw.loadbalancer.server.port=8081"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pmw.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/api/planmonitor-wonen`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pmw.tls=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pmw.tls.certresolver=letsencrypt"
       - "traefik.docker.network=${PROXY_NETWORK:-traefik}"
       - "traefik.enable=true"
