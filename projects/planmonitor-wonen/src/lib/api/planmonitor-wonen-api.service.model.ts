@@ -1,8 +1,12 @@
 import { Observable } from 'rxjs';
 import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
 
+export interface PlanregistratieDetails {
+  plancategorieen: PlancategorieModel[],
+  detailplanningen: DetailplanningModel[]
+}
+
 export interface PlanmonitorWonenApiServiceModel {
   getPlanregistraties$(): Observable<PlanregistratieModel[]>;
-  getPlancategorieen$(id: string): Observable<PlancategorieModel[]>;
-  getPlanDetailplanningen$(id: string): Observable<DetailplanningModel[]>;
+  getPlandetails$(id: string): Observable<PlanregistratieDetails>;
 }

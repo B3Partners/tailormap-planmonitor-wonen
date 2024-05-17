@@ -1,11 +1,11 @@
 export interface DetailplanningModel {
-  Plancategorie_ID: string;
-  ID: string;
-  Created: string | Date;
-  Creator: string;
-  Editor: string | null;
-  Edited: string | Date | null;
-  Jaartal: number;
-  Aantal_Gepland: number;
-  IsNew?: boolean;
+  plancategorieId: string;
+  id: string;
+  created: string | Date;
+  creator: string;
+  editor: string | null;
+  edited: string | Date | null;
+  jaartal: number;
+  aantalGepland: number;
+  isNew?: boolean;
 }

@@ -24,7 +24,7 @@
                  (keydown)="handleCellNavigation($event)"
                  [class]="'cell_totaal_' + i"
                  [value]="row.totalen"
-                 (change)="updateCategorieField($event, row.id, 'Totaal_Gepland')" />
+                 (change)="updateCategorieField($event, row.id, 'totaalGepland')" />
         </mat-cell>
       </ng-container>
 
@@ -46,7 +46,7 @@
                  (keydown)="handleCellNavigation($event)"
                  [class]="'cell_gerealiseerd_' + i"
                  [value]="row.gerealiseerd"
-                 (change)="updateCategorieField($event, row.id, 'Totaal_Gerealiseerd')" />
+                 (change)="updateCategorieField($event, row.id, 'totaalGerealiseerd')" />
         </mat-cell>
       </ng-container>
 

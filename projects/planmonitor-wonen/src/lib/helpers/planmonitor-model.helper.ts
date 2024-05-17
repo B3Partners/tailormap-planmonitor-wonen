@@ -49,33 +49,33 @@ export class PlanMonitorModelHelper {
     };
   }
 
-  public static getNewPlancategorie(initialData: Partial<PlancategorieModel> & Pick<PlancategorieModel, 'Planregistratie_ID'>): PlancategorieModel {
+  public static getNewPlancategorie(initialData: Partial<PlancategorieModel> & Pick<PlancategorieModel, 'planregistratieId'>): PlancategorieModel {
     return {
-      ID: uuid_v4(),
-      Woningtype: null,
-      Nieuwbouw: null,
-      Sloop: null,
-      Betaalbaarheid: null,
-      Flexwoningen: null,
-      WonenenZorg: null,
-      Totaal_Gepland: 0,
-      Totaal_Gerealiseerd: 0,
-      Creator: null,
-      Created: null,
-      Editor: null,
-      Edited: null,
+      id: uuid_v4(),
+      woningType: null,
+      nieuwbouw: null,
+      sloop: null,
+      betaalbaarheid: null,
+      flexwoningen: null,
+      wonenEnZorg: null,
+      totaalGepland: 0,
+      totaalGerealiseerd: 0,
+      creator: null,
+      created: null,
+      editor: null,
+      edited: null,
       ...initialData,
     };
   }
 
-  public static getNewDetailplanning(initialData: Pick<DetailplanningModel, 'Plancategorie_ID' | 'Jaartal' | 'Aantal_Gepland'>): DetailplanningModel {
+  public static getNewDetailplanning(initialData: Pick<DetailplanningModel, 'plancategorieId' | 'jaartal' | 'aantalGepland'>): DetailplanningModel {
     return {
-      ID: uuid_v4(),
-      IsNew: true,
-      Created: new Date(),
-      Creator: '',
-      Editor: null,
-      Edited: null,
+      id: uuid_v4(),
+      isNew: true,
+      created: new Date(),
+      creator: '',
+      editor: null,
+      edited: null,
       ...initialData,
     };
   }
