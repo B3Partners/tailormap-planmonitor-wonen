@@ -16,8 +16,15 @@
 
       <ng-container matColumnDef="totalen">
         <mat-header-cell *matHeaderCellDef  class="number-column">Totalen</mat-header-cell>
-        <mat-cell *matCellDef="let row" class="number-column number-input-cell">
-          <input type="number" class="number-input" [value]="row.totalen" (change)="updateCategorieField($event, row.id, 'Totaal_Gepland')" />
+        <mat-cell *matCellDef="let row; let i = index;" class="number-column number-input-cell">
+          <input type="text"
+                 class="number-input"
+                 [attr.data-row]="i"
+                 [attr.data-column]="'totaal'"
+                 (keydown)="handleCellNavigation($event)"
+                 [class]="'cell_totaal_' + i"
+                 [value]="row.totalen"
+                 (change)="updateCategorieField($event, row.id, 'Totaal_Gepland')" />
         </mat-cell>
       </ng-container>
 
@@ -31,8 +38,15 @@
 
       <ng-container matColumnDef="gerealiseerd">
         <mat-header-cell *matHeaderCellDef  class="number-column">Gerealiseerd</mat-header-cell>
-        <mat-cell *matCellDef="let row" class="number-column number-input-cell">
-          <input type="number" class="number-input" [value]="row.gerealiseerd" (change)="updateCategorieField($event, row.id, 'Totaal_Gerealiseerd')" />
+        <mat-cell *matCellDef="let row; let i = index;" class="number-column number-input-cell">
+          <input type="text"
+                 class="number-input"
+                 [attr.data-row]="i"
+                 [attr.data-column]="'gerealiseerd'"
+                 (keydown)="handleCellNavigation($event)"
+                 [class]="'cell_gerealiseerd_' + i"
+                 [value]="row.gerealiseerd"
+                 (change)="updateCategorieField($event, row.id, 'Totaal_Gerealiseerd')" />
         </mat-cell>
       </ng-container>
 
@@ -46,7 +60,14 @@
           <mat-header-cell *matHeaderCellDef class="year number-column">{{year}}</mat-header-cell>
           <mat-cell *matCellDef="let row; let i = index;" class="year number-input-cell" [class.info-cell]="row.id === 'sloop-sloop'">
             @if (row.id !== 'sloop-sloop') {
-              <input type="number" class="number-input" [class]="'year_' + year + '_' + i" [value]="row['year_' + year]" (change)="updateDetailField($event, row.id, year)" />
+              <input type="text"
+                     class="number-input"
+                     [attr.data-row]="i"
+                     [attr.data-column]="year"
+                     (keydown)="handleCellNavigation($event)"
+                     [class]="'cell_' + year + '_' + i"
+                     [value]="row['year_' + year]"
+                     (change)="updateDetailField($event, row.id, year)" />
             }
           </mat-cell>
         </ng-container>
@@ -59,7 +80,14 @@
         </mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index;" class="year number-input-cell" [class.info-cell]="row.id === 'sloop-sloop'">
           @if (row.id !== 'sloop-sloop') {
-            <input type="number" class="number-input" [class]="'year_2043_' + i" [value]="row.year_2043" (change)="updateDetailField($event, row.id, 2043)" />
+            <input type="text"
+                   class="number-input"
+                   [attr.data-row]="i"
+                   [attr.data-column]="2043"
+                   (keydown)="handleCellNavigation($event)"
+                   [class]="'cell_2043_' + i"
+                   [value]="row.year_2043"
+                   (change)="updateDetailField($event, row.id, 2043)" />
           }
         </mat-cell>
       </ng-container>
