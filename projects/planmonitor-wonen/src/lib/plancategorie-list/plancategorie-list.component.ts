@@ -72,4 +72,26 @@ export class PlancategorieListComponent implements OnInit {
     this.planregistratieService.export();
   }
 
+  public handleCellNavigation($event: KeyboardEvent) {
+    if ($event.key !== 'ArrowLeft' && $event.key !== 'ArrowRight' && $event.key !== 'ArrowUp' && $event.key !== 'ArrowDown' || !($event.target instanceof HTMLInputElement)) {
+      return;
+    }
+    const isAtStart = ($event.target.selectionStart == 0);
+    const isAtEnd = ($event.target.selectionEnd == $event.target.value.length);
+    if ((!isAtEnd && $event.key === 'ArrowRight') || (!isAtStart && $event.key === 'ArrowLeft')) {
+      return;
+    }
+    $event.stopPropagation();
+    const column = $event.target.getAttribute('data-column') || 'invalid';
+    const row = $event.target.getAttribute('data-row') || '-10';
+    const columns = [ 'totaal', 'gerealiseerd', ...this.yearColumns.map(y => `${y}`), '2043' ];
+    const colIdx = columns.indexOf(column);
+    const targetColIdx = $event.key === 'ArrowLeft' ? colIdx - 1 : ($event.key === 'ArrowRight' ? colIdx + 1 : colIdx);
+    const targetRow = $event.key === 'ArrowUp' ? +row - 1 : ($event.key === 'ArrowDown' ? +row + 1 : row);
+    const nextTarget = document.querySelector<HTMLInputElement>(`.cell_${columns[targetColIdx]}_${targetRow}`);
+    if (nextTarget) {
+      nextTarget.focus();
+    }
+  }
+
 }
