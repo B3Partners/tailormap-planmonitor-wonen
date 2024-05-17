@@ -1,4 +1,4 @@
-export enum WoonmilieuABF5Enum {
+export enum WoonmilieuAbf5Enum {
   BUITENCENTRUM = 'Buitencentrum',
   CENTRUM_STEDELIJK = 'Centrum-stedelijk',
   DORPS = 'Dorps',

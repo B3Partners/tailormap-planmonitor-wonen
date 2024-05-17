@@ -40,7 +40,7 @@ export class PlanregistratieDialogComponent {
         tap(isOpen => document.body.classList.toggle('planmonitor-wonen-dialog-open', isOpen)),
       );
     this.dialogTitle$ = this.selectedPlan$.pipe(map(plan => {
-      return plan ? `Planregistratie ${plan.Plannaam}` : 'Planregistratie';
+      return plan ? `Planregistratie ${plan.planNaam}` : 'Planregistratie';
     }));
     this.disableSave$ = this.planregistratieService.hasValidChangedPlan$()
       .pipe(map(validPlan => !validPlan));

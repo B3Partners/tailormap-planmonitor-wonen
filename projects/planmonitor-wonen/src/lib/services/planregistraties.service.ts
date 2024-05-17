@@ -15,7 +15,7 @@ import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 })
 export class PlanregistratiesService {
 
-  private showLogging = false;
+  private showLogging = true;
 
   private planRegistraties = new BehaviorSubject<PlanregistratieModel[]>([]);
 
@@ -101,12 +101,12 @@ export class PlanregistratiesService {
   }
 
   public setSelectedPlanregistratie(id: string | null) {
-    const registratie = id === null ? null : this.planRegistraties.value.find(p => p.ID === id);
+    const registratie = id === null ? null : this.planRegistraties.value.find(p => p.id === id);
     this.selectedPlanregistratie.next(registratie || null);
     this.selectedPlanCategorieen.next(null);
     this.selectedDetailplanningen.next(null);
     if (registratie) {
-      this.loadPlancategorieen(registratie.ID);
+      this.loadPlancategorieen(registratie.id);
     }
     this.hasFormChanges.next(false);
     this.hasTableChanges.next(false);
@@ -135,17 +135,15 @@ export class PlanregistratiesService {
 
   private loadPlancategorieen(registratieId: string) {
     this.categorieenLoadStatus = LoadingStateEnum.LOADING;
-    forkJoin([
-      this.api.getPlancategorieen$(registratieId).pipe(catchError(() => of(null))),
-      this.api.getPlanDetailplanningen$(registratieId).pipe(catchError(() => of(null))),
-    ])
+    this.api.getPlandetails$(registratieId)
       .pipe(
+        catchError(() => of(null)),
         take(1),
       )
-      .subscribe(([ categorieen, detailPlanningen ]) => {
-        this.categorieenLoadStatus = categorieen === null || detailPlanningen === null ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
-        this.selectedPlanCategorieen.next(categorieen);
-        this.selectedDetailplanningen.next(detailPlanningen || []);
+      .subscribe((details) => {
+        this.categorieenLoadStatus = details ? LoadingStateEnum.FAILED : LoadingStateEnum.LOADED;
+        this.selectedPlanCategorieen.next(details?.plancategorieen || []);
+        this.selectedDetailplanningen.next(details?.detailplanningen || []);
       });
   }
 
@@ -156,7 +154,7 @@ export class PlanregistratiesService {
       return;
     }
     PlanregistratieExportHelper.createExcelExport(
-      currentReg.Plannaam,
+      currentReg.planNaam,
       table,
     );
   }
@@ -176,12 +174,12 @@ export class PlanregistratiesService {
   }
 
   public setNewFeatureGeometry(geometry: string) {
-    const newPlan = PlanMonitorModelHelper.getNewPlanregistratie({ GEOM: geometry });
+    const newPlan = PlanMonitorModelHelper.getNewPlanregistratie({ geometrie: geometry });
     this.planRegistraties.next([
       ...this.planRegistraties.value,
       newPlan,
     ]);
-    this.setSelectedPlanregistratie(newPlan.ID);
+    this.setSelectedPlanregistratie(newPlan.id);
   }
 
   public save$() {
@@ -193,14 +191,14 @@ export class PlanregistratiesService {
       .pipe(
         tap(plan => {
           const currentPlans = [...this.planRegistraties.value];
-          const idx = currentPlans.findIndex(p => p.ID === plan.ID);
+          const idx = currentPlans.findIndex(p => p.id === plan.id);
           if (idx === -1) {
             currentPlans.push(plan);
           } else {
             currentPlans[idx] = plan;
           }
           this.planRegistraties.next(currentPlans);
-          if (this.selectedPlanregistratie.value?.ID === plan.ID) {
+          if (this.selectedPlanregistratie.value?.id === plan.id) {
             this.selectedPlanregistratie.next(plan);
           }
         }),
@@ -227,8 +225,8 @@ export class PlanregistratiesService {
     const idx = this.findPlancategorieIndex(categorieGroep, categorieGroepValue);
     if (idx === -1) {
       const newCategorie = PlanMonitorModelHelper.getNewPlancategorie({
-        IsNew: true,
-        Planregistratie_ID: planregistratie.ID,
+        isNew: true,
+        planregistratieId: planregistratie.id,
         [categorieGroep]: categorieGroepValue,
         [field]: value,
       });
@@ -261,20 +259,20 @@ export class PlanregistratiesService {
       return null;
     }
     const categorie = this.findPlancategorie(categorieGroep, categorieGroepValue)
-      || this.updateCategorieField(categorieGroep, categorieGroepValue, 'Totaal_Gepland', 0);
+      || this.updateCategorieField(categorieGroep, categorieGroepValue, 'totaalGepland', 0);
     this.log('Update DetailplanningModel - found categorie', categorie);
     if (categorie === null) {
       return null;
     }
     const details = this.selectedDetailplanningen.value || [];
     const idx = (details || []).findIndex(p => {
-      return p.Jaartal === year && p.Plancategorie_ID === categorie.ID;
+      return p.jaartal === year && p.plancategorieId === categorie.id;
     });
     if (idx === -1) {
       const newDetailplanning = PlanMonitorModelHelper.getNewDetailplanning({
-        Plancategorie_ID: categorie.ID,
-        Jaartal: year,
-        Aantal_Gepland: value,
+        plancategorieId: categorie.id,
+        jaartal: year,
+        aantalGepland: value,
       });
       this.selectedDetailplanningen.next([
         ...details,
@@ -286,7 +284,7 @@ export class PlanregistratiesService {
     }
     const updatedDetailplanning: DetailplanningModel = {
       ...details[idx],
-      Aantal_Gepland: value,
+      aantalGepland: value,
     };
     this.selectedDetailplanningen.next([
       ...details.slice(0, idx),
@@ -299,7 +297,7 @@ export class PlanregistratiesService {
   }
 
   public setSelectedPlanregistratieGeometry(updatedGeometry: string) {
-    this.updatePlan({ GEOM: updatedGeometry });
+    this.updatePlan({ geometrie: updatedGeometry });
   }
 
   private findPlancategorieIndex(categorieGroep: keyof PlancategorieModel, categorieGroepValue: string): number {

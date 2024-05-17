@@ -52,28 +52,28 @@ export class PlancategorieHelper {
   ];
 
   public static categorieen: CategorieRowModel[] = [
-    { id: 'nieuwbouw-nieuwbouw', label: 'Nieuwbouw', groepnaam: 'nieuwbouw', field: "Nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW },
-    { id: 'woningtype-eengezins', label: 'Eengezins', groepnaam: 'woningtype', field: 'Woningtype', fieldValue: WoningtypeEnum.EENGEZINS },
-    { id: 'woningtype-meergezins', label: 'Meergezins', groepnaam: 'woningtype', field: 'Woningtype', fieldValue: WoningtypeEnum.MEERGEZINS },
-    { id: 'woningtype-onbekend', label: 'Onbekend', groepnaam: 'woningtype', field: 'Woningtype', fieldValue: WoningtypeEnum.ONBEKEND },
-    { id: 'wonenenzorg-nultreden', label: 'Nultreden', groepnaam: 'wonen en zorg', field: 'WonenenZorg', fieldValue: WonenEnZorgEnum.NULTREDEN },
-    { id: 'wonenenzorg-geclusterd', label: 'Geclusterd', groepnaam: 'wonen en zorg', field: 'WonenenZorg', fieldValue: WonenEnZorgEnum.GECLUSTERD },
-    { id: 'wonenenzorg-zorggeschikt', label: 'Zorggeschikt', groepnaam: 'wonen en zorg', field: 'WonenenZorg', fieldValue: WonenEnZorgEnum.ZORGGESCHIKT },
-    { id: 'wonenenzorg-onbekend', label: 'Onbekend', groepnaam: 'wonen en zorg', field: 'WonenenZorg', fieldValue: WonenEnZorgEnum.ONBEKEND },
-    { id: 'wonenenzorg-regulier', label: 'Regulier', groepnaam: 'wonen en zorg', field: 'WonenenZorg', fieldValue: WonenEnZorgEnum.REGULIER },
-    { id: 'flexwoningen-flexwoningen', label: 'Flexwoningen', groepnaam: 'flexwoningen', field: 'Flexwoningen', fieldValue: FlexwoningenEnum.FLEXWONINGEN },
-    { id: 'flexwoningen-regulier_permanent', label: 'Regulier permanent', groepnaam: 'flexwoningen', field: 'Flexwoningen', fieldValue: FlexwoningenEnum.REGULIER_PERMANENT },
-    { id: 'betaalbaarheid-sociale_huur', label: 'Sociale huur', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.SOCIALE_HUUR },
-    { id: 'betaalbaarheid-huur_middenhuur', label: 'Huur middenhuur', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_MIDDENHUUR },
-    { id: 'betaalbaarheid-huur_dure_huur', label: 'Huur dure huur', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_DURE_HUUR },
-    { id: 'betaalbaarheid-huur_onbekend', label: 'Huur onbekend', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_ONBEKEND },
+    { id: 'nieuwbouw-nieuwbouw', label: 'Nieuwbouw', groepnaam: 'nieuwbouw', field: "nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW },
+    { id: 'woningtype-eengezins', label: 'Eengezins', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.EENGEZINS },
+    { id: 'woningtype-meergezins', label: 'Meergezins', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.MEERGEZINS },
+    { id: 'woningtype-onbekend', label: 'Onbekend', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.ONBEKEND },
+    { id: 'wonenenzorg-nultreden', label: 'Nultreden', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.NULTREDEN },
+    { id: 'wonenenzorg-geclusterd', label: 'Geclusterd', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.GECLUSTERD },
+    { id: 'wonenenzorg-zorggeschikt', label: 'Zorggeschikt', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.ZORGGESCHIKT },
+    { id: 'wonenenzorg-onbekend', label: 'Onbekend', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.ONBEKEND },
+    { id: 'wonenenzorg-regulier', label: 'Regulier', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.REGULIER },
+    { id: 'flexwoningen-flexwoningen', label: 'Flexwoningen', groepnaam: 'flexwoningen', field: 'flexwoningen', fieldValue: FlexwoningenEnum.FLEXWONINGEN },
+    { id: 'flexwoningen-regulier_permanent', label: 'Regulier permanent', groepnaam: 'flexwoningen', field: 'flexwoningen', fieldValue: FlexwoningenEnum.REGULIER_PERMANENT },
+    { id: 'betaalbaarheid-sociale_huur', label: 'Sociale huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.SOCIALE_HUUR },
+    { id: 'betaalbaarheid-huur_middenhuur', label: 'Huur middenhuur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_MIDDENHUUR },
+    { id: 'betaalbaarheid-huur_dure_huur', label: 'Huur dure huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_DURE_HUUR },
+    { id: 'betaalbaarheid-huur_onbekend', label: 'Huur onbekend', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_ONBEKEND },
     // eslint-disable-next-line max-len
-    { id: 'betaalbaarheid-koop_betaalbare_koop', label: 'Koop betaalbare koop', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_BETAALBARE_KOOP },
-    { id: 'betaalbaarheid-koop_dure_koop', label: 'Koop dure koop', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_DURE_KOOP },
-    { id: 'betaalbaarheid-koop_onbekend', label: 'Koop onbekend', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_ONBEKEND },
+    { id: 'betaalbaarheid-koop_betaalbare_koop', label: 'Koop betaalbare koop', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_BETAALBARE_KOOP },
+    { id: 'betaalbaarheid-koop_dure_koop', label: 'Koop dure koop', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_DURE_KOOP },
+    { id: 'betaalbaarheid-koop_onbekend', label: 'Koop onbekend', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_ONBEKEND },
     // eslint-disable-next-line max-len
-    { id: 'betaalbaarheid-onbekend_koop_of_huur', label: 'Onbekend Koop of Huur', groepnaam: 'betaalbaarheid', field: 'Betaalbaarheid', fieldValue: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR },
-    { id: 'sloop-sloop', label: 'Sloop', groepnaam: 'sloop', field: 'Sloop', fieldValue: SloopEnum.SLOOP },
+    { id: 'betaalbaarheid-onbekend_koop_of_huur', label: 'Onbekend Koop of Huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR },
+    { id: 'sloop-sloop', label: 'Sloop', groepnaam: 'sloop', field: 'sloop', fieldValue: SloopEnum.SLOOP },
   ];
 
 
@@ -83,12 +83,12 @@ export class PlancategorieHelper {
     detailPlanningen: DetailplanningModel[],
   ): CategorieTableRowModel[] {
     const nieuwbouwCategorie = PlancategorieHelper.getNieuwbouwCategorie(planCategorieen);
-    const nieuwbouwTotal = nieuwbouwCategorie?.Totaal_Gepland || 0;
+    const nieuwbouwTotal = nieuwbouwCategorie?.totaalGepland || 0;
     const groupTotals = new Map<string, number>();
     const rows = PlancategorieHelper.categorieen.map(categorieRow => {
       const planCategorie = PlancategorieHelper.getPlanCategorie(categorieRow, planCategorieen);
-      const totalen = planCategorie?.Totaal_Gepland || 0;
-      const gerealiseerd = planCategorie?.Totaal_Gerealiseerd || 0;
+      const totalen = planCategorie?.totaalGepland || 0;
+      const gerealiseerd = planCategorie?.totaalGerealiseerd || 0;
       const restcapaciteit = totalen - gerealiseerd;
       const row: CategorieTableRowModel = {
         id: categorieRow.id,
@@ -126,7 +126,7 @@ export class PlancategorieHelper {
         years_check: 0,
         valid: false,
       };
-      if (row.groep === 'Sloop') {
+      if (row.groep === 'sloop') {
         return row;
       }
       const rowTotaal = PlancategorieHelper.getTotalForRow(row);
@@ -140,15 +140,15 @@ export class PlancategorieHelper {
       const totalCheck = nieuwbouwTotal - (groupTotals.get(row.groep) || 0);
       return {
         ...row,
-        total_check: row.groep === 'Sloop' ? 0 : totalCheck,
-        valid: row.groep === 'Sloop' ? true : row.years_check === 0 && totalCheck === 0,
+        total_check: row.groep === 'sloop' ? 0 : totalCheck,
+        valid: row.groep === 'sloop' ? true : row.years_check === 0 && totalCheck === 0,
       };
     });
   }
 
   public static getNieuwbouwCategorie(planCategorien: PlancategorieModel[]) {
     return PlancategorieHelper.getPlanCategorie(
-      { field: "Nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW },
+      { field: "nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW },
       planCategorien,
     );
   }
@@ -168,7 +168,7 @@ export class PlancategorieHelper {
     if (!planCategorie) {
       return undefined;
     }
-    return detailPlanningen.find(d => d.Plancategorie_ID === planCategorie.ID && d.Jaartal === year);
+    return detailPlanningen.find(d => d.plancategorieId === planCategorie.id && d.jaartal === year);
   }
 
   public static getDetailplanningGeplandForYear(
@@ -177,7 +177,7 @@ export class PlancategorieHelper {
     detailPlanningen : DetailplanningModel[],
   ) {
     const detail = PlancategorieHelper.getDetailplanningForYear(planCategorie, year, detailPlanningen);
-    return detail ? detail.Aantal_Gepland : undefined;
+    return detail ? detail.aantalGepland : undefined;
   }
 
   private static getTotalForRow(row: CategorieTableRowModel) {

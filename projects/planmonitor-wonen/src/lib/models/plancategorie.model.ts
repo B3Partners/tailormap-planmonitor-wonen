@@ -6,19 +6,19 @@ import { SloopEnum } from './sloop.enum';
 import { FlexwoningenEnum } from './flexwoningen.enum';
 
 export interface PlancategorieModel {
-  Planregistratie_ID: string;
-  ID: string;
-  Nieuwbouw: NieuwbouwEnum | null;
-  Woningtype: WoningtypeEnum | null;
-  WonenenZorg: WonenEnZorgEnum | null;
-  Flexwoningen: FlexwoningenEnum | null;
-  Betaalbaarheid: BetaalbaarheidEnum | null;
-  Sloop: SloopEnum | null;
-  Totaal_Gepland: number;
-  Totaal_Gerealiseerd: number;
-  Creator: string | null;
-  Created: string | Date | null;
-  Editor: string | null;
-  Edited: string | Date | null;
-  IsNew?: boolean;
+  planregistratieId: string;
+  id: string;
+  nieuwbouw: NieuwbouwEnum | null;
+  woningType: WoningtypeEnum | null;
+  wonenEnZorg: WonenEnZorgEnum | null;
+  flexwoningen: FlexwoningenEnum | null;
+  betaalbaarheid: BetaalbaarheidEnum | null;
+  sloop: SloopEnum | null;
+  totaalGepland: number;
+  totaalGerealiseerd: number;
+  creator: string | null;
+  created: string | Date | null;
+  editor: string | null;
+  edited: string | Date | null;
+  isNew?: boolean;
 }
