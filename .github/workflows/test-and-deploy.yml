@@ -86,7 +86,7 @@ jobs:
     env:
       VERSION: snapshot
       COMPOSE_PROJECT_NAME: ${{ vars.DEPLOY_PROJECT_NAME }}-snapshot
-      COMPOSE_FILE: docker-compose.yml:docker-compose.traefik.yml
+      COMPOSE_FILE: docker-compose.yml:docker-compose.traefik.yml:../compose.yaml
       BASE_HREF: /
       HOST: ${{ vars.DEPLOY_HOSTNAME }}
       ADMIN_HASHED_PASSWORD: ${{ vars.ADMIN_HASHED_PASSWORD }}

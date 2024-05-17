@@ -1,0 +1,41 @@
+volumes:
+  pmw-data:
+
+services:
+  pmw-db:
+    container_name: ${COMPOSE_PROJECT_NAME}-pmw-db
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: planmonitor-wonen
+      POSTGRES_PASSWORD: planmonitor-wonen
+    volumes:
+      - pmw-data:/var/lib/postgresql/data
+    healthcheck:
+      interval: 1m
+      timeout: 5s
+      retries: 2
+      start_period: 20s
+      start_interval: 8s
+      test: pg_isready -U planmonitor-wonen
+
+  pmw-api:
+    container_name: ${COMPOSE_PROJECT_NAME}-pmw-api
+    image: ghcr.io/b3partners/planmonitor-wonen-api:snapshot
+    restart: unless-stopped
+    depends_on:
+      pmw-db:
+        condition: service_healthy
+    environment:
+      - "TZ=Europe/Amsterdam"
+      - "SERVER_ADDRESS=0.0.0.0"
+      - "SPRING_DATASOURCE_URL=jdbc:postgresql://pmw-db/planmonitor-wonen"
+    networks:
+      - reverse-proxy
+    labels:
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME:-pmw}.loadbalancer.server.port=8081"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-pmw}.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/api/planmonitor-wonen`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-pmw}.tls=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-pmw}.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=${PROXY_NETWORK:-traefik}"
+      - "traefik.enable=true"
