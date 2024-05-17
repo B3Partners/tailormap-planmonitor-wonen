@@ -31,6 +31,7 @@ services:
       - "SERVER_ADDRESS=0.0.0.0"
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://pmw-db/planmonitor-wonen"
     networks:
+      - default
       - reverse-proxy
     labels:
       - "traefik.http.services.${COMPOSE_PROJECT_NAME:-pmw}.loadbalancer.server.port=8081"
