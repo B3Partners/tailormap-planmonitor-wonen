@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
+import { PlanregistratieModel } from '../models';
 import { Observable } from 'rxjs';
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
-import ol from 'ol/dist/ol';
-import string = ol.string;
 
 @Injectable({
   providedIn: 'root',

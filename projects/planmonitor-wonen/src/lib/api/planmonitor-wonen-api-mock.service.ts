@@ -2,8 +2,8 @@
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
 import { Observable, of } from 'rxjs';
 import {
-  BetaalbaarheidEnum, DetailplanningModel, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum,
-  PlancategorieModel, PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WonenEnZorgEnum,
+  BetaalbaarheidEnum, EigendomEnum, KnelpuntenMeerkeuzeEnum, KnelpuntenPlantypeEnum, OpdrachtgeverEnum,
+  PlanregistratieModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum, WonenEnZorgEnum,
   WoningtypeEnum, WoonmilieuAbf13Enum, WoonmilieuAbf5Enum,
 } from '../models';
 import { Injectable } from '@angular/core';
@@ -96,7 +96,7 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
           { ID: "2_1_1", Planregistratie_ID: "2",	Creator: "test", Created: "2024-02-15", Edited: null, Editor: null, Aantal_Gepland: 80, Jaartal: 2026, Plancategorie_ID: "2_1" },
           { ID: "2_2_2", Planregistratie_ID: "2",	Creator: "test", Created: "2024-02-15", Edited: null, Editor: null, Aantal_Gepland: 50, Jaartal: 2026, Plancategorie_ID: "2_2" },
           { ID: "2_3_3", Planregistratie_ID: "2",	Creator: "test", Created: "2024-02-15", Edited: null, Editor: null, Aantal_Gepland: 25, Jaartal: 2026, Plancategorie_ID: "2_3" },
-        ]
+        ],
       });
     }
     if (id === "1") {
@@ -118,9 +118,9 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
           { ID: "1_FlexwoningenEnum_FLEXWONINGEN_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_FlexwoningenEnum_FLEXWONINGEN" },
           { ID: "1_WonenEnZorgEnum_ZORGGESCHIKT_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_WonenEnZorgEnum_ZORGGESCHIKT" },
           { ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR_detail", Planregistratie_ID: "1", Creator: "test", Created: "2024-04-17", Edited: null, Editor: null, Aantal_Gepland: 210, Jaartal: 2026, Plancategorie_ID: "1_BetaalbaarheidEnum_ONBEKEND_KOOP_OF_HUUR" },
-        ]
+        ],
       });
     }
-    return of({plancategorieen: [], detailplanningen: []});
+    return of({ plancategorieen: [], detailplanningen: [] });
   }
 }
