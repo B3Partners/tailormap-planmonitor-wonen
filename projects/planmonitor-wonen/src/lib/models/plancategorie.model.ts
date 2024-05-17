@@ -6,8 +6,12 @@ import { SloopEnum } from './sloop.enum';
 import { FlexwoningenEnum } from './flexwoningen.enum';
 
 export interface PlancategorieModel {
-  planregistratieId: string;
   id: string;
+  planregistratieId: string;
+  creator: string;
+  createdAt: string | Date;
+  editor: string | null;
+  editedAt: string | Date | null;
   nieuwbouw: NieuwbouwEnum | null;
   woningType: WoningtypeEnum | null;
   wonenEnZorg: WonenEnZorgEnum | null;
@@ -16,9 +20,5 @@ export interface PlancategorieModel {
   sloop: SloopEnum | null;
   totaalGepland: number;
   totaalGerealiseerd: number;
-  creator: string | null;
-  created: string | Date | null;
-  editor: string | null;
-  edited: string | Date | null;
   isNew?: boolean;
 }
