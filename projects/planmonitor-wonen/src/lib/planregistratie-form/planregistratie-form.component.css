@@ -9,3 +9,11 @@
 .column + .column {
   margin-left: 16px;
 }
+
+.opmerkingen textarea {
+  height: 160px;
+}
+
+.narrow {
+  width: 200px;
+}

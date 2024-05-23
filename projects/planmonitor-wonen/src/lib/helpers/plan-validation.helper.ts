@@ -4,22 +4,18 @@ export class PlanValidationHelper {
 
   public static validatePlan(planRegistratie: PlanregistratieModel) {
     if (
-      PlanValidationHelper.hasInvalidValue(planRegistratie.vertrouwelijkheid)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.opdrachtgeverType)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.jaarStartProject)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.opleveringEerste)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.opleveringLaatste)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.plantype)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.statusProject)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.statusPlanologisch)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.knelpuntenMeerkeuze)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.regionalePlanlijst)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.toelichtingKnelpunten)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.flexwoningen)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.levensloopbestendigJa)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.levensloopbestendigNee)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.beoogdWoonmilieuAbf5)
-      || PlanValidationHelper.hasInvalidValue(planRegistratie.beoogdWoonmilieuAbf13)
+      PlanValidationHelper.hasEmptyValue(planRegistratie.planNaam)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.provincie)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.gemeente)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.regio)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.plaatsnaam)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.vertrouwelijkheid)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.opdrachtgeverType)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.plantype)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.statusProject)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.statusPlanologisch)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.knelpuntenMeerkeuze)
+      || PlanValidationHelper.hasEmptyValue(planRegistratie.beoogdWoonmilieuAbf13)
       || PlanValidationHelper.hasInvalidValue(planRegistratie.aantalStudentenwoningen)
     ) {
       return false;
@@ -29,6 +25,10 @@ export class PlanValidationHelper {
 
   private static hasInvalidValue(value: number | string | null | undefined) {
     return typeof value === "undefined" || value === null;
+  }
+
+  private static hasEmptyValue(value: number | string | null | undefined) {
+    return !value;
   }
 
 }

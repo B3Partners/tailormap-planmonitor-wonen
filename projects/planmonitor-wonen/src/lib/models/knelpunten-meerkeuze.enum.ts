@@ -7,4 +7,6 @@ export enum KnelpuntenMeerkeuzeEnum {
   ONRENDABELE_TOP = 'Onrendabele top',
   STIKSTOF = 'Stikstof',
   VERVUILDE_GROND = 'Vervuilde grond',
+  FLORA_FAUNA = 'Flora/fauna',
+  NETCONGESTIE = 'Netcongestie',
 }

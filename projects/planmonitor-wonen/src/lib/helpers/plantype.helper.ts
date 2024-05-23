@@ -11,8 +11,8 @@ export class PlantypeHelper {
     [PlantypeEnum.UITBREIDING_OVERIG]: '#c0c0c0',
   };
 
-  public static getPlantypeColor(plantype: PlantypeEnum): string {
-    return PlantypeHelper.planTypeColors[plantype];
+  public static getPlantypeColor(plantype: PlantypeEnum | null): string {
+    return PlantypeHelper.planTypeColors[plantype || PlantypeEnum.UITBREIDING_UITLEG];
   }
 
 }

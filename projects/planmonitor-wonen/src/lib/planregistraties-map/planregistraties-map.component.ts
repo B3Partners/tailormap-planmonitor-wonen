@@ -173,7 +173,7 @@ export class PlanregistratiesMapComponent implements OnInit {
       });
   }
 
-  private static getFeatureStyle(planType: PlantypeEnum, selected = false): MapStyleModel {
+  private static getFeatureStyle(planType: PlantypeEnum | null, selected = false): MapStyleModel {
     // const selected = attributes.selected || alwaysHighlighted;
     return {
       zIndex: selected ? 9999 : 9998,

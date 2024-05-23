@@ -3,11 +3,8 @@ import { OpdrachtgeverEnum } from './opdrachtgever.enum';
 import { PlantypeEnum } from './plantype.enum';
 import { ProjectstatusEnum } from './projectstatus.enum';
 import { KnelpuntenMeerkeuzeEnum } from './knelpunten-meerkeuze.enum';
-import { KnelpuntenPlantypeEnum } from './knelpunten-plantype.enum';
 import { StatusPlanologischEnum } from './status-planologisch.enum';
-import { WoonmilieuAbf5Enum } from './woonmilieu-abf5.enum';
 import { WoonmilieuAbf13Enum } from './woonmilieu-abf13.enum';
-import { EigendomEnum } from './eigendom.enum';
 
 export interface PlanregistratieModel {
   id: string;
@@ -22,25 +19,13 @@ export interface PlanregistratieModel {
   regio: string;
   plaatsnaam: string;
   vertrouwelijkheid: VertrouwelijkheidEnum;
-  opdrachtgeverType: OpdrachtgeverEnum;
+  opdrachtgeverType: OpdrachtgeverEnum | null;
   opdrachtgeverNaam: string;
-  jaarStartProject: number;
-  opleveringEerste: number;
-  opleveringLaatste: number;
   opmerkingen: string;
-  plantype: PlantypeEnum;
-  bestemmingsplan: string;
-  statusProject: ProjectstatusEnum;
-  statusPlanologisch: StatusPlanologischEnum;
-  knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum;
-  regionalePlanlijst: EigendomEnum;
-  toelichtingKnelpunten: KnelpuntenPlantypeEnum;
-  flexwoningen: number;
-  levensloopbestendigJa: number;
-  levensloopbestendigNee: number;
-  beoogdWoonmilieuAbf5: WoonmilieuAbf5Enum;
-  beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum;
+  plantype: PlantypeEnum | null;
+  statusProject: ProjectstatusEnum | null;
+  statusPlanologisch: StatusPlanologischEnum | null;
+  knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum | null;
+  beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum | null;
   aantalStudentenwoningen: number;
-  toelichtingKwalitatief: string;
-  isNew?: boolean;
 }

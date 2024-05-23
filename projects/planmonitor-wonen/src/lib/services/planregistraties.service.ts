@@ -225,7 +225,6 @@ export class PlanregistratiesService {
     const idx = this.findPlancategorieIndex(categorieGroep, categorieGroepValue);
     if (idx === -1) {
       const newCategorie = PlanMonitorModelHelper.getNewPlancategorie({
-        isNew: true,
         planregistratieId: planregistratie.id,
         [categorieGroep]: categorieGroepValue,
         [field]: value,

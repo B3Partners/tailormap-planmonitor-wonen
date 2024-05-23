@@ -20,5 +20,4 @@ export interface PlancategorieModel {
   sloop: SloopEnum | null;
   totaalGepland: number;
   totaalGerealiseerd: number;
-  isNew?: boolean;
 }
