@@ -13,6 +13,7 @@ import { PlanregistratieFormComponent } from './planregistratie-form/planregistr
 import { PlancategorieListComponent } from './plancategorie-list/plancategorie-list.component';
 import { PlanmonitorToggleComponent } from './planmonitor-toggle/planmonitor-toggle.component';
 import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service';
+import { AuthenticatedUserService } from '@tailormap-viewer/api';
 
 
 @NgModule({
@@ -41,8 +42,8 @@ export class PlanmonitorWonenModule {
     viewerRegistryService.registerComponent("map", { type: PLANMONITOR_WONEN_COMPONENT_ID, component: PlanregistratiesMapComponent }, true);
     viewerRegistryService.registerComponent("map-controls-left", { type: PLANMONITOR_WONEN_COMPONENT_ID + '_toggle', component: PlanmonitorToggleComponent }, true);
     adminFieldRegistrationService.registerFields(AdminFieldLocation.GROUP, [
-      { type: "choice", label: "Type gebruiker", dataType: "string", name: "typeGebruiker", values: [ "gemeente", "provincie" ] },
-      { type: "text", label: "Gemeente", dataType: "string", name: "gemeente" },
+      { type: "choice", label: "Type gebruiker", dataType: "string", key: "typeGebruiker", values: [ "gemeente", "provincie" ] },
+      { type: "text", label: "Gemeente", dataType: "string", key: "gemeente" },
     ]);
   }
 }
