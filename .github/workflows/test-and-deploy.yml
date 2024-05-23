@@ -156,7 +156,7 @@ jobs:
         run: |
           cd tailormap-viewer
           docker compose config
-          docker compose up -d
+          docker compose up -d --pull=always
 
       - name: 'Create GitHub deployment'
         if: success()
