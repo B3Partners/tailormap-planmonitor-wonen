@@ -13,7 +13,6 @@ import { PlanregistratieFormComponent } from './planregistratie-form/planregistr
 import { PlancategorieListComponent } from './plancategorie-list/plancategorie-list.component';
 import { PlanmonitorToggleComponent } from './planmonitor-toggle/planmonitor-toggle.component';
 import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service';
-import { AuthenticatedUserService } from '@tailormap-viewer/api';
 
 
 @NgModule({
