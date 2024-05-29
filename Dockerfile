@@ -1,7 +1,7 @@
 ARG BUILDPLATFORM=linux/amd64
 ARG API_VERSION=snapshot
 
-FROM node:20.11.0 AS builder
+FROM node:20.13.1 AS builder
 
 ARG BASE_HREF=/
 ARG ADD_NG_LIBRARIES
