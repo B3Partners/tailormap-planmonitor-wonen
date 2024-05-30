@@ -17,3 +17,4 @@ export * from './vertrouwelijkheid.enum';
 export * from './woningtype.enum';
 export * from './woonmilieu-abf13.enum';
 export * from './woonvisie.enum';
+export * from './planregistratie-save.model';

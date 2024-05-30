@@ -43,6 +43,7 @@ export class PlanregistratieFormComponent implements OnInit {
     knelpunten_meerkeuze: new FormControl<KnelpuntenMeerkeuzeEnum | null>(null, { validators: [Validators.required] }),
     beoogd_woonmilieu_abf13: new FormControl<WoonmilieuAbf13Enum | null>(null, { validators: [Validators.required] }),
     aantal_studentenwoningen: new FormControl<number | null>(null),
+    sleutelproject: new FormControl<boolean | null>(null, { validators: [Validators.required] }),
   });
 
   public lists = {
@@ -90,6 +91,7 @@ export class PlanregistratieFormComponent implements OnInit {
       knelpunten_meerkeuze: planregistratie ? planregistratie.knelpuntenMeerkeuze : null,
       beoogd_woonmilieu_abf13: planregistratie ? planregistratie.beoogdWoonmilieuAbf13 : null,
       aantal_studentenwoningen: planregistratie ? planregistratie.aantalStudentenwoningen : null,
+      sleutelproject: planregistratie ? planregistratie.sleutelproject: null,
     }, { emitEvent: false });
   }
 
@@ -105,6 +107,7 @@ export class PlanregistratieFormComponent implements OnInit {
       || typeof values.knelpunten_meerkeuze === "undefined" || values.knelpunten_meerkeuze === null
       || typeof values.beoogd_woonmilieu_abf13 === "undefined" || values.beoogd_woonmilieu_abf13 === null
       || typeof values.aantal_studentenwoningen === "undefined" || values.aantal_studentenwoningen === null
+      || typeof values.sleutelproject === "undefined" || values.sleutelproject === null
     ) {
       return null;
     }
@@ -124,6 +127,7 @@ export class PlanregistratieFormComponent implements OnInit {
       knelpuntenMeerkeuze: values.knelpunten_meerkeuze,
       beoogdWoonmilieuAbf13: values.beoogd_woonmilieu_abf13,
       aantalStudentenwoningen: values.aantal_studentenwoningen,
+      sleutelproject: values.sleutelproject,
     };
   }
 

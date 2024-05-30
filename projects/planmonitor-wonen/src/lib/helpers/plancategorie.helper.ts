@@ -10,6 +10,7 @@ export interface CategorieRowModel {
   groepnaam: string;
   field: keyof PlancategorieModel;
   fieldValue: string;
+  extraCls?: string;
 }
 
 export class PlancategorieHelper {
@@ -52,17 +53,18 @@ export class PlancategorieHelper {
   ];
 
   public static categorieen: CategorieRowModel[] = [
-    { id: 'nieuwbouw-nieuwbouw', label: 'Nieuwbouw', groepnaam: 'nieuwbouw', field: "nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW },
+    { id: 'nieuwbouw-nieuwbouw', label: 'Nieuwbouw', groepnaam: 'nieuwbouw', field: "nieuwbouw", fieldValue: NieuwbouwEnum.NIEUWBOUW, extraCls: 'line-below' },
     { id: 'woningtype-eengezins', label: 'Eengezins', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.EENGEZINS },
     { id: 'woningtype-meergezins', label: 'Meergezins', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.MEERGEZINS },
-    { id: 'woningtype-onbekend', label: 'Onbekend', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.ONBEKEND },
+    { id: 'woningtype-onbekend', label: 'Onbekend', groepnaam: 'woningtype', field: 'woningType', fieldValue: WoningtypeEnum.ONBEKEND, extraCls: 'line-below' },
     { id: 'wonenenzorg-nultreden', label: 'Nultreden', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.NULTREDEN },
     { id: 'wonenenzorg-geclusterd', label: 'Geclusterd', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.GECLUSTERD },
     { id: 'wonenenzorg-zorggeschikt', label: 'Zorggeschikt', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.ZORGGESCHIKT },
     { id: 'wonenenzorg-onbekend', label: 'Onbekend', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.ONBEKEND },
-    { id: 'wonenenzorg-regulier', label: 'Regulier', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.REGULIER },
+    { id: 'wonenenzorg-regulier', label: 'Regulier', groepnaam: 'wonen en zorg', field: 'wonenEnZorg', fieldValue: WonenEnZorgEnum.REGULIER, extraCls: 'line-below' },
     { id: 'flexwoningen-flexwoningen', label: 'Flexwoningen', groepnaam: 'flexwoningen', field: 'flexwoningen', fieldValue: FlexwoningenEnum.FLEXWONINGEN },
-    { id: 'flexwoningen-regulier_permanent', label: 'Regulier permanent', groepnaam: 'flexwoningen', field: 'flexwoningen', fieldValue: FlexwoningenEnum.REGULIER_PERMANENT },
+    // eslint-disable-next-line max-len
+    { id: 'flexwoningen-regulier_permanent', label: 'Regulier permanent', groepnaam: 'flexwoningen', field: 'flexwoningen', fieldValue: FlexwoningenEnum.REGULIER_PERMANENT, extraCls: 'line-below' },
     { id: 'betaalbaarheid-sociale_huur', label: 'Sociale huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.SOCIALE_HUUR },
     { id: 'betaalbaarheid-huur_middenhuur', label: 'Huur middenhuur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_MIDDENHUUR },
     { id: 'betaalbaarheid-huur_dure_huur', label: 'Huur dure huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.HUUR_DURE_HUUR },
@@ -72,7 +74,7 @@ export class PlancategorieHelper {
     { id: 'betaalbaarheid-koop_dure_koop', label: 'Koop dure koop', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_DURE_KOOP },
     { id: 'betaalbaarheid-koop_onbekend', label: 'Koop onbekend', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.KOOP_ONBEKEND },
     // eslint-disable-next-line max-len
-    { id: 'betaalbaarheid-onbekend_koop_of_huur', label: 'Onbekend Koop of Huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR },
+    { id: 'betaalbaarheid-onbekend_koop_of_huur', label: 'Onbekend Koop of Huur', groepnaam: 'betaalbaarheid', field: 'betaalbaarheid', fieldValue: BetaalbaarheidEnum.ONBEKEND_KOOP_OF_HUUR, extraCls: 'line-below' },
     { id: 'sloop-sloop', label: 'Sloop', groepnaam: 'sloop', field: 'sloop', fieldValue: SloopEnum.SLOOP },
   ];
 
@@ -90,9 +92,19 @@ export class PlancategorieHelper {
       const totalen = planCategorie?.totaalGepland || 0;
       const gerealiseerd = planCategorie?.totaalGerealiseerd || 0;
       const restcapaciteit = totalen - gerealiseerd;
+      const cls = [
+        'group-' + categorieRow.field.toLowerCase(),
+      ];
+      if (categorieRow.extraCls) {
+        cls.push(categorieRow.extraCls);
+      }
+      const disabled = nieuwbouwTotal === 0 && categorieRow.groepnaam !== 'nieuwbouw';
+      if (disabled) {
+        cls.push('disabled');
+      }
       const row: CategorieTableRowModel = {
         id: categorieRow.id,
-        cls: 'group-' + categorieRow.field.toLowerCase(),
+        cls: cls.join(' '),
         groep: categorieRow.field,
         value: categorieRow.fieldValue,
         label: categorieRow.label,
@@ -125,6 +137,7 @@ export class PlancategorieHelper {
         year_2039_2043: 0,
         years_check: 0,
         valid: false,
+        disabled,
       };
       if (row.groep === 'sloop') {
         return row;

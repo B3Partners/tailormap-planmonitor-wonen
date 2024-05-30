@@ -35,4 +35,5 @@ export interface CategorieTableRowModel {
   year_2039_2043: number | string;
   years_check: number;
   valid: boolean;
+  disabled?: boolean;
 }

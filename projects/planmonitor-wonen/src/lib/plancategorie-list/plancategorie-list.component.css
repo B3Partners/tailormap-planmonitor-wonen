@@ -126,32 +126,32 @@ mat-header-cell button {
 
 .group-nieuwbouw .mat-column-label,
 .group-nieuwbouw .mat-column-groeplabel {
-  background-color: #DB803D;
+  background-color: var(--nieuwbouw-color);
 }
 
 .group-woningtype .mat-column-label,
 .group-woningtype .mat-column-groeplabel {
-  background-color: #689BD2;
+  background-color: var(--woningtype-color);
 }
 
 .group-wonenenzorg .mat-column-label,
 .group-wonenenzorg .mat-column-groeplabel {
-  background-color: #E041FB;
+  background-color: var(--wonenenzorg-color);
 }
 
 .group-flexwoningen .mat-column-label,
 .group-flexwoningen .mat-column-groeplabel {
-  background-color: #FFFC44;
+  background-color: var(--flexwoningen-color);
 }
 
 .group-betaalbaarheid .mat-column-label,
 .group-betaalbaarheid .mat-column-groeplabel {
-  background-color: #84A951;
+  background-color: var(--betaalbaarheid-color);
 }
 
 .group-sloop .mat-column-label,
 .group-sloop .mat-column-groeplabel {
-  background-color: #F6BF34;
+  background-color: var(--sloop-color);
 }
 
 .expand-collapse {
@@ -170,4 +170,13 @@ mat-header-cell button {
   margin-right: 0;
   --mdc-icon-button-icon-size: 16px;
   min-width: 16px;
+}
+
+.line-below {
+  border-bottom: 2px solid #606060;
+}
+
+.disabled {
+  opacity: 0.4;
+  user-select: none;
 }

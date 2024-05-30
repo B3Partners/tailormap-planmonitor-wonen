@@ -161,7 +161,6 @@ export class PlanregistratiesService {
 
   public updatePlan(plan: Partial<PlanregistratieModel> | null) {
     this.log('Update Planregistratie', plan);
-    // TODO: Fix this method for when we create new plannen
     if (plan === null || this.selectedPlanregistratie.value === null) {
       this.hasFormChanges.next(false);
       return;
@@ -184,26 +183,58 @@ export class PlanregistratiesService {
 
   public save$() {
     const updatedPlan = this.selectedPlanregistratie.value;
-    if (updatedPlan === null) {
+    const updatedCategorieen = this.selectedPlanCategorieen.value;
+    const updatedDetailplanningen = this.selectedDetailplanningen.value;
+    if (updatedPlan === null || updatedCategorieen === null || updatedDetailplanningen === null) {
       return of(false);
     }
-    return of(updatedPlan)
+    return this.api.savePlanregistratie$({
+      planregistratie: updatedPlan,
+      plancategorieen: updatedCategorieen,
+      detailplanningen: updatedDetailplanningen,
+    })
       .pipe(
-        tap(plan => {
-          const currentPlans = [...this.planRegistraties.value];
-          const idx = currentPlans.findIndex(p => p.id === plan.id);
-          if (idx === -1) {
-            currentPlans.push(plan);
-          } else {
-            currentPlans[idx] = plan;
-          }
-          this.planRegistraties.next(currentPlans);
-          if (this.selectedPlanregistratie.value?.id === plan.id) {
-            this.selectedPlanregistratie.next(plan);
+        tap(success => {
+          if (success) {
+            this.updatePlanAfterSaving(updatedPlan);
           }
         }),
-        map(() => true),
       );
+  }
+
+  public delete$(planregistratieId: string): Observable<boolean> {
+    return this.api.deletePlanregistratie$(planregistratieId)
+      .pipe(
+        tap(success => {
+          if (success) {
+            this.removePlanAfterRemoving(planregistratieId);
+          }
+        }),
+      );
+  }
+
+  private updatePlanAfterSaving(plan: PlanregistratieModel) {
+    const currentPlans = [...this.planRegistraties.value];
+    const idx = currentPlans.findIndex(p => p.id === plan.id);
+    if (idx === -1) {
+      currentPlans.push(plan);
+    } else {
+      currentPlans[idx] = plan;
+    }
+    this.planRegistraties.next(currentPlans);
+  }
+
+  private removePlanAfterRemoving(planregistratieId: string) {
+    const currentPlans = this.planRegistraties.value;
+    const idx = currentPlans.findIndex(p => p.id === planregistratieId);
+    if (idx !== -1) {
+      this.planRegistraties.next([ ...currentPlans.slice(0, idx), ...currentPlans.slice(idx + 1) ]);
+    }
+    if (this.selectedPlanregistratie.value?.id === planregistratieId) {
+      this.selectedPlanregistratie.next(null);
+      this.selectedPlanCategorieen.next(null);
+      this.selectedDetailplanningen.next(null);
+    }
   }
 
   public cancelChanges() {

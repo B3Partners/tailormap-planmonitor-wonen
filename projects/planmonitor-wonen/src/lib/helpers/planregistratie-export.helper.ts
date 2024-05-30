@@ -2,15 +2,21 @@ import * as ExcelJS from 'exceljs';
 import { PlancategorieHelper } from './plancategorie.helper';
 import { FileHelper } from '@tailormap-viewer/shared';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
+import { PlantypeHelper } from './plantype.helper';
 
-const GREY_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFD9D9D8' } };
-const ORANGE_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFDB803D' } };
-const BLUE_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FF689BD2' } };
-const PINK_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFE041FB' } };
-const YELLOW_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFFFFC44' } };
-const GREEN_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FF84A951' } };
-const DARK_YELLOW_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFF6BF34' } };
-const DARK_GREY_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFC0BFC0' } };
+const getColor = (groepNaam: keyof typeof PlantypeHelper.GROUP_COLORS) => {
+  const color = PlantypeHelper.getGroupColor(groepNaam);
+  return `FF${color.substring(1)}`;
+};
+
+const HEADER_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFD9D9D8' } };
+const NIEUWBOUW_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: getColor('nieuwbouw') } };
+const WONINGTYPE_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: getColor('woningType') } };
+const WONEN_ZORG_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: getColor('wonenEnZorg') } };
+const FLEXWONING_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: getColor('flexwoningen') } };
+const BETAALBAARHEID_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: getColor('betaalbaarheid') } };
+const SLOOP_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: getColor('sloop') } };
+const DISABLED_FIELD_BACKGROUND: ExcelJS.Fill = { type: "pattern", pattern: 'solid', fgColor: { argb: 'FFC0BFC0' } };
 const BORDER_STYLE: { style: ExcelJS.BorderStyle; color: ExcelJS.Color } = { style: "thin", color: { argb: '000000', theme: 0 } };
 const CENTER_ALIGNMENT: { vertical: 'middle'; horizontal: 'center' } = { vertical: 'middle', horizontal: 'center' };
 
@@ -134,7 +140,7 @@ export class PlanregistratieExportHelper {
       } else if (rowNumber >= ROW_NUMBER.FLEXWONING_BEGIN && rowNumber <= ROW_NUMBER.FLEXWONING_END) {
         value = { formula: '=C2-SUM(C11:C12)' };
       } else if (rowNumber >= ROW_NUMBER.BETAALBAAR_BEGIN && rowNumber <= ROW_NUMBER.BETAALBAAR_END) {
-        value = { formula: '=C2-SUM(C13:C21)' };
+        value = { formula: '=C2-SUM(C13:C20)' };
       }
       excelRow.getCell(COLUMN_INDEX.CHECK_TOTAL).value = value;
       excelRow.getCell(COLUMN_INDEX.RESTCAPACITEIT).value = { formula: `=C${rowNumber}-E${rowNumber}` };
@@ -170,7 +176,7 @@ export class PlanregistratieExportHelper {
         return;
       }
       PlanregistratieExportHelper.setStyle(cell, {
-        fill: rowIdx === ROW_NUMBER.NIEUWBOUW || rowIdx === ROW_NUMBER.SLOOP ? DARK_GREY_BACKGROUND : undefined,
+        fill: rowIdx === ROW_NUMBER.NIEUWBOUW || rowIdx === ROW_NUMBER.SLOOP ? DISABLED_FIELD_BACKGROUND : undefined,
         alignment: CENTER_ALIGNMENT,
         border: { bottom: BORDER_STYLE, right: BORDER_STYLE, left: BORDER_STYLE },
       });
@@ -179,20 +185,20 @@ export class PlanregistratieExportHelper {
       if (rowIdx < ROW_NUMBER.NIEUWBOUW) {
         return;
       }
-      PlanregistratieExportHelper.setStyle(cell, { fill: DARK_GREY_BACKGROUND, border: { left: BORDER_STYLE, right: BORDER_STYLE } });
+      PlanregistratieExportHelper.setStyle(cell, { fill: DISABLED_FIELD_BACKGROUND, border: { left: BORDER_STYLE, right: BORDER_STYLE } });
     });
     sheet.getColumn(COLUMN_INDEX.CHECK_YEARS).eachCell(cell => {
       PlanregistratieExportHelper.setStyle(cell, { border: { left: BORDER_STYLE, right: BORDER_STYLE } });
     });
 
-    sheet.getRow(ROW_NUMBER.LABELS).eachCell(cell => PlanregistratieExportHelper.setStyle(cell, { fill: GREY_BACKGROUND }));
+    sheet.getRow(ROW_NUMBER.LABELS).eachCell(cell => PlanregistratieExportHelper.setStyle(cell, { fill: HEADER_BACKGROUND }));
     sheet.getRow(ROW_NUMBER.SLOOP).eachCell((cell, colIdx) => {
       if (colIdx <= COLUMN_INDEX.RESTCAPACITEIT) {
         return;
       }
       cell.value = '';
       PlanregistratieExportHelper.setStyle(cell, {
-        fill: DARK_GREY_BACKGROUND,
+        fill: DISABLED_FIELD_BACKGROUND,
         border: { bottom: BORDER_STYLE, right: colIdx === COLUMN_INDEX.CHECK_YEARS ? BORDER_STYLE : undefined },
       });
     });
@@ -217,12 +223,12 @@ export class PlanregistratieExportHelper {
   private static coloredCellFormatter(alignmentCenter?: boolean) {
    return (cell: ExcelJS.Cell, idx: number) => {
       let fill: ExcelJS.Fill | undefined = undefined;
-      if (idx === ROW_NUMBER.NIEUWBOUW) fill = ORANGE_BACKGROUND;
-      if (idx >= ROW_NUMBER.WONINGTYPE_BEGIN && idx <= ROW_NUMBER.WONINGTYPE_END) fill = BLUE_BACKGROUND;
-      if (idx >= ROW_NUMBER.WONEN_ZORG_BEGIN && idx <= ROW_NUMBER.WONEN_ZORG_END) fill = PINK_BACKGROUND;
-      if (idx >= ROW_NUMBER.FLEXWONING_BEGIN && idx <= ROW_NUMBER.FLEXWONING_END) fill = YELLOW_BACKGROUND;
-      if (idx >= ROW_NUMBER.BETAALBAAR_BEGIN && idx <= ROW_NUMBER.BETAALBAAR_END) fill = GREEN_BACKGROUND;
-      if (idx === ROW_NUMBER.SLOOP) fill = DARK_YELLOW_BACKGROUND;
+      if (idx === ROW_NUMBER.NIEUWBOUW) fill = NIEUWBOUW_BACKGROUND;
+      if (idx >= ROW_NUMBER.WONINGTYPE_BEGIN && idx <= ROW_NUMBER.WONINGTYPE_END) fill = WONINGTYPE_BACKGROUND;
+      if (idx >= ROW_NUMBER.WONEN_ZORG_BEGIN && idx <= ROW_NUMBER.WONEN_ZORG_END) fill = WONEN_ZORG_BACKGROUND;
+      if (idx >= ROW_NUMBER.FLEXWONING_BEGIN && idx <= ROW_NUMBER.FLEXWONING_END) fill = FLEXWONING_BACKGROUND;
+      if (idx >= ROW_NUMBER.BETAALBAAR_BEGIN && idx <= ROW_NUMBER.BETAALBAAR_END) fill = BETAALBAARHEID_BACKGROUND;
+      if (idx === ROW_NUMBER.SLOOP) fill = SLOOP_BACKGROUND;
       PlanregistratieExportHelper.setStyle(cell, { fill: fill, border: { right: BORDER_STYLE }, alignment: alignmentCenter ? CENTER_ALIGNMENT : undefined });
     };
   }

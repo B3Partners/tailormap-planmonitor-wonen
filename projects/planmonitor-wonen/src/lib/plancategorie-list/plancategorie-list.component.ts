@@ -4,13 +4,32 @@ import { PlancategorieModel } from '../models';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PlancategorieHelper } from '../helpers/plancategorie.helper';
+import { PlantypeHelper } from '../helpers/plantype.helper';
 
 const INTEGER_REGEX = /^\d+$/;
+const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+  'ArrowDown',
+  'Backspace',
+  'Delete',
+  'Tab',
+  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+]);
 
 @Component({
   selector: 'lib-plancategorie-list',
   templateUrl: './plancategorie-list.component.html',
   styleUrls: ['./plancategorie-list.component.css'],
+  styles: ['mat-table {' +
+    `--nieuwbouw-color: ${PlantypeHelper.getGroupColor('nieuwbouw')};` +
+    `--woningtype-color: ${PlantypeHelper.getGroupColor('woningType')};` +
+    `--wonenenzorg-color: ${PlantypeHelper.getGroupColor('wonenEnZorg')};` +
+    `--flexwoningen-color: ${PlantypeHelper.getGroupColor('flexwoningen')};` +
+    `--betaalbaarheid-color: ${PlantypeHelper.getGroupColor('betaalbaarheid')};` +
+    `--sloop-color: ${PlantypeHelper.getGroupColor('sloop')};` +
+  '}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlancategorieListComponent implements OnInit {
@@ -56,12 +75,19 @@ export class PlancategorieListComponent implements OnInit {
   }
 
   private getRowAndInputValue($event: Event, id: string) {
-    const target = $event.target;
-    const row = this.tableData?.find(p => p.id === id);
-    if (!(target instanceof HTMLInputElement) || !INTEGER_REGEX.test(target.value) || !row) {
+    const target = $event.target instanceof HTMLInputElement ? $event.target : null;
+    if (!target) {
       return { row: null, value: 0 };
     }
-    return { row, value: +target.value };
+    const value = target.value;
+    const row = this.tableData?.find(p => p.id === id);
+    if (!row) {
+      return { row: null, value: 0 };
+    }
+    if (value !== '' && (!INTEGER_REGEX.test(target.value) || !row || +target.value < 0)) {
+      return { row: null, value: 0 };
+    }
+    return { row, value: value === '' ? 0 : +target.value };
   }
 
   public toggleExpanded() {
@@ -73,6 +99,10 @@ export class PlancategorieListComponent implements OnInit {
   }
 
   public handleCellNavigation($event: KeyboardEvent) {
+    if (!ALLOWED_KEYS_FOR_NUMBER_INPUT.has($event.key)) {
+      $event.preventDefault();
+      return;
+    }
     if ($event.key !== 'ArrowLeft' && $event.key !== 'ArrowRight' && $event.key !== 'ArrowUp' && $event.key !== 'ArrowDown' || !($event.target instanceof HTMLInputElement)) {
       return;
     }
@@ -91,6 +121,7 @@ export class PlancategorieListComponent implements OnInit {
     const nextTarget = document.querySelector<HTMLInputElement>(`.cell_${columns[targetColIdx]}_${targetRow}`);
     if (nextTarget) {
       nextTarget.focus();
+      nextTarget.select();
     }
   }
 

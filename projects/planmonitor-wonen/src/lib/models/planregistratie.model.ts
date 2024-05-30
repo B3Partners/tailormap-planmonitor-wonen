@@ -28,4 +28,5 @@ export interface PlanregistratieModel {
   knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum | null;
   beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum | null;
   aantalStudentenwoningen: number;
+  sleutelproject: boolean | null;
 }

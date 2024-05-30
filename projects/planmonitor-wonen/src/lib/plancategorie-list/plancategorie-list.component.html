@@ -21,6 +21,7 @@
                  class="number-input"
                  [attr.data-row]="i"
                  [attr.data-column]="'totaal'"
+                 [disabled]="row.disabled"
                  (keydown)="handleCellNavigation($event)"
                  [class]="'cell_totaal_' + i"
                  [value]="row.totalen"
@@ -43,6 +44,7 @@
                  class="number-input"
                  [attr.data-row]="i"
                  [attr.data-column]="'gerealiseerd'"
+                 [disabled]="row.disabled"
                  (keydown)="handleCellNavigation($event)"
                  [class]="'cell_gerealiseerd_' + i"
                  [value]="row.gerealiseerd"
@@ -62,8 +64,10 @@
             @if (row.id !== 'sloop-sloop') {
               <input type="text"
                      class="number-input"
+                     pattern="0-9"
                      [attr.data-row]="i"
                      [attr.data-column]="year"
+                     [disabled]="row.disabled"
                      (keydown)="handleCellNavigation($event)"
                      [class]="'cell_' + year + '_' + i"
                      [value]="row['year_' + year]"
@@ -84,6 +88,7 @@
                    class="number-input"
                    [attr.data-row]="i"
                    [attr.data-column]="2043"
+                   [disabled]="row.disabled"
                    (keydown)="handleCellNavigation($event)"
                    [class]="'cell_2043_' + i"
                    [value]="row.year_2043"
@@ -93,7 +98,10 @@
       </ng-container>
 
       <ng-container matColumnDef="year_2034_2038">
-        <mat-header-cell *matHeaderCellDef class="year-group number-column">2034 - 2038</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="year-group number-column expand-collapse-container">
+          2034 - 2038
+          <button mat-button class="expand-collapse" (click)="toggleExpanded()"><mat-icon svgIcon="chevron_right"></mat-icon></button>
+        </mat-header-cell>
         <mat-cell *matCellDef="let row" class="year-group number-column" [class.info-cell]="row.id === 'sloop-sloop'">
           @if (row.id !== 'sloop-sloop') {
             {{row.year_2034_2038}}
@@ -102,9 +110,8 @@
       </ng-container>
 
       <ng-container matColumnDef="year_2039_2043">
-        <mat-header-cell *matHeaderCellDef class="year-group number-column expand-collapse-container">
+        <mat-header-cell *matHeaderCellDef class="year-group number-column">
           2039 - 2043
-          <button mat-button class="expand-collapse" (click)="toggleExpanded()"><mat-icon svgIcon="chevron_right"></mat-icon></button>
         </mat-header-cell>
         <mat-cell *matCellDef="let row" class="year-group number-column" [class.info-cell]="row.id === 'sloop-sloop'">
           @if (row.id !== 'sloop-sloop') {

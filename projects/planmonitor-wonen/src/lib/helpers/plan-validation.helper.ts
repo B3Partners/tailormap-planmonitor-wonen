@@ -17,13 +17,14 @@ export class PlanValidationHelper {
       || PlanValidationHelper.hasEmptyValue(planRegistratie.knelpuntenMeerkeuze)
       || PlanValidationHelper.hasEmptyValue(planRegistratie.beoogdWoonmilieuAbf13)
       || PlanValidationHelper.hasInvalidValue(planRegistratie.aantalStudentenwoningen)
+      || PlanValidationHelper.hasInvalidValue(planRegistratie.sleutelproject)
     ) {
       return false;
     }
     return true;
   }
 
-  private static hasInvalidValue(value: number | string | null | undefined) {
+  private static hasInvalidValue(value: number | string | boolean | null | undefined) {
     return typeof value === "undefined" || value === null;
   }
 

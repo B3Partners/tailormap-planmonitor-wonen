@@ -26,6 +26,7 @@ export class PlanMonitorModelHelper {
       vertrouwelijkheid: VertrouwelijkheidEnum.OPENBAAR,
       statusPlanologisch: null,
       statusProject: null,
+      sleutelproject: null,
       ...initialData,
     };
   }

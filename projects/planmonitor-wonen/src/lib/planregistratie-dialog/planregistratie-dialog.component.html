@@ -28,11 +28,21 @@
         </div>
       </div>
       <div class="buttons">
+        <button (click)="delete(selectedPlan.id)"
+                color="warn"
+                mat-flat-button>Verwijder plan</button>
+        <div class="divider"></div>
         <button (click)="cancel()" mat-flat-button>Annuleren</button>
         <button (click)="save()"
-                [disabled]="disableSave$ | async"
+                [disabled]="(disableSave$ | async) || saving()"
                 color="primary"
-                mat-flat-button>Opslaan</button>
+                mat-flat-button>
+          @if (saving()) {
+              <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Opslaan
+          }
+        </button>
       </div>
     </div>
   }

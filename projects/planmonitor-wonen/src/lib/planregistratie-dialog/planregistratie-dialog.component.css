@@ -62,10 +62,12 @@ mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
   padding: 14px;
 }
 
-.buttons button {
+.buttons .divider {
   flex: 1;
 }
 
+.buttons .divider + button,
+.buttons button + .divider,
 .buttons button + button {
   margin-left: 14px;
 }
