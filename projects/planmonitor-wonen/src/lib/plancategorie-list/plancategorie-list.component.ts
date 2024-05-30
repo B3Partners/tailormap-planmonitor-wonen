@@ -3,8 +3,10 @@ import { PlanregistratiesService } from '../services/planregistraties.service';
 import { PlancategorieModel } from '../models';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PlancategorieHelper } from '../helpers/plancategorie.helper';
-import { PlantypeHelper } from '../helpers/plantype.helper';
+import { ColorHelper } from '../helpers/color.helper';
+import { CategorieTableModel } from '../models/categorie-table.model';
+import { YearColumnModel } from '../models/year-table-column.model';
+import { ColumnHelper } from '../helpers/column.helper';
 
 const INTEGER_REGEX = /^\d+$/;
 const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
@@ -23,12 +25,12 @@ const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
   templateUrl: './plancategorie-list.component.html',
   styleUrls: ['./plancategorie-list.component.css'],
   styles: ['mat-table {' +
-    `--nieuwbouw-color: ${PlantypeHelper.getGroupColor('nieuwbouw')};` +
-    `--woningtype-color: ${PlantypeHelper.getGroupColor('woningType')};` +
-    `--wonenenzorg-color: ${PlantypeHelper.getGroupColor('wonenEnZorg')};` +
-    `--flexwoningen-color: ${PlantypeHelper.getGroupColor('flexwoningen')};` +
-    `--betaalbaarheid-color: ${PlantypeHelper.getGroupColor('betaalbaarheid')};` +
-    `--sloop-color: ${PlantypeHelper.getGroupColor('sloop')};` +
+    `--nieuwbouw-color: ${ColorHelper.getGroupColor('nieuwbouw')};` +
+    `--woningtype-color: ${ColorHelper.getGroupColor('woningType')};` +
+    `--wonenenzorg-color: ${ColorHelper.getGroupColor('wonenEnZorg')};` +
+    `--flexwoningen-color: ${ColorHelper.getGroupColor('flexwoningen')};` +
+    `--betaalbaarheid-color: ${ColorHelper.getGroupColor('betaalbaarheid')};` +
+    `--sloop-color: ${ColorHelper.getGroupColor('sloop')};` +
   '}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,10 +38,10 @@ export class PlancategorieListComponent implements OnInit {
 
   public expanded = false;
   public yearColumns = [ 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042 ];
-  public displayedColumns: string[] = PlancategorieHelper.categorieColumns;
-  public displayedColumnsExpanded = PlancategorieHelper.expandedCategorieColumns;
+  public displayedColumns: string[] = ColumnHelper.categorieColumns;
+  public displayedColumnsExpanded = ColumnHelper.expandedCategorieColumns;
 
-  public tableData: CategorieTableRowModel[] | null = null;
+  public tableData: CategorieTableModel | null = null;
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
 
   constructor(
@@ -80,7 +82,7 @@ export class PlancategorieListComponent implements OnInit {
       return { row: null, value: 0 };
     }
     const value = target.value;
-    const row = this.tableData?.find(p => p.id === id);
+    const row = this.tableData?.rows.find(p => p.id === id);
     if (!row) {
       return { row: null, value: 0 };
     }
@@ -123,6 +125,10 @@ export class PlancategorieListComponent implements OnInit {
       nextTarget.focus();
       nextTarget.select();
     }
+  }
+
+  public isInvalidColumn(yearColumns: YearColumnModel[], column: string) {
+    return !yearColumns.find(c => c.year === column)?.valid;
   }
 
 }

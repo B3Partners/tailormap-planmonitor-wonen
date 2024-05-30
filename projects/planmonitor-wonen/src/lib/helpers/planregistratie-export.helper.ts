@@ -1,11 +1,11 @@
 import * as ExcelJS from 'exceljs';
-import { PlancategorieHelper } from './plancategorie.helper';
 import { FileHelper } from '@tailormap-viewer/shared';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
-import { PlantypeHelper } from './plantype.helper';
+import { ColorHelper } from './color.helper';
+import { ColumnHelper } from './column.helper';
 
-const getColor = (groepNaam: keyof typeof PlantypeHelper.GROUP_COLORS) => {
-  const color = PlantypeHelper.getGroupColor(groepNaam);
+const getColor = (groepNaam: keyof typeof ColorHelper.GROUP_COLORS) => {
+  const color = ColorHelper.getGroupColor(groepNaam);
   return `FF${color.substring(1)}`;
 };
 
@@ -124,7 +124,7 @@ export class PlanregistratieExportHelper {
     // Setup page
     sheet.pageSetup.paperSize = ExcelJS.PaperSize.A4;
     // Setup columns
-    sheet.columns = PlancategorieHelper.categorieColumns.map(key => {
+    sheet.columns = ColumnHelper.categorieColumns.map(key => {
       const config = COLUMN_CONFIG.get(key);
       return { header: config?.label || '', key, width: config?.width || 5.71 };
     });

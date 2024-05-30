@@ -4,11 +4,11 @@ import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.se
 import { BehaviorSubject, catchError, combineLatest, debounceTime, map, Observable, of, take, tap } from 'rxjs';
 import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
-import { PlancategorieHelper } from '../helpers/plancategorie.helper';
-import { CategorieTableRowModel } from '../models/categorie-table-row.model';
+import { PlancategorieTableHelper } from '../helpers/plancategorie-table.helper';
 import { PlanValidationHelper } from '../helpers/plan-validation.helper';
 import { PlanregistratieExportHelper } from '../helpers/planregistratie-export.helper';
 import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
+import { CategorieTableModel } from '../models/categorie-table.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class PlanregistratiesService {
   private selectedPlanregistratie = new BehaviorSubject<PlanregistratieModel | null>(null);
   private selectedPlanCategorieen = new BehaviorSubject<PlancategorieModel[] | null>(null);
   private selectedDetailplanningen = new BehaviorSubject<DetailplanningModel[] | null>(null);
-  private selectedCategorieTable = new BehaviorSubject<CategorieTableRowModel[] | null>(null);
+  private selectedCategorieTable = new BehaviorSubject<CategorieTableModel | null>(null);
 
   private registratiesLoadStatus: LoadingStateEnum = LoadingStateEnum.INITIAL;
   private categorieenLoadStatus: LoadingStateEnum = LoadingStateEnum.INITIAL;
@@ -45,7 +45,7 @@ export class PlanregistratiesService {
           this.selectedCategorieTable.next(null);
           return;
         }
-        const table = PlancategorieHelper.getPlancategorieTable(planCategorieen, detailPlanningen);
+        const table = PlancategorieTableHelper.getPlancategorieTable(planCategorieen, detailPlanningen);
         this.log('Recreated table', table, 'source data', planCategorieen, detailPlanningen);
         this.selectedCategorieTable.next(table);
       });
@@ -57,7 +57,7 @@ export class PlanregistratiesService {
         if (updatedPlan === null || categorieTable === null || (!this.hasTableChanges.value && !this.hasFormChanges.value)) {
           return false;
         }
-        return PlanValidationHelper.validatePlan(updatedPlan) && categorieTable.every(row => row.valid);
+        return PlanValidationHelper.validatePlan(updatedPlan, categorieTable);
       }),
     );
   }
@@ -81,7 +81,7 @@ export class PlanregistratiesService {
     return this.selectedDetailplanningen.asObservable();
   }
 
-  public getSelectedCategorieTable$(): Observable<CategorieTableRowModel[] | null> {
+  public getSelectedCategorieTable$(): Observable<CategorieTableModel | null> {
     return this.selectedCategorieTable.asObservable();
   }
 
@@ -153,10 +153,7 @@ export class PlanregistratiesService {
     if (!currentReg || !table) {
       return;
     }
-    PlanregistratieExportHelper.createExcelExport(
-      currentReg.planNaam,
-      table,
-    );
+    PlanregistratieExportHelper.createExcelExport(currentReg.planNaam, table.rows);
   }
 
   public updatePlan(plan: Partial<PlanregistratieModel> | null) {

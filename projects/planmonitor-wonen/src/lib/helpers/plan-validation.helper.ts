@@ -1,8 +1,9 @@
 import { PlanregistratieModel } from '../models';
+import { CategorieTableModel } from '../models/categorie-table.model';
 
 export class PlanValidationHelper {
 
-  public static validatePlan(planRegistratie: PlanregistratieModel) {
+  public static validatePlan(planRegistratie: PlanregistratieModel, categorieTable: CategorieTableModel) {
     if (
       PlanValidationHelper.hasEmptyValue(planRegistratie.planNaam)
       || PlanValidationHelper.hasEmptyValue(planRegistratie.provincie)
@@ -21,7 +22,8 @@ export class PlanValidationHelper {
     ) {
       return false;
     }
-    return true;
+    return categorieTable.rows.every(row => row.valid)
+      && categorieTable.yearColumns.every(column => column.valid);
   }
 
   private static hasInvalidValue(value: number | string | boolean | null | undefined) {

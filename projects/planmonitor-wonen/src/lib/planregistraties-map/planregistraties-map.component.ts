@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { CssHelper } from '@tailormap-viewer/shared';
 import { FeatureModel } from '@tailormap-viewer/api';
-import { PlantypeHelper } from '../helpers/plantype.helper';
+import { ColorHelper } from '../helpers/color.helper';
 
 type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> & { selected?: boolean };
 
@@ -179,10 +179,10 @@ export class PlanregistratiesMapComponent implements OnInit {
       zIndex: selected ? 9999 : 9998,
       strokeColor: selected ? PlanregistratiesMapComponent.PRIMARY_COLOR : 'rgb(0, 0, 0)',
       strokeWidth: selected ? 6 : 1,
-      fillColor: PlantypeHelper.getPlantypeColor(planType),
+      fillColor: ColorHelper.getPlantypeColor(planType),
       fillOpacity: 50,
       pointType: 'square',
-      pointFillColor: PlantypeHelper.getPlantypeColor(planType),
+      pointFillColor: ColorHelper.getPlantypeColor(planType),
       styleKey: 'planmonitor-highlight-style',
     };
   }

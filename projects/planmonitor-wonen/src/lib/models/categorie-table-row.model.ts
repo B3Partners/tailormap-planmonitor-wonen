@@ -1,9 +1,11 @@
 import { PlancategorieModel } from './index';
 
+export type CategorieGroepField = keyof Pick<PlancategorieModel, 'nieuwbouw' | 'woningType' | 'wonenEnZorg' | 'flexwoningen' | 'betaalbaarheid' | 'sloop'>;
+
 export interface CategorieTableRowModel {
   id: string;
   cls: string;
-  groep: keyof PlancategorieModel;
+  groep: CategorieGroepField;
   value: string;
   label: string;
   groeplabel: string;

@@ -1,6 +1,6 @@
 @if (tableData !== null) {
   <div class="table-wrapper">
-    <mat-table [dataSource]="tableData" [trackBy]="trackByRowId">
+    <mat-table [dataSource]="tableData.rows" [trackBy]="trackByRowId">
 
       <ng-container matColumnDef="label" [sticky]="true">
         <mat-header-cell *matHeaderCellDef>
@@ -59,7 +59,7 @@
 
       @for (year of yearColumns; track $index) {
         <ng-container [matColumnDef]="'year_' + year">
-          <mat-header-cell *matHeaderCellDef class="year number-column">{{year}}</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="year number-column" [class.check-failed]="isInvalidColumn(tableData.yearColumns, 'year_' + year)">{{year}}</mat-header-cell>
           <mat-cell *matCellDef="let row; let i = index;" class="year number-input-cell" [class.info-cell]="row.id === 'sloop-sloop'">
             @if (row.id !== 'sloop-sloop') {
               <input type="text"
@@ -78,7 +78,7 @@
       }
 
       <ng-container matColumnDef="year_2043">
-        <mat-header-cell *matHeaderCellDef class="year number-column expand-collapse-container">
+        <mat-header-cell *matHeaderCellDef class="year number-column expand-collapse-container" [class.check-failed]="isInvalidColumn(tableData.yearColumns, 'year_2043')">
           2043
           <button mat-button class="expand-collapse" (click)="toggleExpanded()"><mat-icon svgIcon="chevron_left"></mat-icon></button>
         </mat-header-cell>
@@ -98,7 +98,7 @@
       </ng-container>
 
       <ng-container matColumnDef="year_2034_2038">
-        <mat-header-cell *matHeaderCellDef class="year-group number-column expand-collapse-container">
+        <mat-header-cell *matHeaderCellDef class="year-group number-column expand-collapse-container" [class.check-failed]="isInvalidColumn(tableData.yearColumns, 'year_2034_2038')">
           2034 - 2038
           <button mat-button class="expand-collapse" (click)="toggleExpanded()"><mat-icon svgIcon="chevron_right"></mat-icon></button>
         </mat-header-cell>
@@ -110,7 +110,7 @@
       </ng-container>
 
       <ng-container matColumnDef="year_2039_2043">
-        <mat-header-cell *matHeaderCellDef class="year-group number-column">
+        <mat-header-cell *matHeaderCellDef class="year-group number-column" [class.check-failed]="isInvalidColumn(tableData.yearColumns, 'year_2039_2043')">
           2039 - 2043
         </mat-header-cell>
         <mat-cell *matCellDef="let row" class="year-group number-column" [class.info-cell]="row.id === 'sloop-sloop'">

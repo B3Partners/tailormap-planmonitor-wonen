@@ -1,6 +1,6 @@
 import { PlantypeEnum } from '../models';
 
-export class PlantypeHelper {
+export class ColorHelper {
 
   private static PLAN_TYPE_COLORS = {
     [PlantypeEnum.PAND_TRANSFORMATIE]: '#aa00ff',
@@ -17,15 +17,15 @@ export class PlantypeHelper {
     wonenEnZorg: '#0daee5',
     flexwoningen: '#ff8753',
     betaalbaarheid: '#ffbf3e',
-    sloop: '#f04bfe',
+    sloop: '#00b4c5',
   };
 
   public static getPlantypeColor(plantype: PlantypeEnum | null): string {
-    return PlantypeHelper.PLAN_TYPE_COLORS[plantype || PlantypeEnum.UITBREIDING_UITLEG];
+    return ColorHelper.PLAN_TYPE_COLORS[plantype || PlantypeEnum.UITBREIDING_UITLEG];
   }
 
-  public static getGroupColor(group: keyof typeof PlantypeHelper.GROUP_COLORS): string {
-    return PlantypeHelper.GROUP_COLORS[group] || PlantypeHelper.GROUP_COLORS.nieuwbouw;
+  public static getGroupColor(group: keyof typeof ColorHelper.GROUP_COLORS): string {
+    return ColorHelper.GROUP_COLORS[group] || ColorHelper.GROUP_COLORS.nieuwbouw;
   }
 
 }

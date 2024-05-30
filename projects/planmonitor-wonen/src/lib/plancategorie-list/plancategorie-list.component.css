@@ -116,7 +116,8 @@ mat-header-cell button {
   background-color: #A5CC5D;
 }
 
-.check-failed {
+.check-failed,
+.mat-mdc-table .mat-mdc-header-cell.check-failed {
   background-color: #E52C18;
 }
 
