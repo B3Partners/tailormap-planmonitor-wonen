@@ -6,7 +6,9 @@ import {
 } from '../models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Observable, of } from 'rxjs';
+import { AutofillDataService } from '../services/autofill-data.service';
+import { GemeenteModel } from '../models/gemeente.model';
 
 @Component({
   selector: 'lib-planregistratie-form',
@@ -59,9 +61,14 @@ export class PlanregistratieFormComponent implements OnInit {
   @Output()
   public planregistratieChanged = new EventEmitter<Partial<PlanregistratieModel> | null>();
 
+  public gemeentes$: Observable<GemeenteModel[]> = of([]);
+
   constructor(
     private destroyRef: DestroyRef,
-  ) { }
+    private autofillDataService: AutofillDataService,
+  ) {
+    this.gemeentes$ = this.autofillDataService.getGemeentes$();
+  }
 
   public ngOnInit(): void {
     this.planregistratieForm.valueChanges

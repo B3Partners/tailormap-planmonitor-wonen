@@ -13,6 +13,8 @@ import { PlanregistratieFormComponent } from './planregistratie-form/planregistr
 import { PlancategorieListComponent } from './plancategorie-list/plancategorie-list.component';
 import { PlanmonitorToggleComponent } from './planmonitor-toggle/planmonitor-toggle.component';
 import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service';
+import { filter, take } from 'rxjs';
+import { AutofillDataService } from './services/autofill-data.service';
 
 
 @NgModule({
@@ -36,13 +38,19 @@ export class PlanmonitorWonenModule {
     adminRegistryService: ConfigurationComponentRegistryService,
     viewerRegistryService: ComponentRegistrationService,
     adminFieldRegistrationService: AdminFieldRegistrationService,
+    autofillDataService: AutofillDataService,
   ) {
     adminRegistryService.registerConfigurationComponents(PLANMONITOR_WONEN_COMPONENT_ID, 'Planmonitor wonen', BaseComponentConfigComponent);
     viewerRegistryService.registerComponent("map", { type: PLANMONITOR_WONEN_COMPONENT_ID, component: PlanregistratiesMapComponent }, true);
     viewerRegistryService.registerComponent("map-controls-left", { type: PLANMONITOR_WONEN_COMPONENT_ID + '_toggle', component: PlanmonitorToggleComponent }, true);
-    adminFieldRegistrationService.registerFields(AdminFieldLocation.GROUP, [
-      { type: "choice", label: "Type gebruiker", dataType: "string", key: "typeGebruiker", values: [ "gemeente", "provincie" ] },
-      { type: "text", label: "Gemeente", dataType: "string", key: "gemeente" },
-    ]);
+    autofillDataService.loadGemeentes('Zeeland');
+    autofillDataService.getGemeentes$()
+      .pipe(filter(g => g.length > 0), take(1))
+      .subscribe(gemeentes => {
+        adminFieldRegistrationService.registerFields(AdminFieldLocation.GROUP, [
+          { type: "choice", label: "Type gebruiker", dataType: "string", key: "typeGebruiker", values: [ "gemeente", "provincie" ] },
+          { type: "choice", label: "Gemeente", dataType: "string", key: "gemeente", values: gemeentes.filter(g => g.provincie === 'Zeeland').map(g => g.naam) },
+        ]);
+      });
   }
 }

@@ -9,6 +9,7 @@ import { PlanValidationHelper } from '../helpers/plan-validation.helper';
 import { PlanregistratieExportHelper } from '../helpers/planregistratie-export.helper';
 import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 import { CategorieTableModel } from '../models/categorie-table.model';
+import { AutofillDataService } from './autofill-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,7 @@ export class PlanregistratiesService {
 
   constructor(
     @Inject(PLANMONITOR_WONEN_API_SERVICE) private api: PlanmonitorWonenApiServiceModel,
+    private autofillDataService: AutofillDataService,
   ) {
     combineLatest([
       this.getSelectedPlanCategorieen$(),
@@ -170,12 +172,22 @@ export class PlanregistratiesService {
   }
 
   public setNewFeatureGeometry(geometry: string) {
-    const newPlan = PlanMonitorModelHelper.getNewPlanregistratie({ geometrie: geometry });
-    this.planRegistraties.next([
-      ...this.planRegistraties.value,
-      newPlan,
-    ]);
-    this.setSelectedPlanregistratie(newPlan.id);
+    this.autofillDataService.loadAutofillData$(geometry)
+      .pipe(take(1))
+      .subscribe(autofillData => {
+        const newPlan = PlanMonitorModelHelper.getNewPlanregistratie({
+          gemeente: autofillData.gemeentes[0] || '',
+          regio: autofillData.regios[0] || '',
+          provincie: autofillData.provincies[0] || '',
+          beoogdWoonmilieuAbf13: autofillData.woonmilieus[0] || null,
+          geometrie: geometry,
+        });
+        this.planRegistraties.next([
+          ...this.planRegistraties.value,
+          newPlan,
+        ]);
+        this.setSelectedPlanregistratie(newPlan.id);
+      });
   }
 
   public save$() {
@@ -185,15 +197,17 @@ export class PlanregistratiesService {
     if (updatedPlan === null || updatedCategorieen === null || updatedDetailplanningen === null) {
       return of(false);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { isNew, ...planregistratie } = updatedPlan;
     return this.api.savePlanregistratie$({
-      planregistratie: updatedPlan,
+      planregistratie,
       plancategorieen: updatedCategorieen,
       detailplanningen: updatedDetailplanningen,
     })
       .pipe(
         tap(success => {
           if (success) {
-            this.updatePlanAfterSaving(updatedPlan);
+            this.updatePlanAfterSaving(planregistratie);
           }
         }),
       );
@@ -235,6 +249,10 @@ export class PlanregistratiesService {
   }
 
   public cancelChanges() {
+    const hasNew = this.planRegistraties.value.find(r => r.isNew);
+    if (hasNew) {
+      this.planRegistraties.next(this.planRegistraties.value.filter(r => !r.isNew));
+    }
     this.setSelectedPlanregistratie(null);
   }
 

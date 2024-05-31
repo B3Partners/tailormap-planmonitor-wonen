@@ -2,6 +2,7 @@
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
 import { Observable, of } from 'rxjs';
 import {
+  AutofillDataModel,
   BetaalbaarheidEnum, KnelpuntenMeerkeuzeEnum, OpdrachtgeverEnum,
   PlanregistratieModel, PlanregistratieSaveModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum,
   WonenEnZorgEnum,
@@ -11,9 +12,14 @@ import { Injectable } from '@angular/core';
 import { NieuwbouwEnum } from '../models/nieuwbouw.enum';
 import { FlexwoningenEnum } from '../models/flexwoningen.enum';
 import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
+import { GemeenteModel } from '../models/gemeente.model';
 
 @Injectable()
 export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServiceModel {
+
+  public getGemeentes$(): Observable<GemeenteModel[]> {
+    return of([]);
+  }
 
   public getPlanregistraties$(): Observable<PlanregistratieModel[]> {
     const registraties: PlanregistratieModel[] = [{
@@ -112,6 +118,15 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
 
   public deletePlanregistratie$(_id: string) {
     return of(true);
+  }
+
+  public autofillByGeometry$(_geometry: string): Observable<AutofillDataModel> {
+    return of({
+      gemeentes: [],
+      regios: [],
+      provincies: [],
+      woonmilieus: [],
+    });
   }
 
 }

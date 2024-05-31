@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { PlanregistratieModel, PlanregistratieSaveModel } from '../models';
+import { HttpClient, HttpClientModule, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { AutofillDataModel, GemeenteModel, PlanregistratieModel, PlanregistratieSaveModel } from '../models';
 import { catchError, map, Observable, of } from 'rxjs';
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
 
@@ -13,6 +13,14 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   private apiBaseUrl = '/api/planmonitor-wonen';
 
   constructor(private http: HttpClient) {}
+
+  public getGemeentes$(args?: { provincie?: string }): Observable<GemeenteModel[]> {
+    let params = new HttpParams();
+    if (args?.provincie) {
+      params = params.append('provincie', args.provincie);
+    }
+    return this.http.get<GemeenteModel[]>(`${this.apiBaseUrl}/gemeentes`, { params });
+  }
 
   public getPlanregistraties$(): Observable<PlanregistratieModel[]> {
     return this.http.get<PlanregistratieModel[]>(`${this.apiBaseUrl}/planregistraties`);
@@ -42,6 +50,10 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
         return of(false);
       }),
     );
+  }
+
+  public autofillByGeometry$(geometry: string): Observable<AutofillDataModel> {
+    return this.http.post<AutofillDataModel>(`${this.apiBaseUrl}/planregistratie/autofill-by-geometry`, geometry);
   }
 
 }

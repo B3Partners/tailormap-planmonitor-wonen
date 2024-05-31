@@ -7,20 +7,29 @@
         <input matInput formControlName="plannaam" />
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Provincie</mat-label>
-        <input matInput formControlName="provincie" />
+        <mat-label>Plaatsnaam</mat-label>
+        <input matInput formControlName="plaatsnaam" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Gemeente</mat-label>
-        <input matInput formControlName="gemeente" />
+        @if (((gemeentes$ | async) || []).length > 0) {
+          <mat-select formControlName="gemeente">
+            <mat-option></mat-option>
+            @for (gemeente of gemeentes$ | async; track gemeente.naam) {
+              <mat-option [value]="gemeente.naam">{{gemeente.naam}}</mat-option>
+            }
+          </mat-select>
+        } @else {
+          <input matInput formControlName="gemeente" />
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Regio</mat-label>
         <input matInput formControlName="regio" />
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Plaatsnaam</mat-label>
-        <input matInput formControlName="plaatsnaam" />
+        <mat-label>Provincie</mat-label>
+        <input matInput formControlName="provincie" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Plantype</mat-label>

@@ -29,4 +29,5 @@ export interface PlanregistratieModel {
   beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum | null;
   aantalStudentenwoningen: number;
   sleutelproject: boolean | null;
+  isNew?: boolean;
 }

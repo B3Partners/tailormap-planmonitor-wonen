@@ -27,6 +27,7 @@ export class PlanMonitorModelHelper {
       statusPlanologisch: null,
       statusProject: null,
       sleutelproject: null,
+      isNew: true,
       ...initialData,
     };
   }

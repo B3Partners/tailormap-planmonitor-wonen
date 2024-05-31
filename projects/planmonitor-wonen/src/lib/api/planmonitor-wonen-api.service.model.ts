@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
-import { DetailplanningModel, PlancategorieModel, PlanregistratieModel, PlanregistratieSaveModel } from '../models';
+import {
+  AutofillDataModel, DetailplanningModel, GemeenteModel, PlancategorieModel, PlanregistratieModel, PlanregistratieSaveModel,
+} from '../models';
 
 export interface PlanregistratieDetails {
   plancategorieen: PlancategorieModel[];
@@ -7,6 +9,8 @@ export interface PlanregistratieDetails {
 }
 
 export interface PlanmonitorWonenApiServiceModel {
+  getGemeentes$(args?: { provincie?: string }): Observable<GemeenteModel[]>;
+  autofillByGeometry$(geometry: string): Observable<AutofillDataModel>;
   getPlanregistraties$(): Observable<PlanregistratieModel[]>;
   getPlandetails$(id: string): Observable<PlanregistratieDetails>;
   savePlanregistratie$(planRegistratieSaveModel: PlanregistratieSaveModel): Observable<boolean>;
