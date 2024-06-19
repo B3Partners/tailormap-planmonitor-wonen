@@ -9,4 +9,5 @@ export enum KnelpuntenMeerkeuzeEnum {
   VERVUILDE_GROND = 'Vervuilde grond',
   FLORA_FAUNA = 'Flora/fauna',
   NETCONGESTIE = 'Netcongestie',
+  GEEN = 'Geen',
 }
