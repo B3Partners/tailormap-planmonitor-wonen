@@ -72,7 +72,7 @@ export class PlanregistratieDialogComponent {
     this.planregistratieService.updatePlan(updatedPlan);
   }
 
-  public save() {
+  public save(closeAfterSaving?: boolean) {
     this.saving.set(true);
     this.planregistratieService.save$().subscribe(success => {
       this.saving.set(false);
@@ -83,6 +83,9 @@ export class PlanregistratieDialogComponent {
         showCloseButton: true,
       };
       SnackBarMessageComponent.open$(this.matSnackBar, config).subscribe();
+      if (success && closeAfterSaving) {
+        this.cancel();
+      }
     });
   }
 
