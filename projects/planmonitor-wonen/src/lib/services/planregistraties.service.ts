@@ -54,9 +54,11 @@ export class PlanregistratiesService {
     this.validChangedPlan$ = combineLatest([
       this.selectedPlanregistratie.asObservable(),
       this.selectedCategorieTable.asObservable(),
+      this.hasTableChanges.asObservable(),
+      this.hasFormChanges.asObservable(),
     ]).pipe(
-      map(([ updatedPlan, categorieTable ]) => {
-        if (updatedPlan === null || categorieTable === null || (!this.hasTableChanges.value && !this.hasFormChanges.value)) {
+      map(([ updatedPlan, categorieTable, hasTableChanges, hasFormChanges ]) => {
+        if (updatedPlan === null || categorieTable === null || (!hasTableChanges && !hasFormChanges)) {
           return false;
         }
         return PlanValidationHelper.validatePlan(updatedPlan, categorieTable);
@@ -103,6 +105,9 @@ export class PlanregistratiesService {
   }
 
   public setSelectedPlanregistratie(id: string | null) {
+    if (id !== null && id === this.selectedPlanregistratie.value?.id) {
+      return;
+    }
     const registratie = id === null ? null : this.planRegistraties.value.find(p => p.id === id);
     this.selectedPlanregistratie.next(registratie || null);
     this.selectedPlanCategorieen.next(null);
@@ -110,6 +115,10 @@ export class PlanregistratiesService {
     if (registratie) {
       this.loadPlancategorieen(registratie.id);
     }
+    this.resetChanges();
+  }
+
+  private resetChanges() {
     this.hasFormChanges.next(false);
     this.hasTableChanges.next(false);
     this.creatingNewPlan.next(false);
@@ -233,6 +242,7 @@ export class PlanregistratiesService {
       currentPlans[idx] = plan;
     }
     this.planRegistraties.next(currentPlans);
+    this.resetChanges();
   }
 
   private removePlanAfterRemoving(planregistratieId: string) {

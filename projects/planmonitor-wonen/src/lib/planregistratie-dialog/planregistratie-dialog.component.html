@@ -33,14 +33,18 @@
                 mat-flat-button>Verwijder plan</button>
         <div class="divider"></div>
         <button (click)="cancel()" mat-flat-button>Annuleren</button>
-        <button (click)="save()"
-                [disabled]="(disableSave$ | async) || saving()"
-                color="primary"
-                mat-flat-button>
+        <button (click)="save()" [disabled]="(disableSave$ | async) || saving()" color="primary" mat-flat-button>
           @if (saving()) {
               <mat-spinner diameter="20"></mat-spinner>
           } @else {
             Opslaan
+          }
+        </button>
+        <button (click)="save(true)" [disabled]="(disableSave$ | async) || saving()" color="primary" mat-flat-button>
+          @if (saving()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Opslaan & sluiten
           }
         </button>
       </div>
