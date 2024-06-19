@@ -112,7 +112,7 @@ export class PlanregistratiesService {
     this.selectedPlanregistratie.next(registratie || null);
     this.selectedPlanCategorieen.next(null);
     this.selectedDetailplanningen.next(null);
-    if (registratie) {
+    if (registratie && !registratie.isNew) {
       this.loadPlancategorieen(registratie.id);
     }
     this.resetChanges();
