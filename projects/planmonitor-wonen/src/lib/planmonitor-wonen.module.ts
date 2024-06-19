@@ -48,8 +48,8 @@ export class PlanmonitorWonenModule {
       .pipe(filter(g => g.length > 0), take(1))
       .subscribe(gemeentes => {
         adminFieldRegistrationService.registerFields(AdminFieldLocation.GROUP, [
-          { type: "choice", label: "Type gebruiker", dataType: "string", key: "typeGebruiker", values: [ "gemeente", "provincie" ] },
-          { type: "choice", label: "Gemeente", dataType: "string", key: "gemeente", values: gemeentes.filter(g => g.provincie === 'Zeeland').map(g => g.naam) },
+          { type: "choice", label: "Type gebruiker", dataType: "string", key: "typeGebruiker", isPublic: true, values: [ "gemeente", "provincie" ] },
+          { type: "choice", label: "Gemeente", dataType: "string", key: "gemeente", isPublic: true, values: gemeentes.filter(g => g.provincie === 'Zeeland').map(g => g.naam) },
         ]);
       });
   }
