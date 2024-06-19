@@ -8,9 +8,10 @@ import { combineLatest, distinctUntilChanged, map, Observable, switchMap, tap, w
 import { PlanregistratieModel, PlantypeEnum } from '../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PlanregistratiesService } from '../services/planregistraties.service';
-import { CssHelper } from '@tailormap-viewer/shared';
+import { CssHelper, SnackBarMessageComponent, SnackBarMessageOptionsModel } from '@tailormap-viewer/shared';
 import { FeatureModel } from '@tailormap-viewer/api';
 import { ColorHelper } from '../helpers/color.helper';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> & { selected?: boolean };
 
@@ -32,6 +33,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     private planregistratieService: PlanregistratiesService,
     private mapService: MapService,
     private destroyRef: DestroyRef,
+    private matSnackBar: MatSnackBar,
   ) { }
 
   public ngOnInit(): void {
@@ -70,7 +72,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     this.mapService.createTool$<SelectToolModel<PlanregistratieFeatureAttributes>, SelectToolConfigModel<PlanregistratieFeatureAttributes>>({
       type: ToolTypeEnum.Select,
       layers: [PlanregistratiesMapComponent.LAYER_ID],
-      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.plantype, true),
+      style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.plantype, feature.attributes.selected),
     })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -79,8 +81,13 @@ export class PlanregistratiesMapComponent implements OnInit {
           manager.enableTool(tool.id, true);
         }),
         switchMap(({ tool }) => tool.selectedFeatures$),
+        withLatestFrom(this.planregistratieService.hasChanges$()),
       )
-      .subscribe(selectedFeatures => {
+      .subscribe(([ selectedFeatures, hasChanges ]) => {
+        if (hasChanges) {
+          this.showUnableToSelectMessage();
+          return;
+        }
         const selectedPlan = selectedFeatures && selectedFeatures.length > 0 && selectedFeatures[0] ? selectedFeatures[0].attributes : null;
         this.planregistratieService.setSelectedPlanregistratie(selectedPlan?.id || null);
       });
@@ -155,22 +162,6 @@ export class PlanregistratiesMapComponent implements OnInit {
           toolManager.enableTool(this.selectTool.id, false);
         }
       });
-    this.planregistratieService.hasChanges$()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        distinctUntilChanged(),
-        withLatestFrom(this.mapService.getToolManager$()),
-      )
-      .subscribe(([ hasChanges, toolManager ]) => {
-        if (!this.selectTool) {
-          return;
-        }
-        if (hasChanges) {
-          toolManager.disableTool(this.selectTool.id, true);
-        } else {
-          toolManager.enableTool(this.selectTool.id, false);
-        }
-      });
   }
 
   private static getFeatureStyle(planType: PlantypeEnum | null, selected = false): MapStyleModel {
@@ -185,6 +176,16 @@ export class PlanregistratiesMapComponent implements OnInit {
       pointFillColor: ColorHelper.getPlantypeColor(planType),
       styleKey: 'planmonitor-highlight-style',
     };
+  }
+
+  private showUnableToSelectMessage() {
+    const config: SnackBarMessageOptionsModel = {
+      message: 'U heeft wijzigingen aangebracht bij het huidige plan. Klik op Opslaan of Annuleren voor u een ander plan selecteert.',
+      duration: 5000,
+      showDuration: true,
+      showCloseButton: true,
+    };
+    SnackBarMessageComponent.open$(this.matSnackBar, config).subscribe();
   }
 
 }
