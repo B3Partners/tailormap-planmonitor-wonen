@@ -4,6 +4,7 @@ import { PlanregistratiesService } from '../services/planregistraties.service';
 import { map, Observable } from 'rxjs';
 import { LayoutService } from '@tailormap-viewer/core';
 import { PLANMONITOR_WONEN_COMPONENT_ID } from '../models';
+import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 
 @Component({
   selector: 'lib-planmonitor-toggle',
@@ -15,11 +16,14 @@ export class PlanmonitorToggleComponent {
 
   public activeToggle$: Observable<string>;
   public toolActive$: Observable<boolean>;
+  public isGemeenteGebruiker$: Observable<boolean>;
 
   constructor(
     private planregistratieService: PlanregistratiesService,
     private layoutService: LayoutService,
+    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
   ) {
+    this.isGemeenteGebruiker$ = this.planmonitorAuthenticationService.isGemeenteGebruiker$;
     this.toolActive$ = this.layoutService.componentsConfig$
       .pipe(map(config => this.layoutService.isComponentEnabled(config, PLANMONITOR_WONEN_COMPONENT_ID)));
     this.activeToggle$ = this.planregistratieService.isCreatingNewPlan$()

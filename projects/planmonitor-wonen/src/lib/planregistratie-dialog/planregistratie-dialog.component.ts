@@ -1,11 +1,14 @@
-import { Component, ChangeDetectionStrategy, HostListener, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener, signal, DestroyRef } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
-import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import {
   BrowserHelper, ConfirmDialogService, CssHelper, SnackBarMessageComponent, SnackBarMessageOptionsModel,
 } from '@tailormap-viewer/shared';
 import { PlanregistratieModel } from '../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
+import { MapService, ProjectionCodesEnum } from '@tailormap-viewer/map';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-planregistratie-dialog',
@@ -20,7 +23,7 @@ export class PlanregistratieDialogComponent {
 
   private bodyMargin = CssHelper.getCssVariableValueNumeric('--body-margin');
   public panelWidthMargin = CssHelper.getCssVariableValueNumeric('--menubar-width') + (this.bodyMargin * 2);
-  public panelWidth = 300;
+  public panelWidth = this.getPanelWidth();
 
   public dialogTitle$: Observable<string> = of('');
   private dialogCollapsed = new BehaviorSubject(false);
@@ -29,29 +32,44 @@ export class PlanregistratieDialogComponent {
   public disableSave$: Observable<boolean>;
 
   public saving = signal(false);
+  public savingAndClosing = signal(false);
+  public isGemeenteGebruiker$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
   public onResize() {
-    this.panelWidth = (BrowserHelper.getScreenWith() * 0.7) - this.panelWidthMargin;
+    this.panelWidth = this.getPanelWidth();
   }
 
   constructor(
     private planregistratieService: PlanregistratiesService,
     private matSnackBar: MatSnackBar,
     private confirmDialogService: ConfirmDialogService,
-    // private mapService: MapService,
+    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
+    private mapService: MapService,
+    private destroyRef: DestroyRef,
   ) {
+    this.isGemeenteGebruiker$ = this.planmonitorAuthenticationService.isGemeenteGebruiker$;
     this.selectedPlan$ = this.planregistratieService.getSelectedPlanregistratie$();
     this.dialogOpen$ = this.selectedPlan$
       .pipe(
-        tap(plan => {
-          document.body.classList.toggle('planmonitor-wonen-dialog-open', !!plan);
-          // if (plan) {
-          //   this.mapService.zoomTo(plan.geometrie, ProjectionCodesEnum.RD);
-          // }
-        }),
         map(plan => !!plan),
+        tap(dialogOpen => {
+          document.body.classList.toggle('planmonitor-wonen-dialog-open', dialogOpen);
+        }),
       );
+    this.selectedPlan$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        distinctUntilChanged((prev, current) => {
+          return prev?.id === current?.id;
+        }),
+        debounceTime(0),
+      )
+      .subscribe(plan => {
+        if (plan) {
+          this.mapService.zoomTo(plan.geometrie, ProjectionCodesEnum.RD);
+        }
+      });
     this.dialogTitle$ = this.selectedPlan$.pipe(map(plan => {
       return plan ? `Planregistratie ${plan.planNaam}` : 'Planregistratie';
     }));
@@ -73,9 +91,17 @@ export class PlanregistratieDialogComponent {
   }
 
   public save(closeAfterSaving?: boolean) {
-    this.saving.set(true);
+    if (closeAfterSaving) {
+      this.savingAndClosing.set(true);
+    } else {
+      this.saving.set(true);
+    }
     this.planregistratieService.save$().subscribe(success => {
-      this.saving.set(false);
+      if (closeAfterSaving) {
+        this.savingAndClosing.set(false);
+      } else {
+        this.saving.set(false);
+      }
       const config: SnackBarMessageOptionsModel = {
         message: success ? 'Planregistratie opgeslagen' : 'Er is iets mis gegaan bij het opslaan van deze planregistratie. Probeer het opnieuw.',
         duration: 5000,
@@ -115,4 +141,9 @@ export class PlanregistratieDialogComponent {
         SnackBarMessageComponent.open$(this.matSnackBar, config).subscribe();
       });
   }
+
+  private getPanelWidth() {
+    return (BrowserHelper.getScreenWith() * 0.7) - this.panelWidthMargin;
+  }
+
 }

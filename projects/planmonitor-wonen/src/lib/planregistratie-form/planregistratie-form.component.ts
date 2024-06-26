@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnInit, Output,
+} from '@angular/core';
 import {
   KnelpuntenMeerkeuzeEnum, OpdrachtgeverEnum, PlanregistratieModel, PlantypeEnum, ProjectstatusEnum,
   StatusPlanologischEnum,
@@ -6,9 +8,10 @@ import {
 } from '../models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, Observable, of } from 'rxjs';
+import { BehaviorSubject, debounceTime, Observable, of, combineLatest, map } from 'rxjs';
 import { AutofillDataService } from '../services/autofill-data.service';
 import { GemeenteModel } from '../models/gemeente.model';
+import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 
 @Component({
   selector: 'lib-planregistratie-form',
@@ -62,12 +65,26 @@ export class PlanregistratieFormComponent implements OnInit {
   public planregistratieChanged = new EventEmitter<Partial<PlanregistratieModel> | null>();
 
   public gemeentes$: Observable<GemeenteModel[]> = of([]);
+  public isProvincieGebruiker$: Observable<boolean> = of(false);
+  public invalidGemeenteSelectedMessage$: Observable<string | null> = of(null);
+
+  private selectedGemeenteSubject = new BehaviorSubject<string | null>(null);
 
   constructor(
     private destroyRef: DestroyRef,
     private autofillDataService: AutofillDataService,
+    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
   ) {
     this.gemeentes$ = this.autofillDataService.getGemeentes$();
+    this.planmonitorAuthenticationService.ingelogdeGebruikerGemeente$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isGemeente => {
+        if (isGemeente) {
+          this.planregistratieForm.enable({ emitEvent: false });
+        } else {
+          this.planregistratieForm.disable({ emitEvent: false });
+        }
+      });
   }
 
   public ngOnInit(): void {
@@ -77,8 +94,27 @@ export class PlanregistratieFormComponent implements OnInit {
         debounceTime(250),
       )
       .subscribe(values => {
+        this.selectedGemeenteSubject.next(values?.gemeente || null);
         this.planregistratieChanged.emit(this.parseForm(values));
       });
+    this.isProvincieGebruiker$ = this.planmonitorAuthenticationService.isProvincieGebruiker$;
+    this.invalidGemeenteSelectedMessage$ = combineLatest([
+      this.planmonitorAuthenticationService.ingelogdeGebruikerGemeente$,
+      this.selectedGemeenteSubject.asObservable(),
+    ])
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(([ ingelogdeGebruikerGemeente, selectedGemeente ]) => {
+          if (ingelogdeGebruikerGemeente === null || selectedGemeente === null) {
+            return null;
+          }
+          if (ingelogdeGebruikerGemeente !== selectedGemeente) {
+            // eslint-disable-next-line max-len
+            return `U heeft de gemeente ${selectedGemeente} geselecteerd terwijl rechten heeft op de gemeente ${ingelogdeGebruikerGemeente}. U zult dit plan niet op kunnen slaan zonder in te loggen als een gebruiker met rechten voor de gemeente ${selectedGemeente}`;
+          }
+          return null;
+        }),
+      );
   }
 
   private patchForm(planregistratie: PlanregistratieModel | null) {
@@ -100,6 +136,7 @@ export class PlanregistratieFormComponent implements OnInit {
       aantal_studentenwoningen: planregistratie ? planregistratie.aantalStudentenwoningen : null,
       sleutelproject: planregistratie ? planregistratie.sleutelproject: null,
     }, { emitEvent: false });
+    this.selectedGemeenteSubject.next(planregistratie?.gemeente || null);
   }
 
   private parseForm(values: typeof this.planregistratieForm.value): Partial<PlanregistratieModel> | null {

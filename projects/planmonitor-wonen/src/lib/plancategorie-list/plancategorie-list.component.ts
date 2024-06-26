@@ -7,6 +7,7 @@ import { ColorHelper } from '../helpers/color.helper';
 import { CategorieTableModel } from '../models/categorie-table.model';
 import { YearColumnModel } from '../models/year-table-column.model';
 import { ColumnHelper } from '../helpers/column.helper';
+import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 
 const INTEGER_REGEX = /^\d+$/;
 const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
@@ -43,11 +44,13 @@ export class PlancategorieListComponent implements OnInit {
 
   public tableData: CategorieTableModel | null = null;
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
+  public inputsDisabled = true;
 
   constructor(
     private planregistratieService: PlanregistratiesService,
     private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef,
+    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
   ) {
   }
 
@@ -56,6 +59,12 @@ export class PlancategorieListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(tableData => {
         this.tableData = tableData;
+        this.cdr.detectChanges();
+      });
+    this.planmonitorAuthenticationService.ingelogdeGebruikerGemeente$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isGemeente => {
+        this.inputsDisabled = !isGemeente;
         this.cdr.detectChanges();
       });
   }

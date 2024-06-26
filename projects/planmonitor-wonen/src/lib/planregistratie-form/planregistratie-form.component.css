@@ -17,3 +17,20 @@
 .narrow {
   width: 200px;
 }
+
+.is-provincie-viewer {
+  --mdc-filled-text-field-disabled-input-text-color: #000;
+  --mat-select-disabled-trigger-text-color: #000;
+  --mdc-filled-text-field-disabled-label-text-color: #000;
+  --mdc-filled-text-field-disabled-container-color: transparent;
+  --mdc-filled-text-field-disabled-active-indicator-color: var(--border-color);
+}
+
+.is-provincie-viewer ::ng-deep .mdc-text-field {
+  padding: 0;
+}
+
+.is-provincie-viewer ::ng-deep .mat-mdc-select-arrow-wrapper,
+.is-provincie-viewer ::ng-deep .mat-mdc-form-field-required-marker {
+  display: none;
+}

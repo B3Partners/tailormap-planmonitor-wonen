@@ -1,5 +1,5 @@
 @if (tableData !== null) {
-  <div class="table-wrapper">
+  <div class="table-wrapper" [class.inputs-enabled]="!inputsDisabled" [class.inputs-disabled]="inputsDisabled">
     <mat-table [dataSource]="tableData.rows" [trackBy]="trackByRowId">
 
       <ng-container matColumnDef="label" [sticky]="true">
@@ -17,15 +17,19 @@
       <ng-container matColumnDef="totalen">
         <mat-header-cell *matHeaderCellDef  class="number-column">Totalen</mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index;" class="number-column number-input-cell">
-          <input type="text"
-                 class="number-input"
-                 [attr.data-row]="i"
-                 [attr.data-column]="'totaal'"
-                 [disabled]="row.disabled"
-                 (keydown)="handleCellNavigation($event)"
-                 [class]="'cell_totaal_' + i"
-                 [value]="row.totalen"
-                 (change)="updateCategorieField($event, row.id, 'totaalGepland')" />
+          @if (inputsDisabled) {
+            {{row.totalen}}
+          } @else {
+            <input type="text"
+                   class="number-input"
+                   [attr.data-row]="i"
+                   [attr.data-column]="'totaal'"
+                   [disabled]="row.disabled"
+                   (keydown)="handleCellNavigation($event)"
+                   [class]="'cell_totaal_' + i"
+                   [value]="row.totalen"
+                   (change)="updateCategorieField($event, row.id, 'totaalGepland')" />
+          }
         </mat-cell>
       </ng-container>
 
@@ -40,15 +44,19 @@
       <ng-container matColumnDef="gerealiseerd">
         <mat-header-cell *matHeaderCellDef  class="number-column">Gerealiseerd</mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index;" class="number-column number-input-cell">
-          <input type="text"
-                 class="number-input"
-                 [attr.data-row]="i"
-                 [attr.data-column]="'gerealiseerd'"
-                 [disabled]="row.disabled"
-                 (keydown)="handleCellNavigation($event)"
-                 [class]="'cell_gerealiseerd_' + i"
-                 [value]="row.gerealiseerd"
-                 (change)="updateCategorieField($event, row.id, 'totaalGerealiseerd')" />
+          @if (inputsDisabled) {
+            {{row.gerealiseerd}}
+          } @else {
+            <input type="text"
+                   class="number-input"
+                   [attr.data-row]="i"
+                   [attr.data-column]="'gerealiseerd'"
+                   [disabled]="inputsDisabled || row.disabled"
+                   (keydown)="handleCellNavigation($event)"
+                   [class]="'cell_gerealiseerd_' + i"
+                   [value]="row.gerealiseerd"
+                   (change)="updateCategorieField($event, row.id, 'totaalGerealiseerd')" />
+          }
         </mat-cell>
       </ng-container>
 
@@ -62,16 +70,20 @@
           <mat-header-cell *matHeaderCellDef class="year number-column" [class.check-failed]="isInvalidColumn(tableData.yearColumns, 'year_' + year)">{{year}}</mat-header-cell>
           <mat-cell *matCellDef="let row; let i = index;" class="year number-input-cell" [class.info-cell]="row.id === 'sloop-sloop'">
             @if (row.id !== 'sloop-sloop') {
-              <input type="text"
-                     class="number-input"
-                     pattern="0-9"
-                     [attr.data-row]="i"
-                     [attr.data-column]="year"
-                     [disabled]="row.disabled"
-                     (keydown)="handleCellNavigation($event)"
-                     [class]="'cell_' + year + '_' + i"
-                     [value]="row['year_' + year]"
-                     (change)="updateDetailField($event, row.id, year)" />
+              @if (inputsDisabled) {
+                {{row['year_' + year]}}
+              } @else {
+                <input type="text"
+                       class="number-input"
+                       pattern="0-9"
+                       [attr.data-row]="i"
+                       [attr.data-column]="year"
+                       [disabled]="row.disabled"
+                       (keydown)="handleCellNavigation($event)"
+                       [class]="'cell_' + year + '_' + i"
+                       [value]="row['year_' + year]"
+                       (change)="updateDetailField($event, row.id, year)" />
+              }
             }
           </mat-cell>
         </ng-container>
@@ -84,15 +96,20 @@
         </mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index;" class="year number-input-cell" [class.info-cell]="row.id === 'sloop-sloop'">
           @if (row.id !== 'sloop-sloop') {
-            <input type="text"
-                   class="number-input"
-                   [attr.data-row]="i"
-                   [attr.data-column]="2043"
-                   [disabled]="row.disabled"
-                   (keydown)="handleCellNavigation($event)"
-                   [class]="'cell_2043_' + i"
-                   [value]="row.year_2043"
-                   (change)="updateDetailField($event, row.id, 2043)" />
+            @if (inputsDisabled) {
+              {{row.year_2043}}
+            } @else {
+              <input type="text"
+                     class="number-input"
+                     [attr.data-row]="i"
+                     [attr.data-column]="2043"
+                     [disabled]="inputsDisabled || row.disabled"
+                     (keydown)="handleCellNavigation($event)"
+                     [class]="'cell_2043_' + i"
+                     [value]="row.year_2043"
+                     (change)="updateDetailField($event, row.id, 2043)" />
+            }
+
           }
         </mat-cell>
       </ng-container>

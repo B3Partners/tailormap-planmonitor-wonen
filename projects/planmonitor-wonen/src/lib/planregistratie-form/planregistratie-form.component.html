@@ -1,4 +1,10 @@
-<div class="form" [formGroup]="planregistratieForm">
+<div class="form"
+     [class.is-provincie-viewer]="isProvincieGebruiker$ | async"
+     [formGroup]="planregistratieForm">
+
+  @if (invalidGemeenteSelectedMessage$ | async; as invalidGemeenteMessage) {
+    <tm-error-message [message]="invalidGemeenteMessage"></tm-error-message>
+  }
 
   <div class="form-field__columns">
     <div class="column">

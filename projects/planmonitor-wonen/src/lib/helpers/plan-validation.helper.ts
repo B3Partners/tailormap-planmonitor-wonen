@@ -3,7 +3,7 @@ import { CategorieTableModel } from '../models/categorie-table.model';
 
 export class PlanValidationHelper {
 
-  public static validatePlan(planRegistratie: PlanregistratieModel, categorieTable: CategorieTableModel) {
+  public static validatePlan(planRegistratie: PlanregistratieModel, categorieTable: CategorieTableModel | null) {
     if (
       PlanValidationHelper.hasEmptyValue(planRegistratie.planNaam)
       || PlanValidationHelper.hasEmptyValue(planRegistratie.provincie)
@@ -21,6 +21,9 @@ export class PlanValidationHelper {
       || PlanValidationHelper.hasInvalidValue(planRegistratie.sleutelproject)
     ) {
       return false;
+    }
+    if (categorieTable === null) {
+      return true;
     }
     return categorieTable.rows.every(row => row.valid)
       && categorieTable.yearColumns.every(column => column.valid);

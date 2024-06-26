@@ -58,7 +58,8 @@ export class PlanregistratiesService {
       this.hasFormChanges.asObservable(),
     ]).pipe(
       map(([ updatedPlan, categorieTable, hasTableChanges, hasFormChanges ]) => {
-        if (updatedPlan === null || categorieTable === null || (!hasTableChanges && !hasFormChanges)) {
+        const isNew = updatedPlan?.isNew ?? false;
+        if (updatedPlan === null || (categorieTable === null && !isNew) || (!hasTableChanges && !hasFormChanges)) {
           return false;
         }
         return PlanValidationHelper.validatePlan(updatedPlan, categorieTable);
@@ -203,15 +204,15 @@ export class PlanregistratiesService {
     const updatedPlan = this.selectedPlanregistratie.value;
     const updatedCategorieen = this.selectedPlanCategorieen.value;
     const updatedDetailplanningen = this.selectedDetailplanningen.value;
-    if (updatedPlan === null || updatedCategorieen === null || updatedDetailplanningen === null) {
+    if (updatedPlan === null || (!updatedPlan.isNew && (updatedCategorieen === null || updatedDetailplanningen === null))) {
       return of(false);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { isNew, ...planregistratie } = updatedPlan;
     return this.api.savePlanregistratie$({
       planregistratie,
-      plancategorieen: updatedCategorieen,
-      detailplanningen: updatedDetailplanningen,
+      plancategorieen: updatedCategorieen || [],
+      detailplanningen: updatedDetailplanningen || [],
     })
       .pipe(
         tap(success => {
