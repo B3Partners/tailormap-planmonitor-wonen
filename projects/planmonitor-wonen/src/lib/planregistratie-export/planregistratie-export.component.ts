@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, map, Observable, of, take, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 import { FormControl } from '@angular/forms';
 import { EXPORT_TYPE_LABELS, ExportType, PlanregistratiesExportHelper } from '../helpers/planregistraties-export.helper';
