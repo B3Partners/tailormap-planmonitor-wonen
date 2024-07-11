@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Exporteer planregistraties</h2>
+<mat-dialog-content>
+  @if (loadingPlanregistraties()) {
+    <mat-spinner diameter="20" mode="indeterminate" color="primary"></mat-spinner>
+  } @else {
+    @if (planregistratiesAantal$ | async; as planregistratiesAantal) {
+      Exporteer {{ planregistratiesAantal }} planregistraties. Kies een formaat.
+    } @else {
+      Er zijn geen planregistraties gevonden om te exporteren
+    }
+  }
+  <mat-form-field>
+    <mat-select [formControl]="exportTypeControl">
+      <mat-option [value]="exportType.EENVOUDIG">{{exportTypeLabels[exportType.EENVOUDIG]}}</mat-option>
+      <mat-option [value]="exportType.UITGEBREID">{{exportTypeLabels[exportType.UITGEBREID]}}</mat-option>
+      <mat-option [value]="exportType.DRAAITABEL">{{exportTypeLabels[exportType.DRAAITABEL]}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="cancel()">Sluiten</button>
+  @if (planregistratiesAantal$ | async) {
+    <button mat-flat-button [disabled]="exporting()" (click)="export()">Exporteren</button>
+  }
+</mat-dialog-actions>

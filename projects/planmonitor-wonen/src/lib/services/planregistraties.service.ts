@@ -6,7 +6,7 @@ import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '.
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieTableHelper } from '../helpers/plancategorie-table.helper';
 import { PlanValidationHelper } from '../helpers/plan-validation.helper';
-import { PlanregistratieExportHelper } from '../helpers/planregistratie-export.helper';
+import { PlanregistratieTableExportHelper } from '../helpers/planregistratie-table-export.helper';
 import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 import { CategorieTableModel } from '../models/categorie-table.model';
 import { AutofillDataService } from './autofill-data.service';
@@ -72,6 +72,11 @@ export class PlanregistratiesService {
       this.loadRegistraties();
     }
     return this.planRegistraties.asObservable();
+  }
+
+  public getPlanregistratiesWithDetails$() {
+    return this.api.getPlanregistratiesWithDetails$()
+      .pipe(take(1), catchError(() => of(null)));
   }
 
   public getSelectedPlanregistratie$(): Observable<PlanregistratieModel | null> {
@@ -165,7 +170,7 @@ export class PlanregistratiesService {
     if (!currentReg || !table) {
       return;
     }
-    PlanregistratieExportHelper.createExcelExport(currentReg.planNaam, table.rows);
+    PlanregistratieTableExportHelper.createExcelExport(currentReg.planNaam, table.rows);
   }
 
   public updatePlan(plan: Partial<PlanregistratieModel> | null) {

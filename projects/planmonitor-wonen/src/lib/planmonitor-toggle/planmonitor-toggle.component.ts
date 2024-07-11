@@ -5,6 +5,8 @@ import { map, Observable } from 'rxjs';
 import { LayoutService } from '@tailormap-viewer/core';
 import { PLANMONITOR_WONEN_COMPONENT_ID } from '../models';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
+import { PlanregistratieExportComponent } from '../planregistratie-export/planregistratie-export.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'lib-planmonitor-toggle',
@@ -22,6 +24,7 @@ export class PlanmonitorToggleComponent {
     private planregistratieService: PlanregistratiesService,
     private layoutService: LayoutService,
     private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
+    private dialog: MatDialog,
   ) {
     this.isGemeenteGebruiker$ = this.planmonitorAuthenticationService.isGemeenteGebruiker$;
     this.toolActive$ = this.layoutService.componentsConfig$
@@ -32,6 +35,10 @@ export class PlanmonitorToggleComponent {
 
   public toggleChanged($event: MatButtonToggleChange) {
     this.planregistratieService.setCreateNewPlan($event.value === 'create');
+  }
+
+  public exportPlannen() {
+    PlanregistratieExportComponent.open(this.dialog);
   }
 
 }

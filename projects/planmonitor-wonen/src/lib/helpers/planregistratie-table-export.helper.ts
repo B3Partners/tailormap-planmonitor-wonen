@@ -99,14 +99,14 @@ const COLUMN_CONFIG: Map<string, { label: string; width: number }> = new Map([
   [ 'years_check', { label: 'Check', width: 14.71 }],
 ]);
 
-export class PlanregistratieExportHelper {
+export class PlanregistratieTableExportHelper {
 
   public static createExcelExport(
     plannaam: string,
     table: CategorieTableRowModel[],
   ) {
     const workbook = new ExcelJS.Workbook();
-    PlanregistratieExportHelper.addPlanningSheet(workbook, plannaam, table);
+    PlanregistratieTableExportHelper.addPlanningSheet(workbook, plannaam, table);
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -147,14 +147,14 @@ export class PlanregistratieExportHelper {
       excelRow.getCell(COLUMN_INDEX.CHECK_YEARS).value = { formula: `=F${rowNumber}-SUM(G${rowNumber}:R${rowNumber})` };
     });
     // Merge groepnaam and total check cells
-    PlanregistratieExportHelper.mergeGroepnaamCheckCells(sheet, [
+    PlanregistratieTableExportHelper.mergeGroepnaamCheckCells(sheet, [
       [ ROW_NUMBER.WONINGTYPE_BEGIN, ROW_NUMBER.WONINGTYPE_END ],
       [ ROW_NUMBER.WONEN_ZORG_BEGIN, ROW_NUMBER.WONEN_ZORG_END ],
       [ ROW_NUMBER.FLEXWONING_BEGIN, ROW_NUMBER.FLEXWONING_END ],
       [ ROW_NUMBER.BETAALBAAR_BEGIN, ROW_NUMBER.BETAALBAAR_END ],
     ]);
     // Set the styles
-    PlanregistratieExportHelper.setSheetStyles(sheet);
+    PlanregistratieTableExportHelper.setSheetStyles(sheet);
     // Add conditional formatting for check columns
     sheet.addConditionalFormatting({ ref: 'D3:D20', rules: CONDITIONAL_FORMATTING_RULES });
     sheet.addConditionalFormatting({ ref: 'S2:S20', rules: CONDITIONAL_FORMATTING_RULES });
@@ -169,13 +169,13 @@ export class PlanregistratieExportHelper {
   }
 
   private static setSheetStyles(sheet: ExcelJS.Worksheet) {
-    sheet.getColumn(COLUMN_INDEX.LABEL).eachCell(PlanregistratieExportHelper.coloredCellFormatter());
-    sheet.getColumn(COLUMN_INDEX.GROEPNAAM).eachCell(PlanregistratieExportHelper.coloredCellFormatter(true));
+    sheet.getColumn(COLUMN_INDEX.LABEL).eachCell(PlanregistratieTableExportHelper.coloredCellFormatter());
+    sheet.getColumn(COLUMN_INDEX.GROEPNAAM).eachCell(PlanregistratieTableExportHelper.coloredCellFormatter(true));
     sheet.getColumn(COLUMN_INDEX.CHECK_TOTAL).eachCell((cell, rowIdx) => {
       if (rowIdx < ROW_NUMBER.NIEUWBOUW) {
         return;
       }
-      PlanregistratieExportHelper.setStyle(cell, {
+      PlanregistratieTableExportHelper.setStyle(cell, {
         fill: rowIdx === ROW_NUMBER.NIEUWBOUW || rowIdx === ROW_NUMBER.SLOOP ? DISABLED_FIELD_BACKGROUND : undefined,
         alignment: CENTER_ALIGNMENT,
         border: { bottom: BORDER_STYLE, right: BORDER_STYLE, left: BORDER_STYLE },
@@ -185,26 +185,26 @@ export class PlanregistratieExportHelper {
       if (rowIdx < ROW_NUMBER.NIEUWBOUW) {
         return;
       }
-      PlanregistratieExportHelper.setStyle(cell, { fill: DISABLED_FIELD_BACKGROUND, border: { left: BORDER_STYLE, right: BORDER_STYLE } });
+      PlanregistratieTableExportHelper.setStyle(cell, { fill: DISABLED_FIELD_BACKGROUND, border: { left: BORDER_STYLE, right: BORDER_STYLE } });
     });
     sheet.getColumn(COLUMN_INDEX.CHECK_YEARS).eachCell(cell => {
-      PlanregistratieExportHelper.setStyle(cell, { border: { left: BORDER_STYLE, right: BORDER_STYLE } });
+      PlanregistratieTableExportHelper.setStyle(cell, { border: { left: BORDER_STYLE, right: BORDER_STYLE } });
     });
 
-    sheet.getRow(ROW_NUMBER.LABELS).eachCell(cell => PlanregistratieExportHelper.setStyle(cell, { fill: HEADER_BACKGROUND }));
+    sheet.getRow(ROW_NUMBER.LABELS).eachCell(cell => PlanregistratieTableExportHelper.setStyle(cell, { fill: HEADER_BACKGROUND }));
     sheet.getRow(ROW_NUMBER.SLOOP).eachCell((cell, colIdx) => {
       if (colIdx <= COLUMN_INDEX.RESTCAPACITEIT) {
         return;
       }
       cell.value = '';
-      PlanregistratieExportHelper.setStyle(cell, {
+      PlanregistratieTableExportHelper.setStyle(cell, {
         fill: DISABLED_FIELD_BACKGROUND,
         border: { bottom: BORDER_STYLE, right: colIdx === COLUMN_INDEX.CHECK_YEARS ? BORDER_STYLE : undefined },
       });
     });
     Array.from(WITH_BORDER_BOTTOM).forEach(rowIdx => {
       sheet.getRow(rowIdx).eachCell(cell => {
-        PlanregistratieExportHelper.setStyle(cell, { border: { bottom: BORDER_STYLE } });
+        PlanregistratieTableExportHelper.setStyle(cell, { border: { bottom: BORDER_STYLE } });
       });
     });
   }
@@ -229,7 +229,7 @@ export class PlanregistratieExportHelper {
       if (idx >= ROW_NUMBER.FLEXWONING_BEGIN && idx <= ROW_NUMBER.FLEXWONING_END) fill = FLEXWONING_BACKGROUND;
       if (idx >= ROW_NUMBER.BETAALBAAR_BEGIN && idx <= ROW_NUMBER.BETAALBAAR_END) fill = BETAALBAARHEID_BACKGROUND;
       if (idx === ROW_NUMBER.SLOOP) fill = SLOOP_BACKGROUND;
-      PlanregistratieExportHelper.setStyle(cell, { fill: fill, border: { right: BORDER_STYLE }, alignment: alignmentCenter ? CENTER_ALIGNMENT : undefined });
+      PlanregistratieTableExportHelper.setStyle(cell, { fill: fill, border: { right: BORDER_STYLE }, alignment: alignmentCenter ? CENTER_ALIGNMENT : undefined });
     };
   }
 

@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import {
   AutofillDataModel, DetailplanningModel, GemeenteModel, PlancategorieModel, PlanregistratieModel, PlanregistratieSaveModel,
 } from '../models';
+import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 
 export interface PlanregistratieDetails {
   plancategorieen: PlancategorieModel[];
@@ -15,4 +16,5 @@ export interface PlanmonitorWonenApiServiceModel {
   getPlandetails$(id: string): Observable<PlanregistratieDetails>;
   savePlanregistratie$(planRegistratieSaveModel: PlanregistratieSaveModel): Observable<boolean>;
   deletePlanregistratie$(id: string): Observable<boolean>;
+  getPlanregistratiesWithDetails$(): Observable<PlanregistratieWithDetailsModel[]>;
 }

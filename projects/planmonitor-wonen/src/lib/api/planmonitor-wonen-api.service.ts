@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule, HttpErrorResponse, HttpParams } from '@an
 import { AutofillDataModel, GemeenteModel, PlanregistratieModel, PlanregistratieSaveModel } from '../models';
 import { catchError, map, Observable, of } from 'rxjs';
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
+import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 
 @Injectable({
   providedIn: 'root',
@@ -54,6 +55,12 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
 
   public autofillByGeometry$(geometry: string): Observable<AutofillDataModel> {
     return this.http.post<AutofillDataModel>(`${this.apiBaseUrl}/planregistratie/autofill-by-geometry`, geometry);
+  }
+
+  public getPlanregistratiesWithDetails$(): Observable<PlanregistratieWithDetailsModel[]> {
+    return this.http.get<PlanregistratieWithDetailsModel[]>(`${this.apiBaseUrl}/planregistraties`, {
+      params: { details: true },
+    });
   }
 
 }

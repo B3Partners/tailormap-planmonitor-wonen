@@ -16,6 +16,7 @@ import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service'
 import { filter, take } from 'rxjs';
 import { AutofillDataService } from './services/autofill-data.service';
 import { PlanmonitorAuthenticationService } from './services/planmonitor-authentication.service';
+import { PlanregistratieExportComponent } from './planregistratie-export/planregistratie-export.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { PlanmonitorAuthenticationService } from './services/planmonitor-authent
     PlanregistratieFormComponent,
     PlancategorieListComponent,
     PlanmonitorToggleComponent,
+    PlanregistratieExportComponent,
   ],
   imports: [
     CommonModule,

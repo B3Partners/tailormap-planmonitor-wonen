@@ -1,4 +1,5 @@
 import { YearColumn } from '../models/year-table-column.model';
+import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 
 export class ColumnHelper {
 
@@ -27,7 +28,7 @@ export class ColumnHelper {
     'year_2039_2043',
   ];
 
-  public static categorieColumns: string[] = [
+  public static categorieColumns: Array<keyof CategorieTableRowModel> = [
     'label',
     'groeplabel',
     'totalen',
@@ -49,7 +50,7 @@ export class ColumnHelper {
     'years_check',
   ];
 
-  public static expandedCategorieColumns = [
+  public static expandedCategorieColumns: Array<keyof CategorieTableRowModel> = [
     ...ColumnHelper.categorieColumns.slice(0, -3),
     'year_2034',
     'year_2035',

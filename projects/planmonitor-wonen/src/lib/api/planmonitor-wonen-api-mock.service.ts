@@ -1,18 +1,18 @@
 /* eslint-disable max-len */
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
-import { Observable, of } from 'rxjs';
+import { concatMap, forkJoin, map, Observable, of } from 'rxjs';
 import {
   AutofillDataModel,
   BetaalbaarheidEnum, KnelpuntenMeerkeuzeEnum, OpdrachtgeverEnum,
   PlanregistratieModel, PlanregistratieSaveModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum,
-  WonenEnZorgEnum,
+  WonenEnZorgEnum, GemeenteModel,
   WoningtypeEnum, WoonmilieuAbf13Enum,
 } from '../models';
 import { Injectable } from '@angular/core';
 import { NieuwbouwEnum } from '../models/nieuwbouw.enum';
 import { FlexwoningenEnum } from '../models/flexwoningen.enum';
 import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
-import { GemeenteModel } from '../models/gemeente.model';
+import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 
 @Injectable()
 export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServiceModel {
@@ -42,7 +42,7 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
       statusProject: ProjectstatusEnum.VOORBEREIDING,
       statusPlanologisch: StatusPlanologischEnum.IN_VOORBEREIDING,
       knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum.BEREIKBAARHEID,
-      beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum.CENTRUM_DORPS,
+      beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum.DORPS,
       aantalStudentenwoningen: 70,
       sleutelproject: false,
     }, {
@@ -65,7 +65,7 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
       statusProject: ProjectstatusEnum.START,
       statusPlanologisch: StatusPlanologischEnum.VASTGESTELD,
       knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum.ANDERS,
-      beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum.CENTRUM_DORPS,
+      beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum.DORPS,
       aantalStudentenwoningen: 80,
       sleutelproject: false,
     }];
@@ -127,6 +127,24 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
       provincies: [],
       woonmilieus: [],
     });
+  }
+
+  public getPlanregistratiesWithDetails$(): Observable<PlanregistratieWithDetailsModel[]> {
+    return this.getPlanregistraties$()
+      .pipe(
+        concatMap(plannen => {
+          return forkJoin(plannen.map(plan => {
+            return this.getPlandetails$(plan.id)
+              .pipe(map(details => {
+                return {
+                  ...plan,
+                  plancategorieList: details.plancategorieen,
+                  detailplanningList: details.detailplanningen,
+                };
+              }));
+          }));
+        }),
+      );
   }
 
 }
