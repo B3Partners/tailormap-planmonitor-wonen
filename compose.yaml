@@ -48,6 +48,7 @@ services:
     image: docker.osgeo.org/geoserver:2.25.3
     environment:
       SKIP_DEMO_DATA: true
+      GEOSERVER_CSRF_WHITELIST: ${HOST}
       INSTALL_EXTENSIONS: false
       STABLE_EXTENSIONS: web-resource,geopkg-output,excel,css
       PROXY_BASE_URL: https://${HOST}/geoserver
