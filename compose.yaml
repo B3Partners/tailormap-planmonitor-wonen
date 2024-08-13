@@ -57,10 +57,10 @@ services:
       - default
       - reverse-proxy
     labels:
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-geoserver}.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/geoserver`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-geoserver}.tls=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-geoserver}.tls.certresolver=letsencrypt"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME:-geoserver}.loadbalancer.server.port=8080"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-geoserver.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/geoserver`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-geoserver.tls=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-geoserver.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-geoserver.loadbalancer.server.port=8080"
       - "traefik.docker.network=${PROXY_NETWORK:-traefik}"
       - "traefik.enable=true"
     restart: unless-stopped
