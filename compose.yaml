@@ -14,7 +14,7 @@ services:
       - pmw-data:/var/lib/postgresql/data
     networks:
       - default
-      - traefik
+      - reverse-proxy
     labels:
       - "traefik.tcp.routers.postgres-pmw.rule=HostSNI(`${HOST}`)"
       - "traefik.tcp.routers.postgres-pmw.tls=true"
