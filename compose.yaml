@@ -50,7 +50,7 @@ services:
       SKIP_DEMO_DATA: true
       INSTALL_EXTENSIONS: false
       STABLE_EXTENSIONS: web-resource,geopkg-output,excel,css
-      PROXY_BASE_URL: $${X-Forwarded-Proto}://$${X-Forwarded-Host}/geoserver
+      PROXY_BASE_URL: https://${HOST}/geoserver
     volumes:
       - geoserver-data:/opt/geoserver_data
     networks:
