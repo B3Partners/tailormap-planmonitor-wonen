@@ -24,6 +24,7 @@ services:
       - "traefik.tcp.routers.postgres-pmw.middlewares=postgres-pmw-ipallowlist"
       - "traefik.tcp.services.postgres-pmw.loadbalancer.server.port=5432"
       - "traefik.docker.network=traefik"
+      - "traefik.enable=true"
     healthcheck:
       interval: 1m
       timeout: 5s
