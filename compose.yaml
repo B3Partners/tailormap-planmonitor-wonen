@@ -12,6 +12,18 @@ services:
       POSTGRES_PASSWORD: ${PMW_DB_PASSWORD:-planmonitor-wonen}
     volumes:
       - pmw-data:/var/lib/postgresql/data
+    networks:
+      - default
+      - traefik
+    labels:
+      - "traefik.tcp.routers.postgres-pmw.rule=HostSNI(`${HOST}`)"
+      - "traefik.tcp.routers.postgres-pmw.tls=true"
+      - "traefik.tcp.routers.postgres-pmw.certresolver=letsencrypt"
+      - "traefik.tcp.routers.postgres-pmw.entrypoints=postgres-pmw"
+      - "traefik.tcp.middlewares.postgres-pmw-ipallowlist.ipallowlist.sourcerange=${PMW_IP_ALLOWLIST_RANGE}"
+      - "traefik.tcp.routers.postgres-pmw.middlewares=postgres-pmw-ipallowlist"
+      - "traefik.tcp.services.postgres-pmw.loadbalancer.server.port=5432"
+      - "traefik.docker.network=traefik"
     healthcheck:
       interval: 1m
       timeout: 5s
