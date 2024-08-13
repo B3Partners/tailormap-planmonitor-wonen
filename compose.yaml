@@ -1,5 +1,6 @@
 volumes:
   pmw-data:
+  geoserver-data:
 
 services:
   pmw-db:
@@ -41,3 +42,25 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pmw.tls.certresolver=letsencrypt"
       - "traefik.docker.network=${PROXY_NETWORK:-traefik}"
       - "traefik.enable=true"
+
+  geoserver:
+    container_name: ${COMPOSE_PROJECT_NAME}-geoserver
+    image: docker.osgeo.org/geoserver:2.25.3
+    environment:
+      SKIP_DEMO_DATA: true
+      INSTALL_EXTENSIONS: false
+      STABLE_EXTENSIONS: web-resource,geopkg-output,excel,css
+      PROXY_BASE_URL: $${X-Forwarded-Proto}://$${X-Forwarded-Host}/geoserver
+    volumes:
+      - geoserver-data:/opt/geoserver_data
+    networks:
+      - default
+      - reverse-proxy
+    labels:
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-geoserver}.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/geoserver`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-geoserver}.tls=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:-geoserver}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME:-geoserver}.loadbalancer.server.port=8080"
+      - "traefik.docker.network=${PROXY_NETWORK:-traefik}"
+      - "traefik.enable=true"
+    restart: unless-stopped
