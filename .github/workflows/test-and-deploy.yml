@@ -91,6 +91,7 @@ jobs:
       HOST: ${{ vars.DEPLOY_HOSTNAME }}
       ADMIN_HASHED_PASSWORD: ${{ vars.ADMIN_HASHED_PASSWORD }}
       PMW_DB_PASSWORD: ${{ secrets.PMW_DB_PASSWORD }}
+      PMW_IP_ALLOWLIST_RANGE: ${{ secrets.PMW_IP_ALLOWLIST_RANGE }}
       SOURCE_MAP_AUTH: ${{ secrets.SOURCE_MAP_AUTH }}
       BUILDX_NO_DEFAULT_ATTESTATIONS: 1
     needs: [ lint, test ]
