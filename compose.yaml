@@ -18,7 +18,7 @@ services:
     labels:
       - "traefik.tcp.routers.postgres-pmw.rule=HostSNI(`${HOST}`)"
       - "traefik.tcp.routers.postgres-pmw.tls=true"
-      - "traefik.tcp.routers.postgres-pmw.certresolver=letsencrypt"
+      - "traefik.tcp.routers.postgres-pmw.tls.certresolver=letsencrypt"
       - "traefik.tcp.routers.postgres-pmw.entrypoints=postgres-pmw"
       - "traefik.tcp.middlewares.postgres-pmw-ipallowlist.ipallowlist.sourcerange=${PMW_IP_ALLOWLIST_RANGE}"
       - "traefik.tcp.routers.postgres-pmw.middlewares=postgres-pmw-ipallowlist"
