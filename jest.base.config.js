@@ -1,3 +1,5 @@
+process.env.TZ = 'GMT';
+
 module.exports = {
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/../../setup-jest.ts'],
@@ -11,5 +13,5 @@ module.exports = {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$|ol|observable-fns|quick-lru|nanoid))'],
+  transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$|ol|observable-fns|quick-lru|nanoid|earcut|pbf|rbush|@tinyhttp/|@stardazed|color-(space|parse|rgba|name)/))'],
 };

@@ -1,7 +1,7 @@
 name: 'Test and deploy'
 
 env: # Keep this in sync with Dockerfile version
-  NODE_VERSION: "20.13.1"
+  NODE_VERSION: "20.17.0"
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
     types: [ opened, synchronize ]
   workflow_dispatch:
 
+
 jobs:
   lint:
     name: 'Lint'
@@ -17,11 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -43,11 +44,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -61,7 +62,7 @@ jobs:
         run: npm run test:ci
 
       - name: 'Upload test results'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Test Results
@@ -74,13 +75,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Event File
           path: ${{ github.event_path }}
 
   build:
     name: 'Build and deploy'
+    permissions:
+      deployments: write
     runs-on: ubuntu-22.04
     if: vars.DEPLOY == 'true'
     env:
@@ -159,7 +162,7 @@ jobs:
         run: |
           cd tailormap-viewer
           docker compose config
-          docker compose up -d --pull=always
+          docker compose up -d --pull=always --remove-orphans
 
       - name: 'Create GitHub deployment'
         if: success()

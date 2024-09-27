@@ -28,6 +28,13 @@
               "node_modules/@tailormap-viewer/shared/assets/locale/messages.shared.nl.xlf",
               "node_modules/@tailormap-admin/admin-core/assets/locale/messages.admin-core.nl.xlf"
             ]
+          },
+          "de": {
+            "translation": [
+              "node_modules/@tailormap-viewer/core/assets/locale/messages.core.de.xlf",
+              "node_modules/@tailormap-viewer/shared/assets/locale/messages.shared.de.xlf",
+              "node_modules/@tailormap-admin/admin-core/assets/locale/messages.admin-core.de.xlf"
+            ]
           }
         }
       },
@@ -38,7 +45,7 @@
             "outputPath": "dist/app",
             "index": "projects/app/src/index.html",
             "main": "projects/app/src/main.ts",
-            "polyfills": ["projects/app/src/polyfills.ts"],
+            "polyfills": ["projects/app/src/polyfills.ts", "@angular/localize/init"],
             "tsConfig": "projects/app/tsconfig.app.json",
             "assets": [
               {
@@ -79,7 +86,10 @@
               "earcut",
               "svgpath",
               "lerc",
-              "color-name"
+              "color-name",
+              "localforage",
+              "fastpriorityqueue",
+              "color-convert"
             ],
             "i18nMissingTranslation": "error"
           },
@@ -91,8 +101,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4.5mb",
-                  "maximumError": "5.0mb"
+                  "maximumWarning": "3.5mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -134,6 +144,9 @@
             },
             "nl": {
               "buildTarget": "app:build:development,nl"
+            },
+            "de": {
+              "buildTarget": "app:build:development,de"
             }
           },
           "options": {

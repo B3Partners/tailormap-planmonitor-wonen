@@ -4,22 +4,22 @@ updates:
     directory: '/'
     schedule:
       interval: weekly
-      day: tuesday
+      day: monday
       time: '21:00'
       timezone: 'Europe/Amsterdam'
     labels:
-      - infrastucture
+      - infrastructure
 
   - package-ecosystem: docker
     directory: '/'
     schedule:
       interval: weekly
-      day: tuesdaymonday
+      day: monday
       time: '21:00'
       timezone: 'Europe/Amsterdam'
     target-branch: main
     labels:
-      - infrastucture
+      - infrastructure
     ignore:
       - dependency-name: node
         versions:
