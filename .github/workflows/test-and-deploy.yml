@@ -105,7 +105,7 @@ jobs:
           # https://github.com/actions/checkout/issues/701
           fetch-depth: 0
       - name: 'GitHub Slug Action'
-        uses: rlespinasse/github-slug-action@v4
+        uses: rlespinasse/github-slug-action@v5
 
       - name: 'Find Current Pull Request'
         uses: jwalton/gh-find-current-pr@v1

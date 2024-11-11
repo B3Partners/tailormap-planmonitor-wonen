@@ -52,7 +52,7 @@ jobs:
           docker compose down --rmi all --volumes --remove-orphans
 
       - name: 'GitHub Slug Action'
-        uses: rlespinasse/github-slug-action@v4
+        uses: rlespinasse/github-slug-action@v5
 
       - name: 'Remove GitHub deployment and environment'
         if: ${{ always() }}
