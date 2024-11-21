@@ -59,13 +59,13 @@ export class PlancategorieTableHelper {
     detailPlanningen: DetailplanningModel[],
   ): CategorieTableModel {
     const nieuwbouwCategorie = PlancategorieTableHelper.getNieuwbouwCategorie(planCategorieen);
-    const nieuwbouwTotal = nieuwbouwCategorie?.totaalGepland || 0;
+    const nieuwbouwTotal = nieuwbouwCategorie?.totaalGepland || undefined;
     const groupTotals = new Map<string, number>();
     const rows = PlancategorieTableHelper.categorieen.map(categorieRow => {
       const planCategorie = PlancategorieTableHelper.getPlanCategorie(categorieRow, planCategorieen);
-      const totalen = planCategorie?.totaalGepland || 0;
-      const gerealiseerd = planCategorie?.totaalGerealiseerd || 0;
-      const restcapaciteit = totalen - gerealiseerd;
+      const totalen = planCategorie?.totaalGepland || undefined;
+      const gerealiseerd = planCategorie?.totaalGerealiseerd || undefined;
+      const restcapaciteit = (totalen ?? 0) - (gerealiseerd ?? 0);
       const cls = [
         'group-' + categorieRow.field.toLowerCase(),
       ];
@@ -120,7 +120,7 @@ export class PlancategorieTableHelper {
       row.years_check = restcapaciteit - rowTotaal;
       row.year_2034_2038 = PlancategorieTableHelper.getTotalFor20342038(row);
       row.year_2039_2043 = PlancategorieTableHelper.getTotalFor20392043(row);
-      groupTotals.set(categorieRow.field, (groupTotals.get(categorieRow.field) || 0) + totalen);
+      groupTotals.set(categorieRow.field, (groupTotals.get(categorieRow.field) || 0) + (totalen ?? 0));
       return row;
     });
     const categorieGroups: CategorieGroepField[] = [ 'woningType',  'wonenEnZorg',  'flexwoningen',  'betaalbaarheid' ];
@@ -134,7 +134,7 @@ export class PlancategorieTableHelper {
       return { year, valid };
     });
     const validatedRows = rows.map(row => {
-      const totalCheck = nieuwbouwTotal - (groupTotals.get(row.groep) || 0);
+      const totalCheck = (nieuwbouwTotal ?? 0) - (groupTotals.get(row.groep) || 0);
       return {
         ...row,
         total_check: row.groep === 'sloop' ? 0 : totalCheck,

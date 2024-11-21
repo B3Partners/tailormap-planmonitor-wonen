@@ -9,10 +9,10 @@ export interface CategorieTableRowModel {
   value: string;
   label: string;
   groeplabel: string;
-  totalen: number;
+  totalen: number | undefined;
   total_check: number;
-  gerealiseerd: number;
-  restcapaciteit: number;
+  gerealiseerd: number | undefined;
+  restcapaciteit: number | undefined;
   year_2024: number | string;
   year_2025: number | string;
   year_2026: number | string;

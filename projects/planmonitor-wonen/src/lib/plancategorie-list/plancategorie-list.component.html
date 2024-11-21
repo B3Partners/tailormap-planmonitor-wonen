@@ -27,7 +27,7 @@
                    [disabled]="row.disabled"
                    (keydown)="handleCellNavigation($event)"
                    [class]="'cell_totaal_' + i"
-                   [value]="row.totalen"
+                   [value]="row.totalen ?? ''"
                    (change)="updateCategorieField($event, row.id, 'totaalGepland')" />
           }
         </mat-cell>
@@ -54,7 +54,7 @@
                    [disabled]="inputsDisabled || row.disabled"
                    (keydown)="handleCellNavigation($event)"
                    [class]="'cell_gerealiseerd_' + i"
-                   [value]="row.gerealiseerd"
+                   [value]="row.gerealiseerd ?? ''"
                    (change)="updateCategorieField($event, row.id, 'totaalGerealiseerd')" />
           }
         </mat-cell>
