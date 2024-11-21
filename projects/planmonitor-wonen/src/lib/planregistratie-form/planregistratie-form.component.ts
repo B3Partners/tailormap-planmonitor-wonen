@@ -34,10 +34,10 @@ export class PlanregistratieFormComponent implements OnInit {
 
   public planregistratieForm = new FormGroup({
     plannaam: new FormControl<string>('', { nonNullable: true, validators: [ Validators.required, Validators.minLength(3) ] }),
-    provincie: new FormControl<string>('', { nonNullable: true }),
-    gemeente: new FormControl<string>('', { nonNullable: true }),
-    regio: new FormControl<string>('', { nonNullable: true }),
-    plaatsnaam: new FormControl<string>('', { nonNullable: true }),
+    provincie: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    gemeente: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    regio: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    plaatsnaam: new FormControl<string>('', { nonNullable: true, validators: [ Validators.required, Validators.minLength(3) ] }),
     vertrouwelijkheid: new FormControl<VertrouwelijkheidEnum | null>(null, { validators: [Validators.required] }),
     opdrachtgever_type: new FormControl<OpdrachtgeverEnum | null>(null, { validators: [Validators.required] }),
     opdrachtgever_naam: new FormControl<string>('', { nonNullable: true, validators: [ Validators.required, Validators.minLength(3) ] }),
@@ -47,7 +47,7 @@ export class PlanregistratieFormComponent implements OnInit {
     status_planologisch: new FormControl<StatusPlanologischEnum | null>(null, { validators: [Validators.required] }),
     knelpunten_meerkeuze: new FormControl<KnelpuntenMeerkeuzeEnum | null>(null, { validators: [Validators.required] }),
     beoogd_woonmilieu_abf13: new FormControl<WoonmilieuAbf13Enum | null>(null, { validators: [Validators.required] }),
-    aantal_studentenwoningen: new FormControl<number | null>(null),
+    aantal_studentenwoningen: new FormControl<number | null>(null, { validators: [Validators.required] }),
     sleutelproject: new FormControl<boolean | null>(null, { validators: [Validators.required] }),
   });
 
