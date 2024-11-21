@@ -223,6 +223,12 @@ export class PlanregistratiesService {
         tap(success => {
           if (success) {
             this.updatePlanAfterSaving(planregistratie);
+            if (isNew && !updatedCategorieen) {
+              this.selectedPlanCategorieen.next([]);
+            }
+            if (isNew && !updatedDetailplanningen) {
+              this.selectedDetailplanningen.next([]);
+            }
           }
         }),
       );
