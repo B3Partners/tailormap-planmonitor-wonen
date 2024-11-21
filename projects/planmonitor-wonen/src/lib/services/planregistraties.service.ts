@@ -16,7 +16,7 @@ import { AutofillDataService } from './autofill-data.service';
 })
 export class PlanregistratiesService {
 
-  private showLogging = true;
+  private showLogging = false;
 
   private planRegistraties = new BehaviorSubject<PlanregistratieModel[]>([]);
 
