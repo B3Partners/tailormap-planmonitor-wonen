@@ -17,6 +17,8 @@ import { filter, take } from 'rxjs';
 import { AutofillDataService } from './services/autofill-data.service';
 import { PlanmonitorAuthenticationService } from './services/planmonitor-authentication.service';
 import { PlanregistratieExportComponent } from './planregistratie-export/planregistratie-export.component';
+import { PlanmonitorHelpComponent } from './planmonitor-help/planmonitor-help.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -27,11 +29,16 @@ import { PlanregistratieExportComponent } from './planregistratie-export/planreg
     PlancategorieListComponent,
     PlanmonitorToggleComponent,
     PlanregistratieExportComponent,
+    PlanmonitorHelpComponent,
   ],
   imports: [
     CommonModule,
     SharedModule,
     CoreSharedModule,
+    RouterModule.forChild([{
+      path: 'ext/planmonitor/planmonitor-help',
+      component: PlanmonitorHelpComponent,
+    }]),
   ],
   providers: [
     { provide: PLANMONITOR_WONEN_API_SERVICE, useClass: PlanmonitorWonenApiService },

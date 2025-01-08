@@ -16,6 +16,14 @@
   flex-direction: column;
 }
 
+mat-panel-description {
+  justify-content: flex-end;
+}
+
+.help-button {
+  color: #026fff;
+}
+
 .form {
   flex: 1;
   display: flex;

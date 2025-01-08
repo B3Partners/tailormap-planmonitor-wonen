@@ -1,0 +1,24 @@
+.help-wrapper {
+  padding: 16px;
+  line-height: 1.25rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--text-color);
+  margin-bottom: 1rem;
+}
+
+h2 {
+  border-bottom: 1px solid var(--text-color);
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+p {
+  margin: 0;
+}
+
+.row {
+  margin-top: 1em;
+}

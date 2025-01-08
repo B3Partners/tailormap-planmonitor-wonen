@@ -34,6 +34,7 @@ export class PlanregistratieDialogComponent {
   public saving = signal(false);
   public savingAndClosing = signal(false);
   public isGemeenteGebruiker$: Observable<boolean>;
+  private lastWindow: Window | undefined | null;
 
   @HostListener('window:resize', ['$event'])
   public onResize() {
@@ -144,6 +145,16 @@ export class PlanregistratieDialogComponent {
 
   private getPanelWidth() {
     return (BrowserHelper.getScreenWith() * 0.7) - this.panelWidthMargin;
+  }
+
+  public showHelp($event: MouseEvent) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    if (this.lastWindow) {
+      this.lastWindow.close();
+    }
+    const baseUrl = window.location.protocol + "//" + window.location.host;
+    this.lastWindow = window.open(baseUrl + '/ext/planmonitor/planmonitor-help', '', 'width=600,height=300');
   }
 
 }
