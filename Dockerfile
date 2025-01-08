@@ -1,7 +1,7 @@
 ARG BUILDPLATFORM=linux/amd64
 ARG API_VERSION=snapshot
 
-FROM node:22.11.0 AS builder
+FROM node:22.12.0 AS builder
 
 ARG BASE_HREF=/
 ARG ADD_NG_LIBRARIES

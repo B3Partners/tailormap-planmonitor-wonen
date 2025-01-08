@@ -1,7 +1,7 @@
 name: 'Test and deploy'
 
 env: # Keep this in sync with Dockerfile version
-  NODE_VERSION: "22.11.0"
+  NODE_VERSION: "22.12.0"
 
 on:
   push:
@@ -128,7 +128,7 @@ jobs:
       - name: 'Build image'
         # Always uses the 'snapshot' tag of the tailormap-api base image by setting the API_VERSION build arg
         run: |
-          docker build --progress plain --build-arg BASE_HREF=${BASE_HREF} --build-arg VERSION=${VERSION} --build-arg API_VERSION=snapshot --tag ${{ vars.DEPLOY_IMAGE_TAG }}:${VERSION} .
+          docker build --progress plain --pull --build-arg BASE_HREF=${BASE_HREF} --build-arg VERSION=${VERSION} --build-arg API_VERSION=snapshot --tag ${{ vars.DEPLOY_IMAGE_TAG }}:${VERSION} .
           docker save ${{ vars.DEPLOY_IMAGE_TAG }}:${VERSION} > image.tar
 
       - name: 'Set Docker context for deployment'
@@ -163,7 +163,7 @@ jobs:
         run: |
           cd tailormap-viewer
           docker compose config
-          docker compose up -d --pull=always --remove-orphans
+          docker compose up -d --remove-orphans --pull=always
 
       - name: 'Create GitHub deployment'
         if: success()
