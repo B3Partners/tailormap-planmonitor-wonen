@@ -77,10 +77,15 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Knelpunten Meerkeuze</mat-label>
-        <mat-select formControlName="knelpunten_meerkeuze">
-          <mat-option></mat-option>
+        <mat-select multiple="true" formControlName="knelpunten_meerkeuze">
           @for (item of lists.knelpuntenMeerkeuze; track $index) {
-            <mat-option [value]="item">{{item}}</mat-option>
+            <mat-option [value]="item">
+              @if (item === 'Anders') {
+                Anders (vul Opmerking veld in)
+              } @else {
+                {{item}}
+              }
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>

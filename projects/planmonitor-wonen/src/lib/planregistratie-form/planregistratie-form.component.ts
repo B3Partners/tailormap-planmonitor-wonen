@@ -45,7 +45,7 @@ export class PlanregistratieFormComponent implements OnInit {
     plantype: new FormControl<PlantypeEnum | null>(null, { validators: [Validators.required] }),
     status_project: new FormControl<ProjectstatusEnum | null>(null, { validators: [Validators.required] }),
     status_planologisch: new FormControl<StatusPlanologischEnum | null>(null, { validators: [Validators.required] }),
-    knelpunten_meerkeuze: new FormControl<KnelpuntenMeerkeuzeEnum | null>(null, { validators: [Validators.required] }),
+    knelpunten_meerkeuze: new FormControl<KnelpuntenMeerkeuzeEnum[] | null>(null, { validators: [ Validators.required, Validators.minLength(1) ] }),
     beoogd_woonmilieu_abf13: new FormControl<WoonmilieuAbf13Enum | null>(null, { validators: [Validators.required] }),
     aantal_studentenwoningen: new FormControl<number | null>(null, { validators: [Validators.required] }),
     sleutelproject: new FormControl<boolean | null>(null, { validators: [Validators.required] }),

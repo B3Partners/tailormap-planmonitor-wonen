@@ -189,12 +189,15 @@ export class PlanregistratiesExportHelper {
     return categorie.label;
   }
 
-  private static getValue(value: string | number | boolean | Date) {
+  private static getValue(value: string | number | boolean | Date | string[]) {
     if (typeof value === "boolean") {
       return value ? "ja" : "nee";
     }
     if (value instanceof Date) {
       return DateTime.fromJSDate(value).toFormat("dd-mm-yyyy");
+    }
+    if (Array.isArray(value)) {
+      return value.join(", ");
     }
     return value;
   }

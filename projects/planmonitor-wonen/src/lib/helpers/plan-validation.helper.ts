@@ -15,7 +15,7 @@ export class PlanValidationHelper {
       || PlanValidationHelper.hasEmptyValue(planRegistratie.plantype)
       || PlanValidationHelper.hasEmptyValue(planRegistratie.statusProject)
       || PlanValidationHelper.hasEmptyValue(planRegistratie.statusPlanologisch)
-      || PlanValidationHelper.hasEmptyValue(planRegistratie.knelpuntenMeerkeuze)
+      || (planRegistratie.knelpuntenMeerkeuze || []).length === 0
       || PlanValidationHelper.hasEmptyValue(planRegistratie.beoogdWoonmilieuAbf13)
       || PlanValidationHelper.hasInvalidValue(planRegistratie.aantalStudentenwoningen)
       || PlanValidationHelper.hasInvalidValue(planRegistratie.sleutelproject)

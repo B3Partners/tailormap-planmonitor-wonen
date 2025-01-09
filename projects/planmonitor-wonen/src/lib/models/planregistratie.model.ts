@@ -25,7 +25,7 @@ export interface PlanregistratieModel {
   plantype: PlantypeEnum | null;
   statusProject: ProjectstatusEnum | null;
   statusPlanologisch: StatusPlanologischEnum | null;
-  knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum | null;
+  knelpuntenMeerkeuze: KnelpuntenMeerkeuzeEnum[] | null;
   beoogdWoonmilieuAbf13: WoonmilieuAbf13Enum | null;
   aantalStudentenwoningen: number;
   sleutelproject: boolean | null;
