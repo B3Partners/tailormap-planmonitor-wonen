@@ -5,6 +5,7 @@ import {
 } from '@tailormap-admin/admin-core';
 import { PLANMONITOR_WONEN_COMPONENT_ID } from './models/planmonitor-wonen-component-id';
 import { PlanregistratiesMapComponent } from './planregistraties-map/planregistraties-map.component';
+import { BaseComponentConfigHelper } from '@tailormap-viewer/api';
 import { ComponentRegistrationService, CoreSharedModule } from '@tailormap-viewer/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from './api/planmonitor-wonen-api.service.injection-token';
 import { PlanregistratieDialogComponent } from './planregistratie-dialog/planregistratie-dialog.component';
@@ -51,6 +52,7 @@ export class PlanmonitorWonenModule {
     adminFieldRegistrationService: AdminFieldRegistrationService,
     autofillDataService: AutofillDataService,
   ) {
+    BaseComponentConfigHelper.addDefaultDisabledComponent(PLANMONITOR_WONEN_COMPONENT_ID);
     adminRegistryService.registerConfigurationComponents(PLANMONITOR_WONEN_COMPONENT_ID, 'Planmonitor wonen', BaseComponentConfigComponent);
     viewerRegistryService.registerComponent("map", { type: PLANMONITOR_WONEN_COMPONENT_ID, component: PlanregistratiesMapComponent }, true);
     viewerRegistryService.registerComponent("map-controls-left", { type: PLANMONITOR_WONEN_COMPONENT_ID + '_toggle', component: PlanmonitorToggleComponent }, true);
