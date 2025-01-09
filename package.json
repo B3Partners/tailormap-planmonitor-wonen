@@ -12,6 +12,9 @@
     "test": "jest --max-workers=4",
     "test:ci": "jest --ci --collect-coverage --reporters=default --reporters=jest-junit",
     "lint": "ng lint",
+    "prebuild-planmonitor-wonen": "node bin/clear-cache.js",
+    "build-planmonitor-wonen": "ng build planmonitor-wonen && cd projects/planmonitor-wonen && npm run build",
+    "release-planmonitor-wonen": "node bin/publish-new-release --project=planmonitor-wonen",
     "extract-locale-[specify-project]": "node bin/extract-i18n.js --project=[specify-project]"
   },
   "private": true,
