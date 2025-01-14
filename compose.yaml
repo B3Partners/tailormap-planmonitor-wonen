@@ -35,7 +35,7 @@ services:
 
   pmw-api:
     container_name: ${COMPOSE_PROJECT_NAME}-pmw-api
-    image: ghcr.io/b3partners/planmonitor-wonen-api:snapshot
+    image: ghcr.io/b3partners/planmonitor-wonen-api:${PMW_API_VERSION:-snapshot}
     restart: unless-stopped
     depends_on:
       pmw-db:
