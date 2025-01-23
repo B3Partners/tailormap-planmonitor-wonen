@@ -7,7 +7,7 @@
     "start-nl": "ng serve app --configuration=nl",
     "build": "ng build app",
     "build-localized": "ng build app --localize",
-    "postbuild-localized": "node bin/post-build-localized.js && node bin/post-build-compress.js",
+    "postbuild-localized": "node bin/post-build-version-info.js && node bin/post-build-compress.js",
     "watch": "ng build --watch --configuration development app",
     "test": "jest --max-workers=4",
     "test:ci": "jest --ci --collect-coverage --reporters=default --reporters=jest-junit",
