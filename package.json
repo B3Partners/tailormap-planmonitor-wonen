@@ -3,19 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve app",
-    "start-nl": "ng serve app --configuration=nl",
-    "build": "ng build app",
-    "build-localized": "ng build app --localize",
-    "postbuild-localized": "node bin/post-build-version-info.js && node bin/post-build-compress.js",
-    "watch": "ng build --watch --configuration development app",
+    "start": "ng serve app --configuration=nl",
+    "build": "tm-build-application --skip-localize --language=nl",
     "test": "jest --max-workers=4",
     "test:ci": "jest --ci --collect-coverage --reporters=default --reporters=jest-junit",
     "lint": "ng lint",
-    "prebuild-planmonitor-wonen": "node bin/clear-cache.js",
-    "build-planmonitor-wonen": "ng build planmonitor-wonen && cd projects/planmonitor-wonen && npm run build",
-    "release-planmonitor-wonen": "node bin/publish-new-release --project=planmonitor-wonen",
-    "extract-locale-[specify-project]": "node bin/extract-i18n.js --project=[specify-project]"
+    "publish-all": "tm-publish-all-libraries",
+    "extract-locale": "tm-extract-i18n --project=planmonitor-wonen"
   },
   "private": true,
   "dependencies": {
@@ -77,6 +71,7 @@
     "@bufbuild/protoc-gen-es": "^1.9.0",
     "@stylistic/eslint-plugin-ts": "^2.6.1",
     "@tailormap-viewer/schematics": "^0.0.17",
+    "@tailormap-viewer/tools": "^0.0.14",
     "@testing-library/angular": "^17.3.0",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/user-event": "^14.5.2",
