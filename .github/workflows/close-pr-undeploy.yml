@@ -1,0 +1,15 @@
+name: 'Remove deployment'
+
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+  cleanup:
+    uses: Tailormap/tailormap-tools/.github/workflows/reusable-undeploy.yml@main
+    with:
+      environment: ''
+    secrets:
+      DEPLOY_DOCKER_HOST: ${{ secrets.DEPLOY_DOCKER_HOST }}
+      DEPLOY_DOCKER_HOST_SSH_CERT: ${{ secrets.DEPLOY_DOCKER_HOST_SSH_CERT }}
+      DEPLOY_DOCKER_HOST_SSH_KEY: ${{ secrets.DEPLOY_DOCKER_HOST_SSH_KEY }}
