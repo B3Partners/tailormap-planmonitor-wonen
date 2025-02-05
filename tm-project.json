@@ -1,5 +1,5 @@
 {
   "libraries": [
-    "planmonitor-wonen"
+    ["@b3p", "planmonitor-wonen"]
   ]
 }
