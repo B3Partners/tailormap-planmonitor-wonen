@@ -1,0 +1,37 @@
+name: 'Deploy backend'
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    name: 'Deploy backend'
+    runs-on: ubuntu-22.04
+    if: vars.DEPLOY == 'true' && ${{ github.author != 'dependabot[bot]' }}
+    steps:
+      - name: 'Set Docker context for deployment'
+        uses: arwynfr/actions-docker-context@v2
+        with:
+          docker_host: ${{ secrets.DEPLOY_DOCKER_HOST }}
+          context_name: 'dev-server'
+          ssh_cert: ${{ secrets.DEPLOY_DOCKER_HOST_SSH_CERT }}
+          ssh_key: ${{ secrets.DEPLOY_DOCKER_HOST_SSH_KEY }}
+          use_context: true
+
+      - name: 'Add known hosts'
+        run: |
+          DEPLOY_DOCKER_HOST=${{ secrets.DEPLOY_DOCKER_HOST }}
+          ssh-keyscan -H ${DEPLOY_DOCKER_HOST##*@} > $HOME/.ssh/known_hosts
+
+      - name: 'Update backend deployment using Docker Compose'
+        env:
+          COMPOSE_PROJECT_NAME: ${{ vars.DEPLOY_PROJECT_NAME }}-backend
+          TAILORMAP_COMPOSE_PROJECT_NAME: ${{ vars.DEPLOY_PROJECT_NAME }}-snapshot
+          PMW_DB_PASSWORD: ${{ secrets.PMW_DB_PASSWORD }}
+          PMW_IP_ALLOWLIST_RANGE: ${{ secrets.PMW_IP_ALLOWLIST_RANGE }}
+          HOST: ${{ vars.DEPLOY_HOSTNAME }}
+        run: |
+          docker compose config
+          docker compose up -d --remove-orphans --pull=always

@@ -2,6 +2,14 @@ volumes:
   pmw-data:
   geoserver-data:
 
+networks:
+  tailormap:
+    external: true
+    name: ${TAILORMAP_COMPOSE_PROJECT_NAME:-tailormap-planmonitor-wonen-snapshot}_default
+  reverse-proxy:
+    external: true
+    name: ${PROXY_NETWORK:-traefik}
+
 services:
   pmw-db:
     container_name: ${COMPOSE_PROJECT_NAME}-pmw-db
@@ -15,6 +23,7 @@ services:
     networks:
       - default
       - reverse-proxy
+      - tailormap
     labels:
       - "traefik.tcp.routers.postgres-pmw.rule=HostSNI(`${HOST}`)"
       - "traefik.tcp.routers.postgres-pmw.tls=true"
@@ -49,6 +58,7 @@ services:
     networks:
       - default
       - reverse-proxy
+      - tailormap
     labels:
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-pmw.loadbalancer.server.port=8081"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pmw.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/api/planmonitor-wonen`)"
@@ -71,6 +81,7 @@ services:
     networks:
       - default
       - reverse-proxy
+      - tailormap
     labels:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-geoserver.rule=Host(`${HOST:-localhost}`) && PathPrefix(`/geoserver`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-geoserver.tls=true"
