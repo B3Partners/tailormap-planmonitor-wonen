@@ -40,11 +40,12 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/app",
+            "outputPath": {
+              "base": "dist/app"
+            },
             "index": "projects/app/src/index.html",
-            "main": "projects/app/src/main.ts",
             "polyfills": ["projects/app/src/polyfills.ts", "@angular/localize/init"],
             "tsConfig": "projects/app/tsconfig.app.json",
             "assets": [
@@ -91,7 +92,8 @@
               "fastpriorityqueue",
               "color-convert"
             ],
-            "i18nMissingTranslation": "error"
+            "i18nMissingTranslation": "error",
+            "browser": "projects/app/src/main.ts"
           },
           "configurations": {
             "nl": {

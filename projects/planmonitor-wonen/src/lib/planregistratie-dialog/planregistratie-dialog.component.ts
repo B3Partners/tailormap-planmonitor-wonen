@@ -11,10 +11,11 @@ import { MapService, ProjectionCodesEnum } from '@tailormap-viewer/map';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'lib-planregistratie-dialog',
-  templateUrl: './planregistratie-dialog.component.html',
-  styleUrls: ['./planregistratie-dialog.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'lib-planregistratie-dialog',
+    templateUrl: './planregistratie-dialog.component.html',
+    styleUrls: ['./planregistratie-dialog.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PlanregistratieDialogComponent {
 

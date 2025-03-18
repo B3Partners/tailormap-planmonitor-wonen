@@ -9,10 +9,11 @@ import { PlanregistratieExportComponent } from '../planregistratie-export/planre
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'lib-planmonitor-toggle',
-  templateUrl: './planmonitor-toggle.component.html',
-  styleUrls: ['./planmonitor-toggle.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'lib-planmonitor-toggle',
+    templateUrl: './planmonitor-toggle.component.html',
+    styleUrls: ['./planmonitor-toggle.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PlanmonitorToggleComponent {
 

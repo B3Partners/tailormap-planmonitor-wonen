@@ -22,18 +22,19 @@ const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
 ]);
 
 @Component({
-  selector: 'lib-plancategorie-list',
-  templateUrl: './plancategorie-list.component.html',
-  styleUrls: ['./plancategorie-list.component.css'],
-  styles: ['mat-table {' +
-    `--nieuwbouw-color: ${ColorHelper.getGroupColor('nieuwbouw')};` +
-    `--woningtype-color: ${ColorHelper.getGroupColor('woningType')};` +
-    `--wonenenzorg-color: ${ColorHelper.getGroupColor('wonenEnZorg')};` +
-    `--flexwoningen-color: ${ColorHelper.getGroupColor('flexwoningen')};` +
-    `--betaalbaarheid-color: ${ColorHelper.getGroupColor('betaalbaarheid')};` +
-    `--sloop-color: ${ColorHelper.getGroupColor('sloop')};` +
-  '}'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'lib-plancategorie-list',
+    templateUrl: './plancategorie-list.component.html',
+    styleUrls: ['./plancategorie-list.component.css'],
+    styles: ['mat-table {' +
+            `--nieuwbouw-color: ${ColorHelper.getGroupColor('nieuwbouw')};` +
+            `--woningtype-color: ${ColorHelper.getGroupColor('woningType')};` +
+            `--wonenenzorg-color: ${ColorHelper.getGroupColor('wonenEnZorg')};` +
+            `--flexwoningen-color: ${ColorHelper.getGroupColor('flexwoningen')};` +
+            `--betaalbaarheid-color: ${ColorHelper.getGroupColor('betaalbaarheid')};` +
+            `--sloop-color: ${ColorHelper.getGroupColor('sloop')};` +
+            '}'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PlancategorieListComponent implements OnInit {
 
