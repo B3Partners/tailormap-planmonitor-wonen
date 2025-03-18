@@ -8,10 +8,11 @@ import { EXPORT_TYPE_LABELS, ExportType, PlanregistratiesExportHelper } from '..
 
 
 @Component({
-  selector: 'lib-planregistratie-export',
-  templateUrl: './planregistratie-export.component.html',
-  styleUrls: ['./planregistratie-export.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'lib-planregistratie-export',
+    templateUrl: './planregistratie-export.component.html',
+    styleUrls: ['./planregistratie-export.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false,
 })
 export class PlanregistratieExportComponent implements OnInit {
 

@@ -16,10 +16,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> & { selected?: boolean };
 
 @Component({
-  selector: 'lib-planregistraties-map',
-  templateUrl: './planregistraties-map.component.html',
-  styleUrls: ['./planregistraties-map.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'lib-planregistraties-map',
+    templateUrl: './planregistraties-map.component.html',
+    styleUrls: ['./planregistraties-map.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false,
 })
 export class PlanregistratiesMapComponent implements OnInit {
 

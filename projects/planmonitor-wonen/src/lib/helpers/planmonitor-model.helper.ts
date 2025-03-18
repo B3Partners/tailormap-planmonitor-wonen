@@ -1,11 +1,11 @@
 import { DetailplanningModel, PlancategorieModel, PlanregistratieModel, VertrouwelijkheidEnum } from '../models';
-import { v4 as uuid_v4 } from '@lukeed/uuid/secure';
+import { v4 as uuidv4 } from 'uuid';
 
 export class PlanMonitorModelHelper {
 
   public static getNewPlanregistratie(initialData: Partial<PlanregistratieModel>): PlanregistratieModel {
     return {
-      id: uuid_v4(),
+      id: uuidv4(),
       geometrie: "",
       createdAt: new Date(),
       creator: "",
@@ -34,7 +34,7 @@ export class PlanMonitorModelHelper {
 
   public static getNewPlancategorie(initialData: Partial<PlancategorieModel> & Pick<PlancategorieModel, 'planregistratieId'>): PlancategorieModel {
     return {
-      id: uuid_v4(),
+      id: uuidv4(),
       creator: '',
       createdAt: new Date(),
       editor: null,
@@ -53,7 +53,7 @@ export class PlanMonitorModelHelper {
 
   public static getNewDetailplanning(initialData: Pick<DetailplanningModel, 'plancategorieId' | 'jaartal' | 'aantalGepland'>): DetailplanningModel {
     return {
-      id: uuid_v4(),
+      id: uuidv4(),
       creator: '',
       createdAt: new Date(),
       editor: null,

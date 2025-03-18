@@ -14,10 +14,11 @@ import { GemeenteModel } from '../models/gemeente.model';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 
 @Component({
-  selector: 'lib-planregistratie-form',
-  templateUrl: './planregistratie-form.component.html',
-  styleUrls: ['./planregistratie-form.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'lib-planregistratie-form',
+    templateUrl: './planregistratie-form.component.html',
+    styleUrls: ['./planregistratie-form.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false,
 })
 export class PlanregistratieFormComponent implements OnInit {
 

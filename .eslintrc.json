@@ -31,6 +31,7 @@
         ]
       },
       "rules": {
+        "@angular-eslint/prefer-standalone": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@stylistic/ts/no-explicit-any": "off",
         "@angular-eslint/directive-selector": [
