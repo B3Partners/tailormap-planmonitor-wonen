@@ -34,7 +34,7 @@ const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
             `--sloop-color: ${ColorHelper.getGroupColor('sloop')};` +
             '}'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class PlancategorieListComponent implements OnInit {
 

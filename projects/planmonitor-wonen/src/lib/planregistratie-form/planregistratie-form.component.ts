@@ -18,7 +18,7 @@ import { PlanmonitorAuthenticationService } from '../services/planmonitor-authen
     templateUrl: './planregistratie-form.component.html',
     styleUrls: ['./planregistratie-form.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class PlanregistratieFormComponent implements OnInit {
 

@@ -20,7 +20,7 @@ type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> 
     templateUrl: './planregistraties-map.component.html',
     styleUrls: ['./planregistraties-map.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class PlanregistratiesMapComponent implements OnInit {
 

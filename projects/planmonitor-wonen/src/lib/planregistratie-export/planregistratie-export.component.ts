@@ -12,7 +12,7 @@ import { EXPORT_TYPE_LABELS, ExportType, PlanregistratiesExportHelper } from '..
     templateUrl: './planregistratie-export.component.html',
     styleUrls: ['./planregistratie-export.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class PlanregistratieExportComponent implements OnInit {
 

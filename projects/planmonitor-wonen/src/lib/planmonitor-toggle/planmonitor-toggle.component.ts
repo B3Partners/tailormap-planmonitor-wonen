@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
     templateUrl: './planmonitor-toggle.component.html',
     styleUrls: ['./planmonitor-toggle.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class PlanmonitorToggleComponent {
 

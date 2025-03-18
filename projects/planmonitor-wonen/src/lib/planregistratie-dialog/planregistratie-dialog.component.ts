@@ -15,7 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     templateUrl: './planregistratie-dialog.component.html',
     styleUrls: ['./planregistratie-dialog.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: false,
 })
 export class PlanregistratieDialogComponent {
 
