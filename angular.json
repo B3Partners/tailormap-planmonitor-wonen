@@ -90,7 +90,10 @@
               "color-name",
               "localforage",
               "fastpriorityqueue",
-              "color-convert"
+              "color-convert",
+              "lodash.debounce",
+              "lodash.throttle",
+              "extend"
             ],
             "i18nMissingTranslation": "error",
             "browser": "projects/app/src/main.ts"
@@ -103,8 +106,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4.5mb",
-                  "maximumError": "6.0mb"
+                  "maximumWarning": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -129,12 +131,7 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": {
-                "scripts": true,
-                "styles": true,
-                "hidden": true,
-                "vendor": true
-              },
+              "sourceMap": true,
               "namedChunks": true
             }
           },
