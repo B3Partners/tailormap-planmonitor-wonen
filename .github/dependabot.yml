@@ -20,6 +20,6 @@ updates:
     labels:
       - dependencies
     ignore:
-      - dependency-name: postgis
+      - dependency-name: 'postgis/postgis'
         versions:
           - '>= 17'
