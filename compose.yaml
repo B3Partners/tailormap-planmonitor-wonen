@@ -13,7 +13,7 @@ networks:
 services:
   pmw-db:
     container_name: ${COMPOSE_PROJECT_NAME}-pmw-db
-    image: postgis/postgis:16-3.4
+    image: postgis/postgis:17-3.5
     restart: unless-stopped
     environment:
       POSTGRES_USER: planmonitor-wonen
