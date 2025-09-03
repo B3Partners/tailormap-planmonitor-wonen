@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import {
   DrawingEnableToolArguments,
   DrawingToolConfigModel, DrawingToolModel, MapService, MapStyleModel, ModifyEnableToolArguments, ModifyToolConfigModel, ModifyToolModel,
@@ -24,20 +24,17 @@ type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> 
     standalone: false,
 })
 export class PlanregistratiesMapComponent implements OnInit {
+  private planregistratieService = inject(PlanregistratiesService);
+  private mapService = inject(MapService);
+  private destroyRef = inject(DestroyRef);
+  private matSnackBar = inject(MatSnackBar);
+  private printService = inject(PrintService);
 
   private static LAYER_ID = 'planregistraties-layer';
   private static PRIMARY_COLOR = '';
   private selectTool: SelectToolModel | undefined;
   private modifyTool: ModifyToolModel | undefined;
   private addFeatureTool: DrawingToolModel | undefined;
-
-  constructor(
-    private planregistratieService: PlanregistratiesService,
-    private mapService: MapService,
-    private destroyRef: DestroyRef,
-    private matSnackBar: MatSnackBar,
-    private printService: PrintService,
-  ) { }
 
   public ngOnInit(): void {
     PlanregistratiesMapComponent.PRIMARY_COLOR = CssHelper.getCssVariableValue('--primary-color').trim();

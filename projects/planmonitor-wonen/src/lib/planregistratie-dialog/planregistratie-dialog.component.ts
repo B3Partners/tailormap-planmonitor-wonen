@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostListener, signal, DestroyRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener, signal, DestroyRef, inject } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import {
@@ -18,6 +18,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     standalone: false,
 })
 export class PlanregistratieDialogComponent {
+  private planregistratieService = inject(PlanregistratiesService);
+  private matSnackBar = inject(MatSnackBar);
+  private confirmDialogService = inject(ConfirmDialogService);
+  private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
+  private mapService = inject(MapService);
+  private destroyRef = inject(DestroyRef);
+
 
   public selectedPlan$: Observable<PlanregistratieModel | null>;
   public dialogOpen$: Observable<boolean>;
@@ -42,14 +49,7 @@ export class PlanregistratieDialogComponent {
     this.panelWidth = this.getPanelWidth();
   }
 
-  constructor(
-    private planregistratieService: PlanregistratiesService,
-    private matSnackBar: MatSnackBar,
-    private confirmDialogService: ConfirmDialogService,
-    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
-    private mapService: MapService,
-    private destroyRef: DestroyRef,
-  ) {
+  constructor() {
     this.isGemeenteGebruiker$ = this.planmonitorAuthenticationService.isGemeenteGebruiker$;
     this.selectedPlan$ = this.planregistratieService.getSelectedPlanregistratie$();
     this.dialogOpen$ = this.selectedPlan$

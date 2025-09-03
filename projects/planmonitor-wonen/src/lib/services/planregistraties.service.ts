@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
-import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.service.model';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, map, Observable, of, take, tap } from 'rxjs';
 import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
@@ -15,6 +14,9 @@ import { AutofillDataService } from './autofill-data.service';
   providedIn: 'root',
 })
 export class PlanregistratiesService {
+  private api = inject(PLANMONITOR_WONEN_API_SERVICE);
+  private autofillDataService = inject(AutofillDataService);
+
 
   private showLogging = false;
 
@@ -33,10 +35,7 @@ export class PlanregistratiesService {
   private hasFormChanges = new BehaviorSubject<boolean>(false);
   private creatingNewPlan = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    @Inject(PLANMONITOR_WONEN_API_SERVICE) private api: PlanmonitorWonenApiServiceModel,
-    private autofillDataService: AutofillDataService,
-  ) {
+  constructor() {
     combineLatest([
       this.getSelectedPlanCategorieen$(),
       this.getSelectedDetailplanningen$(),

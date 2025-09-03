@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { AutofillDataModel, GemeenteModel, PlanregistratieModel, PlanregistratieSaveModel } from '../models';
 import { catchError, map, Observable, of } from 'rxjs';
@@ -10,10 +10,10 @@ import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-
   deps: [HttpClientModule],
 })
 export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceModel {
+  private http = inject(HttpClient);
+
 
   private apiBaseUrl = '/api/planmonitor-wonen';
-
-  constructor(private http: HttpClient) {}
 
   public getGemeentes$(args?: { provincie?: string }): Observable<GemeenteModel[]> {
     let params = new HttpParams();

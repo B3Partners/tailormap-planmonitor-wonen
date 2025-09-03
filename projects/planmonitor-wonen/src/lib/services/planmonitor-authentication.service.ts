@@ -1,7 +1,7 @@
 import { BehaviorSubject, map } from 'rxjs';
 import { AuthenticatedUserService } from '@tailormap-viewer/api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DestroyRef, Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { SecurityPropertyModel } from '@tailormap-viewer/api';
 
 export interface PlanmonitorUserModel {
@@ -22,6 +22,9 @@ const ANON_USER: PlanmonitorUserModel = {
   providedIn: 'root',
 })
 export class PlanmonitorAuthenticationService {
+  private authenticatedUserService = inject(AuthenticatedUserService);
+  private destroyRef = inject(DestroyRef);
+
 
   public static readonly TYPE_GEBRUIKER_KEY = 'typeGebruiker';
   public static readonly GEMEENTE_KEY = 'gemeente';
@@ -38,10 +41,7 @@ export class PlanmonitorAuthenticationService {
   public ingelogdeGebruikerGemeente$ = this.gebruiker$
     .pipe(map(gebruiker => gebruiker.isAuthenticated && gebruiker.isGemeenteGebruiker ? gebruiker.gemeente || null : null));
 
-  constructor(
-    private authenticatedUserService: AuthenticatedUserService,
-    private destroyRef: DestroyRef,
-  ) {
+  constructor() {
     this.authenticatedUserService.getUserDetails$()
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(details => {

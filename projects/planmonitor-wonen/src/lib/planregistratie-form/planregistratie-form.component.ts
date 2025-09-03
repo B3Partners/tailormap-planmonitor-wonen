@@ -1,6 +1,4 @@
-import {
-  ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnInit, Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import {
   KnelpuntenMeerkeuzeEnum, OpdrachtgeverEnum, PlanregistratieModel, PlantypeEnum, ProjectstatusEnum,
   StatusPlanologischEnum,
@@ -21,6 +19,10 @@ import { PlanmonitorAuthenticationService } from '../services/planmonitor-authen
     standalone: false,
 })
 export class PlanregistratieFormComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private autofillDataService = inject(AutofillDataService);
+  private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
+
 
   private _planregistratie: PlanregistratieModel | null = null;
 
@@ -71,11 +73,7 @@ export class PlanregistratieFormComponent implements OnInit {
 
   private selectedGemeenteSubject = new BehaviorSubject<string | null>(null);
 
-  constructor(
-    private destroyRef: DestroyRef,
-    private autofillDataService: AutofillDataService,
-    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
-  ) {
+  constructor() {
     this.gemeentes$ = this.autofillDataService.getGemeentes$();
     this.planmonitorAuthenticationService.ingelogdeGebruikerGemeente$
       .pipe(takeUntilDestroyed(this.destroyRef))
