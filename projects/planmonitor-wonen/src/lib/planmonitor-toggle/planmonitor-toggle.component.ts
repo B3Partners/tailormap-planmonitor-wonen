@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { map, Observable } from 'rxjs';
@@ -16,17 +16,17 @@ import { MatDialog } from '@angular/material/dialog';
     standalone: false,
 })
 export class PlanmonitorToggleComponent {
+  private planregistratieService = inject(PlanregistratiesService);
+  private layoutService = inject(LayoutService);
+  private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
+  private dialog = inject(MatDialog);
+
 
   public activeToggle$: Observable<string>;
   public toolActive$: Observable<boolean>;
   public isGemeenteGebruiker$: Observable<boolean>;
 
-  constructor(
-    private planregistratieService: PlanregistratiesService,
-    private layoutService: LayoutService,
-    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
     this.isGemeenteGebruiker$ = this.planmonitorAuthenticationService.isGemeenteGebruiker$;
     this.toolActive$ = this.layoutService.componentsConfig$
       .pipe(map(config => this.layoutService.isComponentEnabled(config, PLANMONITOR_WONEN_COMPONENT_ID)));

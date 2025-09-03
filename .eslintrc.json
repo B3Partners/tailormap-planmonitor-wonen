@@ -12,9 +12,8 @@
         "*.ts"
       ],
       "plugins": [
-        "rxjs",
         "import",
-        "@stylistic/ts"
+        "@stylistic"
       ],
       "extends": [
         "eslint:recommended",
@@ -31,9 +30,8 @@
         ]
       },
       "rules": {
-        "@angular-eslint/prefer-standalone": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@stylistic/ts/no-explicit-any": "off",
+        "@stylistic/no-explicit-any": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -65,7 +63,7 @@
           "always"
         ],
         "comma-dangle": "off",
-        "@stylistic/ts/comma-dangle": [
+        "@stylistic/comma-dangle": [
           "error",
           "always-multiline"
         ],
@@ -76,8 +74,8 @@
         "import/order": "off",
         "arrow-body-style": "off",
         "semi": "off",
-        "@stylistic/ts/semi": "error",
-        "@stylistic/ts/member-ordering": "off",
+        "@stylistic/semi": "error",
+        "@stylistic/member-ordering": "off",
         "@typescript-eslint/naming-convention": [
           "error",
           {
@@ -101,7 +99,7 @@
           }
         ],
         "space-before-function-paren": "off",
-        "@stylistic/ts/space-before-function-paren": [
+        "@stylistic/space-before-function-paren": [
           "error",
           {
             "anonymous": "always",
@@ -109,6 +107,7 @@
             "asyncArrow": "always"
           }
         ],
+        "@angular-eslint/prefer-standalone": "off",
         "object-curly-spacing": [
           "error",
           "always"
@@ -136,26 +135,7 @@
           "error",
           180
         ],
-        "rxjs/no-cyclic-action": "off",
-        "rxjs/finnish": [
-          "error",
-          {
-            "functions": true,
-            "methods": true,
-            "names": {
-              "^(canActivate|canActivateChild|canDeactivate|canLoad|intercept|resolve|validate)$": false
-            },
-            "parameters": true,
-            "properties": true,
-            "strict": false,
-            "types": {
-              "^EventEmitter$": false,
-              "^Subject": false
-            },
-            "variables": true
-          }
-        ],
-        "@stylistic/ts/member-delimiter-style": [
+        "@stylistic/member-delimiter-style": [
           "error",
           {
             "multiline": {
@@ -181,9 +161,8 @@
       "rules": {
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "rxjs/finnish": "off",
-        "@stylistic/ts/ban-ts-comment": "off",
-        "@stylistic/ts/no-empty-function": "off"
+        "@stylistic/ban-ts-comment": "off",
+        "@stylistic/no-empty-function": "off"
       }
     },
     {

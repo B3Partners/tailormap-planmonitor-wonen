@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AdminFieldLocation, AdminFieldRegistrationService, BaseComponentConfigComponent, ConfigurationComponentRegistryService,
@@ -46,12 +46,12 @@ import { RouterModule } from '@angular/router';
   ],
 })
 export class PlanmonitorWonenModule {
-  constructor(
-    adminRegistryService: ConfigurationComponentRegistryService,
-    viewerRegistryService: ComponentRegistrationService,
-    adminFieldRegistrationService: AdminFieldRegistrationService,
-    autofillDataService: AutofillDataService,
-  ) {
+  constructor() {
+    const adminRegistryService = inject(ConfigurationComponentRegistryService);
+    const viewerRegistryService = inject(ComponentRegistrationService);
+    const adminFieldRegistrationService = inject(AdminFieldRegistrationService);
+    const autofillDataService = inject(AutofillDataService);
+
     BaseComponentConfigHelper.addDefaultDisabledComponent(PLANMONITOR_WONEN_COMPONENT_ID);
     adminRegistryService.registerConfigurationComponents(PLANMONITOR_WONEN_COMPONENT_ID, 'Planmonitor wonen', BaseComponentConfigComponent);
     viewerRegistryService.registerComponent("map", { type: PLANMONITOR_WONEN_COMPONENT_ID, component: PlanregistratiesMapComponent }, true);

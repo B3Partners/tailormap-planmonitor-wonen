@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, TrackByFunction, DestroyRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, TrackByFunction, DestroyRef, ChangeDetectorRef, OnInit, inject } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { PlancategorieModel } from '../models';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
@@ -37,6 +37,11 @@ const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
     standalone: false,
 })
 export class PlancategorieListComponent implements OnInit {
+  private planregistratieService = inject(PlanregistratiesService);
+  private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
+  private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
+
 
   public expanded = false;
   public yearColumns = [ 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042 ];
@@ -46,14 +51,6 @@ export class PlancategorieListComponent implements OnInit {
   public tableData: CategorieTableModel | null = null;
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
   public inputsDisabled = true;
-
-  constructor(
-    private planregistratieService: PlanregistratiesService,
-    private destroyRef: DestroyRef,
-    private cdr: ChangeDetectorRef,
-    private planmonitorAuthenticationService: PlanmonitorAuthenticationService,
-  ) {
-  }
 
   public ngOnInit() {
     this.planregistratieService.getSelectedCategorieTable$()

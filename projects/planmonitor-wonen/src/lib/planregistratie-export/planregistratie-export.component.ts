@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, map, Observable } from 'rxjs';
@@ -15,6 +15,9 @@ import { EXPORT_TYPE_LABELS, ExportType, PlanregistratiesExportHelper } from '..
     standalone: false,
 })
 export class PlanregistratieExportComponent implements OnInit {
+  private planregistratieService = inject(PlanregistratiesService);
+  private dialogRef = inject<MatDialogRef<PlanregistratieExportComponent>>(MatDialogRef);
+
 
   private planregistratiesSubject: BehaviorSubject<null | PlanregistratieWithDetailsModel[]> = new BehaviorSubject<null | PlanregistratieWithDetailsModel[]>(null);
   private planregistraties$: Observable<null | PlanregistratieWithDetailsModel[]> = this.planregistratiesSubject.asObservable();
@@ -27,11 +30,6 @@ export class PlanregistratieExportComponent implements OnInit {
   public exportTypeControl = new FormControl<ExportType>(ExportType.EENVOUDIG, { nonNullable: true });
   public exportType = ExportType;
   public exportTypeLabels = EXPORT_TYPE_LABELS;
-
-  constructor(
-    private planregistratieService: PlanregistratiesService,
-    private dialogRef: MatDialogRef<PlanregistratieExportComponent>,
-  ) { }
 
   public static open(dialog: MatDialog) {
     dialog.open(PlanregistratieExportComponent, {

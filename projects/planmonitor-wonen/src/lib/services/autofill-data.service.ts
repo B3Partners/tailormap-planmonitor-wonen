@@ -1,21 +1,16 @@
 import { BehaviorSubject, catchError, Observable, of, take } from 'rxjs';
 import { GemeenteModel } from '../models/gemeente.model';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
-import { PlanmonitorWonenApiServiceModel } from '../api/planmonitor-wonen-api.service.model';
 import { AutofillDataModel } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AutofillDataService {
+  private api = inject(PLANMONITOR_WONEN_API_SERVICE);
 
   private gemeentesSubject = new BehaviorSubject<GemeenteModel[]>([]);
-
-  constructor(
-    @Inject(PLANMONITOR_WONEN_API_SERVICE) private api: PlanmonitorWonenApiServiceModel,
-  ) {
-  }
 
   public loadGemeentes(provincie?: string): void {
     this.api.getGemeentes$({ provincie })
