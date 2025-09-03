@@ -12,6 +12,7 @@ import { CssHelper, SnackBarMessageComponent, SnackBarMessageOptionsModel } from
 import { FeatureModel } from '@tailormap-viewer/api';
 import { ColorHelper } from '../helpers/color.helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PrintService } from '@tailormap-viewer/core';
 
 type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> & { selected?: boolean };
 
@@ -35,6 +36,7 @@ export class PlanregistratiesMapComponent implements OnInit {
     private mapService: MapService,
     private destroyRef: DestroyRef,
     private matSnackBar: MatSnackBar,
+    private printService: PrintService,
   ) { }
 
   public ngOnInit(): void {
@@ -67,6 +69,8 @@ export class PlanregistratiesMapComponent implements OnInit {
       planregistratieFeatures$,
       feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.plantype, feature.attributes.selected),
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+
+    this.printService.addAdditionalVectorLayer(PlanregistratiesMapComponent.LAYER_ID);
   }
 
   private createSelectTool() {
