@@ -2,7 +2,7 @@ import { BehaviorSubject, map } from 'rxjs';
 import { AuthenticatedUserService } from '@tailormap-viewer/api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef, Injectable } from '@angular/core';
-import { SecurityPropertyModel } from '@tailormap-viewer/api/lib/models/security-model';
+import { SecurityPropertyModel } from '@tailormap-viewer/api';
 
 export interface PlanmonitorUserModel {
   isAuthenticated: boolean;

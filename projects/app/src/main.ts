@@ -1,5 +1,5 @@
 import { enableProdMode, ErrorHandler } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { platformBrowser } from '@angular/platform-browser';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -35,7 +35,6 @@ const setupSentryProviders = async () => {
     ],
     // Capture 1% of traces in production
     tracesSampleRate: environment.production ? 0.01 : 1.0,
-    autoSessionTracking: false,
   });
   return [
     { provide: ErrorHandler, useValue: sentry.createErrorHandler({ showDialog: false }) },
@@ -45,7 +44,7 @@ const setupSentryProviders = async () => {
 const main = async () => {
   try {
     const sentryProviders = await setupSentryProviders();
-    await platformBrowserDynamic(sentryProviders).bootstrapModule(AppModule);
+    await platformBrowser(sentryProviders).bootstrapModule(AppModule);
   } catch (error) {
     console.error(error);
   }
