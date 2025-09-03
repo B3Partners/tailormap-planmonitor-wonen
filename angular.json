@@ -199,7 +199,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular/build:ng-packagr",
           "options": {
             "project": "projects/planmonitor-wonen/ng-package.json"
           },
@@ -212,14 +212,6 @@
             }
           },
           "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/planmonitor-wonen/src/test.ts",
-            "tsConfig": "projects/planmonitor-wonen/tsconfig.spec.json",
-            "karmaConfig": "projects/planmonitor-wonen/karma.conf.js"
-          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
