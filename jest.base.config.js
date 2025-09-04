@@ -9,8 +9,7 @@ module.exports = {
     '^.+\\.(ts|js|html|svg)$': [
       'jest-preset-angular',
       {
-        stringifyContentPathRegex: '\\.(html|svg)$',
-        isolatedModules: true,
+        stringifyContentPathRegex: '\\.(html|svg)$'
       },
     ],
   },
