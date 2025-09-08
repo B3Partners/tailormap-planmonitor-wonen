@@ -122,7 +122,7 @@ export class PlanregistratieTableExportHelper {
   ) {
     const sheet = workbook.addWorksheet(plannaam);
     // Setup page
-    sheet.pageSetup.paperSize = ExcelJS.PaperSize.A4;
+    sheet.pageSetup.paperSize = 9; /* ExcelJS.PaperSize.A4, because of isolatedModules can't use const enum without TS2748 error */
     // Setup columns
     sheet.columns = ColumnHelper.categorieColumns.map(key => {
       const config = COLUMN_CONFIG.get(key);
