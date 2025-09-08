@@ -55,7 +55,6 @@ services:
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://pmw-db/planmonitor-wonen"
       - "TAILORMAP_DATASOURCE_URL=jdbc:postgresql://db/tailormap"
       - "SPRING_DATASOURCE_PASSWORD=${PMW_DB_PASSWORD:-planmonitor-wonen}"
-      - "TAILORMAPAPI_CREDENTIALS_URL=http://tailormap:8080/api/user"
     networks:
       - default
       - reverse-proxy
