@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve app",
+    "start": "ng serve app --configuration=nl",
     "build": "tm-build-application --skip-localize --language=nl",
     "test": "jest --max-workers=4",
     "test:ci": "jest --ci --collect-coverage --reporters=default --reporters=jest-junit",
