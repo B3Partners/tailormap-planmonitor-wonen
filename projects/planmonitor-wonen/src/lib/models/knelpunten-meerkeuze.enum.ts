@@ -10,6 +10,6 @@ export enum KnelpuntenMeerkeuzeEnum {
   STIKSTOF = 'Stikstof',
   VERVUILDE_GROND = 'Vervuilde grond',
   FLORA_FAUNA = 'Flora/fauna',
-  NUTS = 'NUTS',
+  NUTS = 'Nuts',
   GEEN = 'Geen',
 }
