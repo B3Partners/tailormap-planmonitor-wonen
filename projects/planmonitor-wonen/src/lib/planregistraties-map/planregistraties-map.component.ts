@@ -72,6 +72,7 @@ export class PlanregistratiesMapComponent implements OnInit {
 
   private createSelectTool() {
     this.mapService.createTool$<SelectToolModel<PlanregistratieFeatureAttributes>, SelectToolConfigModel<PlanregistratieFeatureAttributes>>({
+      owner: 'PLANREGISTRATIES_MAP',
       type: ToolTypeEnum.Select,
       layers: [PlanregistratiesMapComponent.LAYER_ID],
       style: feature => PlanregistratiesMapComponent.getFeatureStyle(feature.attributes.plantype, feature.attributes.selected),
@@ -96,8 +97,10 @@ export class PlanregistratiesMapComponent implements OnInit {
   }
 
   private createModifyTool() {
-    this.mapService.createTool$<ModifyToolModel, ModifyToolConfigModel>({ type: ToolTypeEnum.Modify })
-      .pipe(
+    this.mapService.createTool$<ModifyToolModel, ModifyToolConfigModel>({
+      owner: 'PLANREGISTRATIES_MAP',
+      type: ToolTypeEnum.Modify,
+    }).pipe(
         takeUntilDestroyed(this.destroyRef),
         tap(({ tool }) => {
           this.modifyTool = tool;
@@ -111,6 +114,7 @@ export class PlanregistratiesMapComponent implements OnInit {
 
   private createAddFeatureTool() {
     this.mapService.createTool$<DrawingToolModel, DrawingToolConfigModel>({
+      owner: 'PLANREGISTRATIES_MAP',
       type: ToolTypeEnum.Draw,
       style: PlanregistratiesMapComponent.getFeatureStyle(PlantypeEnum.UITBREIDING_OVERIG),
     })
