@@ -23,3 +23,6 @@ updates:
       - dependency-name: 'postgis/postgis'
         versions:
           - '>= 17'
+      - dependency-name: node
+        versions:
+          - '>= 25'
