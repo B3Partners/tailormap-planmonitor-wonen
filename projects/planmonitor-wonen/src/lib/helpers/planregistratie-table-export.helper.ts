@@ -1,4 +1,4 @@
-import * as ExcelJS from 'exceljs';
+import type * as ExcelJS from 'exceljs';
 import { FileHelper } from '@tailormap-viewer/shared';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { ColorHelper } from './color.helper';
@@ -101,11 +101,12 @@ const COLUMN_CONFIG: Map<string, { label: string; width: number }> = new Map([
 
 export class PlanregistratieTableExportHelper {
 
-  public static createExcelExport(
+  public static async createExcelExport(
     plannaam: string,
     table: CategorieTableRowModel[],
   ) {
-    const workbook = new ExcelJS.Workbook();
+    const excelJS = await import('exceljs');
+    const workbook = new excelJS.Workbook();
     PlanregistratieTableExportHelper.addPlanningSheet(workbook, plannaam, table);
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {

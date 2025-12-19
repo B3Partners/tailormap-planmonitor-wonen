@@ -51,12 +51,12 @@ export class PlanregistratieExportComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public export() {
+  public async export() {
     const exportType = this.exportTypeControl.value;
     this.exporting.set(true);
     const planregistraties = this.planregistratiesSubject.value;
     if (planregistraties) {
-      PlanregistratiesExportHelper.createExcelExport(exportType, planregistraties);
+      await PlanregistratiesExportHelper.createExcelExport(exportType, planregistraties);
     }
     this.exporting.set(false);
   }

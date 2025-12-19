@@ -163,13 +163,13 @@ export class PlanregistratiesService {
       });
   }
 
-  public export() {
+  public async export() {
     const currentReg = this.selectedPlanregistratie.value;
     const table = this.selectedCategorieTable.value;
     if (!currentReg || !table) {
       return;
     }
-    PlanregistratieTableExportHelper.createExcelExport(currentReg.planNaam, table.rows);
+    await PlanregistratieTableExportHelper.createExcelExport(currentReg.planNaam, table.rows);
   }
 
   public updatePlan(plan: Partial<PlanregistratieModel> | null) {

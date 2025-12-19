@@ -1,4 +1,4 @@
-import * as ExcelJS from 'exceljs';
+import type * as ExcelJS from 'exceljs';
 import { FileHelper } from '@tailormap-viewer/shared';
 import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 import { DateTime } from 'luxon';
@@ -54,11 +54,12 @@ const COLUMN_TRANSLATION: Record<string, string> = {
 
 export class PlanregistratiesExportHelper {
 
-  public static createExcelExport(
+  public static async createExcelExport(
     exportType: ExportType,
     registraties: PlanregistratieWithDetailsModel[],
   ) {
-    const workbook = new ExcelJS.Workbook();
+    const excelJS = await import('exceljs');
+    const workbook = new excelJS.Workbook();
     const sheet = workbook.addWorksheet(EXPORT_TYPE_LABELS[exportType]);
     if (exportType === ExportType.EENVOUDIG) {
       PlanregistratiesExportHelper.addEenvoudigExport(sheet, registraties);

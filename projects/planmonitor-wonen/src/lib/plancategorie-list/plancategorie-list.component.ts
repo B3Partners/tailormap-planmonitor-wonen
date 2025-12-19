@@ -103,8 +103,8 @@ export class PlancategorieListComponent implements OnInit {
     this.expanded = !this.expanded;
   }
 
-  public createExport() {
-    this.planregistratieService.export();
+  public async createExport() {
+    await this.planregistratieService.export();
   }
 
   public handleCellNavigation($event: KeyboardEvent) {
