@@ -38,6 +38,8 @@ export class PlanmonitorAuthenticationService {
     .pipe(map(gebruiker => gebruiker.isAuthenticated && gebruiker.isGemeenteGebruiker));
   public isProvincieGebruiker$ = this.gebruiker$
     .pipe(map(gebruiker => gebruiker.isAuthenticated && gebruiker.isProvincieGebruiker));
+  public isGemeenteOrProvincieGebruiker$ = this.gebruiker$
+    .pipe(map(gebruiker => gebruiker.isAuthenticated && (gebruiker.isGemeenteGebruiker || gebruiker.isProvincieGebruiker)));
   public ingelogdeGebruikerGemeente$ = this.gebruiker$
     .pipe(map(gebruiker => gebruiker.isAuthenticated && gebruiker.isGemeenteGebruiker ? gebruiker.gemeente || null : null));
 
