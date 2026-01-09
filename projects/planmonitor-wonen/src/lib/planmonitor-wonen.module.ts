@@ -20,6 +20,7 @@ import { PlanmonitorAuthenticationService } from './services/planmonitor-authent
 import { PlanregistratieExportComponent } from './planregistratie-export/planregistratie-export.component';
 import { PlanmonitorHelpComponent } from './planmonitor-help/planmonitor-help.component';
 import { RouterModule } from '@angular/router';
+import { PlanregistratieImportComponent } from './planregistratie-import/planregistratie-import.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { RouterModule } from '@angular/router';
     PlancategorieListComponent,
     PlanmonitorToggleComponent,
     PlanregistratieExportComponent,
+    PlanregistratieImportComponent,
     PlanmonitorHelpComponent,
   ],
   imports: [

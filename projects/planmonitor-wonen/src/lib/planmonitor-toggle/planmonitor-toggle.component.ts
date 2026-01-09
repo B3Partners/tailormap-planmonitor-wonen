@@ -7,6 +7,7 @@ import { PLANMONITOR_WONEN_COMPONENT_ID } from '../models';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { PlanregistratieExportComponent } from '../planregistratie-export/planregistratie-export.component';
 import { MatDialog } from '@angular/material/dialog';
+import { PlanregistratieImportComponent } from '../planregistratie-import/planregistratie-import.component';
 
 @Component({
     selector: 'lib-planmonitor-toggle',
@@ -40,6 +41,10 @@ export class PlanmonitorToggleComponent {
 
   public exportPlannen() {
     PlanregistratieExportComponent.open(this.dialog);
+  }
+
+  public importPlannen() {
+    PlanregistratieImportComponent.open(this.dialog);
   }
 
 }
