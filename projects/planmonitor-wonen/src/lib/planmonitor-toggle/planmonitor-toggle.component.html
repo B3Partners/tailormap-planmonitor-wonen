@@ -10,8 +10,4 @@
   @if (isGemeenteOrProvincieGebruiker$ | async) {
     <button mat-flat-button class="button" (click)="exportPlannen()">Exporteer plannen</button>
   }
-
-  @if (isGemeenteGebruiker$ | async) {
-    <button mat-flat-button class="button" (click)="importPlannen()">Importeer plannen</button>
-  }
 }

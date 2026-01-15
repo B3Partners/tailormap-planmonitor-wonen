@@ -1,34 +1,23 @@
 import type * as ExcelJS from 'exceljs';
-import { PlanregistratieModel } from '../models';
-import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 import { PlancategorieModel } from '../models/plancategorie.model';
-import { DetailplanningModel } from '../models/detailplanning.model';
-import { PlancategorieTableHelper } from './plancategorie-table.helper';
-import { PlanMonitorModelHelper } from './planmonitor-model.helper';
+import { CategorieRowModel, PlancategorieTableHelper } from './plancategorie-table.helper';
 
-const BASE_COLUMNS: Array<[keyof PlanregistratieModel, string]> = [
-  [ "id", "ID" ],
-  [ "planNaam", "Plannaam" ],
-  [ "plaatsnaam", "Plaatsnaam" ],
-  [ "gemeente", "Gemeente" ],
-  [ "regio", "Regio" ],
-  [ "provincie", "Provincie" ],
-  [ "plantype", "Plantype" ],
-  [ "vertrouwelijkheid", "Vertrouwelijkheid" ],
-  [ "statusProject", "Status Project" ],
-  [ "statusPlanologisch", "Status Planologisch" ],
-  [ "knelpuntenMeerkeuze", "Knelpunten" ],
-  [ "beoogdWoonmilieuAbf13", "Woonmilieu" ],
-  [ "aantalStudentenwoningen", "Studentenwoningen" ],
-  [ "opdrachtgeverType", "Opdrachtegever" ],
-  [ "opdrachtgeverNaam", "Opdrachtgever Naam" ],
-  [ "sleutelproject", "Sleutelproject" ],
-  [ "opmerkingen", "Opmerkingen" ],
-];
+export interface CategorieImportResult {
+  categorieGroep: keyof PlancategorieModel;
+  categorieValue: string;
+  totaalGepland: number;
+  totaalGerealiseerd: number;
+  detailPlanningRows: DetailPlanningImportRow[];
+}
+
+export interface DetailPlanningImportRow {
+  jaartal: number;
+  aantalGepland: number;
+}
 
 export class PlanregistratiesImportHelper {
 
-  public static async importExcelFile(file: File | ArrayBuffer): Promise<PlanregistratieWithDetailsModel> {
+  public static async importExcelFile(file: File | ArrayBuffer): Promise<CategorieImportResult[]> {
     const excelJS = await import('exceljs');
     const workbook = new excelJS.Workbook();
 
@@ -44,99 +33,56 @@ export class PlanregistratiesImportHelper {
       throw new Error('No worksheet found in the Excel file');
     }
 
-    // Read base plan information from rows 1-16 (column B contains the values)
-    const fieldLabelMap = new Map<string, keyof PlanregistratieModel>();
-    BASE_COLUMNS.forEach(([ key, label ]) => {
-      fieldLabelMap.set(label, key);
-    });
-
-    const basePlan: Partial<PlanregistratieModel> = {
-      isNew: true,
-    };
-
-    // Read base plan data from rows 1-16
-    for (let rowIndex = 1; rowIndex <= 16; rowIndex++) {
-      const row = worksheet.getRow(rowIndex);
-      const label = row.getCell(1).value?.toString() || '';
-      const value = row.getCell(2).value; // Column B
-
-      const fieldKey = fieldLabelMap.get(label);
-      if (fieldKey && value !== null && value !== undefined) {
-        const parsedValue = PlanregistratiesImportHelper.parseCellValue(value);
-        // Handle arrays (knelpuntenMeerkeuze)
-        if (fieldKey === 'knelpuntenMeerkeuze' && typeof parsedValue === 'string') {
-          basePlan[fieldKey] = parsedValue.split(',').map(v => v.trim()).filter(v => v) as any;
-        } else {
-          (basePlan as any)[fieldKey] = parsedValue;
-        }
-      }
-    }
-
-    // Read category data starting from row 19
-    const plancategorieList: PlancategorieModel[] = [];
-    const detailplanningList: DetailplanningModel[] = [];
-
+    const plancategorieList: CategorieImportResult[] = [];
     PlancategorieTableHelper.categorieen.forEach(categorieRow => {
-      // Find the row for this category
-      let categoryRowIndex = -1;
-      for (let i = 19; i <= worksheet.rowCount; i++) {
-        const row = worksheet.getRow(i);
-        const labelCell = row.getCell(1).value?.toString() || '';
-        const groupCell = row.getCell(2).value?.toString() || '';
-
-        if (labelCell === categorieRow.label && groupCell === categorieRow.groepnaam) {
-          categoryRowIndex = i;
-          break;
-        }
-      }
-
-      if (categoryRowIndex === -1) {
+      const categoryRowIndex = PlanregistratiesImportHelper.findRowIndexForCategorie(worksheet, categorieRow);
+      if (categoryRowIndex === null) {
         return;
       }
-
       const categoryRow = worksheet.getRow(categoryRowIndex);
       // Read totalen (column C) and gerealiseerd (column E)
-      const totalenValue = categoryRow.getCell(3).value;
-      const gerealiseerdeValue = categoryRow.getCell(5).value;
-
-      const totaalGepland = PlanregistratiesImportHelper.parseNumericValue(totalenValue);
-      const totaalGerealiseerd = PlanregistratiesImportHelper.parseNumericValue(gerealiseerdeValue);
-
-      const planCategorie = PlanMonitorModelHelper.getNewPlancategorie({
-        planregistratieId: '',
-        nieuwbouw: categorieRow.field === 'nieuwbouw' ? categorieRow.fieldValue as any : null,
-        woningType: categorieRow.field === 'woningType' ? categorieRow.fieldValue as any : null,
-        wonenEnZorg: categorieRow.field === 'wonenEnZorg' ? categorieRow.fieldValue as any : null,
-        flexwoningen: categorieRow.field === 'flexwoningen' ? categorieRow.fieldValue as any : null,
-        betaalbaarheid: categorieRow.field === 'betaalbaarheid' ? categorieRow.fieldValue as any : null,
-        sloop: categorieRow.field === 'sloop' ? categorieRow.fieldValue as any : null,
+      const totaalGepland = PlanregistratiesImportHelper.parseNumericValue(categoryRow.getCell(3).value);
+      const totaalGerealiseerd = PlanregistratiesImportHelper.parseNumericValue(categoryRow.getCell(5).value);
+      const planCategorie: CategorieImportResult = {
+        categorieGroep: categorieRow.field,
+        categorieValue: categorieRow.fieldValue,
         totaalGepland,
         totaalGerealiseerd,
-      });
-      plancategorieList.push(planCategorie);
-
+        detailPlanningRows: [],
+      };
       // Read year data (columns G onwards: 2024, 2025, ..., 2043)
       const yearStartColumn = 7; // Column G
       for (let year = 2024; year <= 2043; year++) {
         const yearColumnIndex = yearStartColumn + (year - 2024);
         const yearValue = categoryRow.getCell(yearColumnIndex).value;
         const aantalGepland = PlanregistratiesImportHelper.parseNumericValue(yearValue);
-
         if (aantalGepland > 0) {
-          detailplanningList.push(PlanMonitorModelHelper.getNewDetailplanning({
-            plancategorieId: planCategorie.id,
+          planCategorie.detailPlanningRows.push({
             jaartal: year,
             aantalGepland,
-          }));
+          });
         }
       }
+      plancategorieList.push(planCategorie);
     });
+    return plancategorieList;
+  }
 
-    return {
-      ...PlanMonitorModelHelper.getNewPlanregistratie(basePlan),
-      plancategorieList,
-      detailplanningList,
-    };
+  private static findRowIndexForCategorie(
+    worksheet: ExcelJS.Worksheet,
+    categorie: CategorieRowModel,
+  ): number | null {
+    let categoryRowIndex = -1;
+    for (let i = 1; i <= worksheet.rowCount; i++) {
+      const row = worksheet.getRow(i);
+      const labelCell = row.getCell(1).value?.toString() || '';
+      const groupCell = row.getCell(2).value?.toString() || '';
+      if (labelCell === categorie.label && groupCell === categorie.groepnaam) {
+        categoryRowIndex = i;
+        break;
+      }
+    }
+    return categoryRowIndex === -1 ? null : categoryRowIndex;
   }
 
   private static parseCellValue(value: ExcelJS.CellValue): string | number | boolean | Date | undefined {

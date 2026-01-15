@@ -8,6 +8,8 @@ import { CategorieTableModel } from '../models/categorie-table.model';
 import { YearColumnModel } from '../models/year-table-column.model';
 import { ColumnHelper } from '../helpers/column.helper';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
+import { CategorieImportResult, PlanregistratiesImportHelper } from '../helpers/planregistraties-import.helper';
+import { MatDialog } from '@angular/material/dialog';
 
 const INTEGER_REGEX = /^\d+$/;
 const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
@@ -41,6 +43,7 @@ export class PlancategorieListComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
   private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
+  private dialog = inject(MatDialog);
 
 
   public expanded = false;
@@ -51,6 +54,8 @@ export class PlancategorieListComponent implements OnInit {
   public tableData: CategorieTableModel | null = null;
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
   public inputsDisabled = true;
+
+  protected acceptedDocumentTypes = [ 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel' ];
 
   public ngOnInit() {
     this.planregistratieService.getSelectedCategorieTable$()
@@ -105,6 +110,34 @@ export class PlancategorieListComponent implements OnInit {
 
   public async createExport() {
     await this.planregistratieService.export();
+  }
+
+  public onFileSelected($event: Event) {
+    const fileInput = $event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      PlanregistratiesImportHelper.importExcelFile(file)
+        .then(importResult => {
+          this.handleImportResult(importResult);
+        })
+        .catch(() => {
+        });
+    }
+    fileInput.value = '';
+  }
+
+  public handleImportResult(importResult: CategorieImportResult[]) {
+    if (!importResult) {
+      return;
+    }
+    this.planregistratieService.clearDetailAndCategorieData();
+    importResult.forEach(categorie => {
+      this.planregistratieService.updateCategorieField(categorie.categorieGroep, categorie.categorieValue, 'totaalGepland', categorie.totaalGepland);
+      this.planregistratieService.updateCategorieField(categorie.categorieGroep, categorie.categorieValue, 'totaalGerealiseerd', categorie.totaalGerealiseerd);
+      categorie.detailPlanningRows.forEach(detail => {
+        this.planregistratieService.updateDetailplanning(categorie.categorieGroep, categorie.categorieValue, detail.jaartal, detail.aantalGepland);
+      });
+    });
   }
 
   public handleCellNavigation($event: KeyboardEvent) {

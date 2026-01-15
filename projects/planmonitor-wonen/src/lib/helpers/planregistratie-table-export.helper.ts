@@ -73,7 +73,7 @@ const COLUMN_INDEX = {
   GROEPNAAM: 2,
   CHECK_TOTAL: 4,
   RESTCAPACITEIT: 6,
-  CHECK_YEARS: 19,
+  CHECK_YEARS: 27,
 };
 
 // width = character width + "magic" 5/7 to fix character width -> px conversion, see https://github.com/exceljs/exceljs/issues/744#issuecomment-1529795663
@@ -94,8 +94,16 @@ const COLUMN_CONFIG: Map<string, { label: string; width: number }> = new Map([
   [ 'year_2031', { label: '2031', width: 5.71 }],
   [ 'year_2032', { label: '2032', width: 5.71 }],
   [ 'year_2033', { label: '2033', width: 5.71 }],
-  [ 'year_2034_2038', { label: '2034 - 2038', width: 9.71 }],
-  [ 'year_2039_2043', { label: '2039 - 2043', width: 9.71 }],
+  [ 'year_2034', { label: '2034', width: 5.71 }],
+  [ 'year_2035', { label: '2035', width: 5.71 }],
+  [ 'year_2036', { label: '2036', width: 5.71 }],
+  [ 'year_2037', { label: '2037', width: 5.71 }],
+  [ 'year_2038', { label: '2038', width: 5.71 }],
+  [ 'year_2039', { label: '2039', width: 5.71 }],
+  [ 'year_2040', { label: '2040', width: 5.71 }],
+  [ 'year_2041', { label: '2041', width: 5.71 }],
+  [ 'year_2042', { label: '2042', width: 5.71 }],
+  [ 'year_2043', { label: '2043', width: 5.71 }],
   [ 'years_check', { label: 'Check', width: 14.71 }],
 ]);
 
@@ -125,7 +133,7 @@ export class PlanregistratieTableExportHelper {
     // Setup page
     sheet.pageSetup.paperSize = 9; /* ExcelJS.PaperSize.A4, because of isolatedModules can't use const enum without TS2748 error */
     // Setup columns
-    sheet.columns = ColumnHelper.categorieColumns.map(key => {
+    sheet.columns = ColumnHelper.expandedCategorieColumns.map(key => {
       const config = COLUMN_CONFIG.get(key);
       return { header: config?.label || '', key, width: config?.width || 5.71 };
     });
@@ -145,7 +153,7 @@ export class PlanregistratieTableExportHelper {
       }
       excelRow.getCell(COLUMN_INDEX.CHECK_TOTAL).value = value;
       excelRow.getCell(COLUMN_INDEX.RESTCAPACITEIT).value = { formula: `=C${rowNumber}-E${rowNumber}` };
-      excelRow.getCell(COLUMN_INDEX.CHECK_YEARS).value = { formula: `=F${rowNumber}-SUM(G${rowNumber}:R${rowNumber})` };
+      excelRow.getCell(COLUMN_INDEX.CHECK_YEARS).value = { formula: `=F${rowNumber}-SUM(G${rowNumber}:Z${rowNumber})` };
     });
     // Merge groepnaam and total check cells
     PlanregistratieTableExportHelper.mergeGroepnaamCheckCells(sheet, [
@@ -158,7 +166,7 @@ export class PlanregistratieTableExportHelper {
     PlanregistratieTableExportHelper.setSheetStyles(sheet);
     // Add conditional formatting for check columns
     sheet.addConditionalFormatting({ ref: 'D3:D20', rules: CONDITIONAL_FORMATTING_RULES });
-    sheet.addConditionalFormatting({ ref: 'S2:S20', rules: CONDITIONAL_FORMATTING_RULES });
+    sheet.addConditionalFormatting({ ref: 'AA2:AA20', rules: CONDITIONAL_FORMATTING_RULES });
     return sheet;
   }
 
@@ -204,9 +212,10 @@ export class PlanregistratieTableExportHelper {
       });
     });
     Array.from(WITH_BORDER_BOTTOM).forEach(rowIdx => {
-      sheet.getRow(rowIdx).eachCell(cell => {
+      for (let colIdx = 1; colIdx <= sheet.columnCount; colIdx++) {
+        const cell = sheet.getRow(rowIdx).getCell(colIdx);
         PlanregistratieTableExportHelper.setStyle(cell, { border: { bottom: BORDER_STYLE } });
-      });
+      }
     });
   }
 

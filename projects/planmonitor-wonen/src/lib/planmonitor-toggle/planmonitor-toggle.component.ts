@@ -1,13 +1,12 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { PlanregistratiesService } from '../services/planregistraties.service';
-import { combineLatest, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { LayoutService } from '@tailormap-viewer/core';
 import { PLANMONITOR_WONEN_COMPONENT_ID } from '../models';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { PlanregistratieExportComponent } from '../planregistratie-export/planregistratie-export.component';
 import { MatDialog } from '@angular/material/dialog';
-import { PlanregistratieImportComponent } from '../planregistratie-import/planregistratie-import.component';
 
 @Component({
     selector: 'lib-planmonitor-toggle',
@@ -41,10 +40,6 @@ export class PlanmonitorToggleComponent {
 
   public exportPlannen() {
     PlanregistratieExportComponent.open(this.dialog);
-  }
-
-  public importPlannen() {
-    PlanregistratieImportComponent.open(this.dialog);
   }
 
 }
