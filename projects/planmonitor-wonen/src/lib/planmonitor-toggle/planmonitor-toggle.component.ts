@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { PlanregistratiesService } from '../services/planregistraties.service';
-import { combineLatest, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { LayoutService } from '@tailormap-viewer/core';
 import { PLANMONITOR_WONEN_COMPONENT_ID } from '../models';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
