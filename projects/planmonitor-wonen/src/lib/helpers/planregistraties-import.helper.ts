@@ -135,7 +135,7 @@ export class PlanregistratiesImportHelper {
     return value.toString();
   }
 
-  private static parseNumericValue(value: ExcelJS.CellValue): number {
+  public static parseNumericValue(value: ExcelJS.CellValue): number {
     const parsed = PlanregistratiesImportHelper.parseCellValue(value);
 
     if (typeof parsed === 'number') {
@@ -143,8 +143,40 @@ export class PlanregistratiesImportHelper {
     }
 
     if (typeof parsed === 'string') {
-      const num = parseFloat(parsed);
-      return isNaN(num) ? 0 : num;
+      const s = parsed.trim().replace(/\s+/g, '');
+
+      const dotCount = (s.match(/\./g) || []).length;
+      const commaCount = (s.match(/,/g) || []).length;
+
+      let normalized = s;
+
+      // Both separators present: last one is decimal
+      if (dotCount > 0 && commaCount > 0) {
+        if (s.lastIndexOf('.') > s.lastIndexOf(',')) {
+          normalized = s.replace(/,/g, '');
+        } else {
+          normalized = s.replace(/\./g, '').replace(',', '.');
+        }
+      }
+      // Only dots: multiple = thousands, single with 3 digits = thousands
+      else if (dotCount > 0) {
+        const afterDot = s.split('.').pop()?.length || 0;
+        if (dotCount > 1 || afterDot === 3) {
+          normalized = s.replace(/\./g, '');
+        }
+      }
+      // Only commas: multiple = thousands, single with 3 digits = thousands
+      else if (commaCount > 0) {
+        const afterComma = s.split(',').pop()?.length || 0;
+        if (commaCount > 1 || afterComma === 3) {
+          normalized = s.replace(/,/g, '');
+        } else {
+          normalized = s.replace(',', '.');
+        }
+      }
+
+      const result = parseFloat(normalized);
+      return isNaN(result) ? 0 : result;
     }
 
     return 0;
