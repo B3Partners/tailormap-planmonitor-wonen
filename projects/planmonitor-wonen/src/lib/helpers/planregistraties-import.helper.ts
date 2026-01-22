@@ -1,6 +1,7 @@
 import type * as ExcelJS from 'exceljs';
 import { PlancategorieModel } from '../models/plancategorie.model';
 import { CategorieRowModel, PlancategorieTableHelper } from './plancategorie-table.helper';
+import { ExcelHelper } from './excel.helper';
 
 export interface CategorieImportResult {
   categorieGroep: keyof PlancategorieModel;
@@ -18,8 +19,7 @@ export interface DetailPlanningImportRow {
 export class PlanregistratiesImportHelper {
 
   public static async importExcelFile(file: File | ArrayBuffer): Promise<CategorieImportResult[]> {
-    const excelJS = await import('exceljs');
-    const workbook = new excelJS.Workbook();
+    const workbook = await ExcelHelper.getNewWorkbook();
 
     if (file instanceof File) {
       const arrayBuffer = await file.arrayBuffer();

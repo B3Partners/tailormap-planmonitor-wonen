@@ -3,6 +3,7 @@ import { FileHelper } from '@tailormap-viewer/shared';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { ColorHelper } from './color.helper';
 import { ColumnHelper } from './column.helper';
+import { ExcelHelper } from './excel.helper';
 
 const getColor = (groepNaam: keyof typeof ColorHelper.GROUP_COLORS) => {
   const color = ColorHelper.getGroupColor(groepNaam);
@@ -113,8 +114,7 @@ export class PlanregistratieTableExportHelper {
     plannaam: string,
     table: CategorieTableRowModel[],
   ) {
-    const excelJS = await import('exceljs');
-    const workbook = new excelJS.Workbook();
+    const workbook = await ExcelHelper.getNewWorkbook();
     PlanregistratieTableExportHelper.addPlanningSheet(workbook, plannaam, table);
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
