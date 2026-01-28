@@ -277,6 +277,11 @@ export class PlanregistratiesService {
     this.setSelectedPlanregistratie(null);
   }
 
+  public clearDetailAndCategorieData() {
+    this.selectedPlanCategorieen.next(null);
+    this.selectedDetailplanningen.next(null);
+  }
+
   public updateCategorieField(
     categorieGroep: keyof PlancategorieModel,
     categorieGroepValue: string,

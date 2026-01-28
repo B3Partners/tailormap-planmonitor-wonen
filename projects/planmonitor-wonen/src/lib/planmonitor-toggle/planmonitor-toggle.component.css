@@ -8,7 +8,7 @@ mat-button-toggle-group {
   --mat-button-toggle-selected-state-background-color: rgb(224, 224, 224);
 }
 
-.export-button {
+.button {
   --base-button-height: 42px;
   border: solid 1px var(--mat-standard-button-toggle-divider-color);
   border-radius: var(--mat-standard-button-toggle-shape);
