@@ -18,7 +18,10 @@ export interface DetailPlanningImportRow {
 
 export class PlanregistratiesImportHelper {
 
-  public static async importExcelFile(file: File | ArrayBuffer): Promise<CategorieImportResult[]> {
+  private static invalidNumber = Symbol('invalidNumber');
+  private static emptyNumber = Symbol('emptyNumber');
+
+  public static async importExcelFile(file: File | ArrayBuffer): Promise<{ result?: CategorieImportResult[]; errors: string[] }> {
     const workbook = await ExcelHelper.getNewWorkbook();
 
     if (file instanceof File) {
@@ -30,9 +33,10 @@ export class PlanregistratiesImportHelper {
 
     const worksheet = workbook.worksheets[0];
     if (!worksheet) {
-      throw new Error('No worksheet found in the Excel file');
+      return { errors: ['Geen werkblad gevonden in het Excel-bestand.'] };
     }
 
+    const errors: string[] = [];
     const plancategorieList: CategorieImportResult[] = [];
     PlancategorieTableHelper.categorieen.forEach(categorieRow => {
       const categoryRowIndex = PlanregistratiesImportHelper.findRowIndexForCategorie(worksheet, categorieRow);
@@ -43,11 +47,19 @@ export class PlanregistratiesImportHelper {
       // Read totalen (column C) and gerealiseerd (column E)
       const totaalGepland = PlanregistratiesImportHelper.parseNumericValue(categoryRow.getCell(3).value);
       const totaalGerealiseerd = PlanregistratiesImportHelper.parseNumericValue(categoryRow.getCell(5).value);
+
+      if (totaalGepland === PlanregistratiesImportHelper.invalidNumber) {
+        PlanregistratiesImportHelper.addError(errors, `Totaal gepland in rij ${categoryRowIndex} is ongeldig.`);
+      }
+      if (totaalGerealiseerd === PlanregistratiesImportHelper.invalidNumber) {
+        PlanregistratiesImportHelper.addError(errors, `Totaal gerealiseerd in rij ${categoryRowIndex} is ongeldig.`);
+      }
+
       const planCategorie: CategorieImportResult = {
         categorieGroep: categorieRow.field,
         categorieValue: categorieRow.fieldValue,
-        totaalGepland,
-        totaalGerealiseerd,
+        totaalGepland: typeof totaalGepland === 'number' ? totaalGepland : 0,
+        totaalGerealiseerd: typeof totaalGerealiseerd === 'number' ? totaalGerealiseerd : 0,
         detailPlanningRows: [],
       };
       // Read year data (columns G onwards: 2024, 2025, ..., 2043)
@@ -55,17 +67,35 @@ export class PlanregistratiesImportHelper {
       for (let year = 2024; year <= 2043; year++) {
         const yearColumnIndex = yearStartColumn + (year - 2024);
         const yearValue = categoryRow.getCell(yearColumnIndex).value;
+        // Check if column header year matches year
+        const headerRow = worksheet.getRow(1);
+        const jaartal = PlanregistratiesImportHelper.parseNumericValue(headerRow.getCell(yearColumnIndex).value);
+        if (typeof jaartal !== 'number') {
+          continue;
+        }
         const aantalGepland = PlanregistratiesImportHelper.parseNumericValue(yearValue);
-        if (aantalGepland > 0) {
+        if (aantalGepland === PlanregistratiesImportHelper.invalidNumber) {
+          PlanregistratiesImportHelper.addError(errors, `Aantal gepland voor jaar ${jaartal} in rij ${categoryRowIndex} is ongeldig.`);
+        } else if(typeof aantalGepland === 'number' && aantalGepland > 0) {
           planCategorie.detailPlanningRows.push({
-            jaartal: year,
+            jaartal,
             aantalGepland,
           });
         }
       }
-      plancategorieList.push(planCategorie);
+      if (planCategorie.detailPlanningRows.length > 0) {
+        plancategorieList.push(planCategorie);
+      }
     });
-    return plancategorieList;
+
+    return { result: plancategorieList, errors };
+  }
+
+  private static addError(errors: string[], message: string) {
+    if (errors.includes(message)) {
+      return;
+    }
+    errors.push(message);
   }
 
   private static findRowIndexForCategorie(
@@ -135,8 +165,12 @@ export class PlanregistratiesImportHelper {
     return value.toString();
   }
 
-  public static parseNumericValue(value: ExcelJS.CellValue): number {
+  public static parseNumericValue(value: ExcelJS.CellValue): number | symbol {
     const parsed = PlanregistratiesImportHelper.parseCellValue(value);
+
+    if (value === null || parsed === null || typeof value === 'undefined' || typeof parsed === 'undefined') {
+      return PlanregistratiesImportHelper.emptyNumber;
+    }
 
     if (typeof parsed === 'number') {
       return parsed;
@@ -144,6 +178,10 @@ export class PlanregistratiesImportHelper {
 
     if (typeof parsed === 'string') {
       const s = parsed.trim().replace(/\s+/g, '');
+
+      if (s === '') {
+        return PlanregistratiesImportHelper.emptyNumber;
+      }
 
       const dotCount = (s.match(/\./g) || []).length;
       const commaCount = (s.match(/,/g) || []).length;
@@ -176,10 +214,10 @@ export class PlanregistratiesImportHelper {
       }
 
       const result = parseFloat(normalized);
-      return isNaN(result) ? 0 : result;
+      return isNaN(result) ? PlanregistratiesImportHelper.invalidNumber : result;
     }
 
-    return 0;
+    return PlanregistratiesImportHelper.invalidNumber;
   }
 
 }

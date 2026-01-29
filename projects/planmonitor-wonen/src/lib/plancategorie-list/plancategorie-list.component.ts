@@ -10,6 +10,7 @@ import { ColumnHelper } from '../helpers/column.helper';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { CategorieImportResult, PlanregistratiesImportHelper } from '../helpers/planregistraties-import.helper';
 import { MatDialog } from '@angular/material/dialog';
+import { ImportErrorDialogComponent } from '../import-error-dialog/import-error-dialog.component';
 
 const INTEGER_REGEX = /^\d+$/;
 const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
@@ -118,7 +119,13 @@ export class PlancategorieListComponent implements OnInit {
       const file = fileInput.files[0];
       PlanregistratiesImportHelper.importExcelFile(file)
         .then(importResult => {
-          this.handleImportResult(importResult);
+          if (importResult.errors.length > 0) {
+            ImportErrorDialogComponent.open(this.dialog, importResult.errors);
+          }
+          if (!importResult.result || importResult.result.length === 0) {
+            return;
+          }
+          this.handleImportResult(importResult.result);
         })
         .catch(() => {
         });

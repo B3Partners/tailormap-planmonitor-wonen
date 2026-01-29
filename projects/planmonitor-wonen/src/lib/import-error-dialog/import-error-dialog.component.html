@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Fouten bij importeren</h2>
+<mat-dialog-content>
+  @if (data.errors.length === 0) {
+    <p>Geen fouten gevonden.</p>
+  } @else {
+    <p>De volgende fouten zijn opgetreden tijdens het importeren:</p>
+    <ul class="error-list">
+      @for (error of data.errors; track $index) {
+        <li>{{ error }}</li>
+      }
+    </ul>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="close()">Sluiten</button>
+</mat-dialog-actions>

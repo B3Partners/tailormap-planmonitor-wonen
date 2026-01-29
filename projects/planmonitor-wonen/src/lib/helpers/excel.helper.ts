@@ -1,3 +1,5 @@
+import type { Worksheet } from 'exceljs';
+
 export class ExcelHelper {
 
   public static async getNewWorkbook() {
@@ -9,6 +11,10 @@ export class ExcelHelper {
       return new excelJS.default.Workbook();
     }
     throw new Error('Could not load ExcelJS Workbook');
+  }
+
+  public static getColumnLetter(worksheet: Worksheet, yearColumnIndex: number) {
+    return worksheet.getColumn(yearColumnIndex).letter;
   }
 
 }
