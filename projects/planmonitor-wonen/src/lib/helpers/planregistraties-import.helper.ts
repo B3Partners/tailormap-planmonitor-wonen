@@ -18,8 +18,8 @@ export interface DetailPlanningImportRow {
 
 export class PlanregistratiesImportHelper {
 
-  private static invalidNumber = Symbol('invalidNumber');
-  private static emptyNumber = Symbol('emptyNumber');
+  public static invalidNumber = Symbol('invalidNumber');
+  public static emptyNumber = Symbol('emptyNumber');
 
   public static async importExcelFile(file: File | ArrayBuffer): Promise<{ result?: CategorieImportResult[]; errors: string[] }> {
     const workbook = await ExcelHelper.getNewWorkbook();

@@ -12,9 +12,18 @@ describe('PlanregistratiesImportHelper', () => {
     expect(result).toBe(5678);
   });
 
-  it('returns 0 for non-numeric string cell values', () => {
+  it('returns invalidNumber symbol for non-numeric string cell values', () => {
     const result = PlanregistratiesImportHelper.parseNumericValue('not a number');
-    expect(result).toBe(0);
+    expect(result).toBe(PlanregistratiesImportHelper.invalidNumber);
+  });
+
+  it('returns emptyNumber symbol for empty cell values', () => {
+    const result = PlanregistratiesImportHelper.parseNumericValue('');
+    expect(result).toBe(PlanregistratiesImportHelper.emptyNumber);
+    const result2 = PlanregistratiesImportHelper.parseNumericValue(null);
+    expect(result2).toBe(PlanregistratiesImportHelper.emptyNumber);
+    const result3 = PlanregistratiesImportHelper.parseNumericValue(undefined);
+    expect(result3).toBe(PlanregistratiesImportHelper.emptyNumber);
   });
 
   it('returns correctly parses different number formats', () => {
