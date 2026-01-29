@@ -191,3 +191,12 @@ mat-header-cell button {
   opacity: 0.4;
   user-select: none;
 }
+
+.table-button {
+  --mat-button-outlined-outline-color: var(--primary-color);
+  background-color: var(#fff);
+}
+
+.table-button + .table-button {
+  margin-left: 8px;
+}
