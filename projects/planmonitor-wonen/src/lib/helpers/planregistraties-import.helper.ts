@@ -33,7 +33,6 @@ export class PlanregistratiesImportHelper {
         Het bestand moet einden op .xlsx`] };
     }
 
-    console.log('Worksheets in workbook:', workbook.worksheets.map(ws => ws.name), workbook);
     const worksheet = workbook.worksheets[0];
     if (!worksheet) {
       return { errors: ['Geen werkblad gevonden in het Excel-bestand.'] };
