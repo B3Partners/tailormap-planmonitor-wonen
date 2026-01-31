@@ -21,16 +21,19 @@ export class PlanregistratiesImportHelper {
   public static invalidNumber = Symbol('invalidNumber');
   public static emptyNumber = Symbol('emptyNumber');
 
-  public static async importExcelFile(file: File | ArrayBuffer): Promise<{ result?: CategorieImportResult[]; errors: string[] }> {
+  public static async importExcelFile(file: File | ArrayBuffer, fileName: string): Promise<{ result?: CategorieImportResult[]; errors: string[] }> {
     const workbook = await ExcelHelper.getNewWorkbook();
 
-    if (file instanceof File) {
-      const arrayBuffer = await file.arrayBuffer();
+    const arrayBuffer: ArrayBuffer = file instanceof File ? await file.arrayBuffer() : file;
+    try {
       await workbook.xlsx.load(arrayBuffer);
-    } else {
-      await workbook.xlsx.load(file);
+    } catch (error) {
+      return { errors: [`Fout bij het lezen van het Excel-bestand.
+        Het geimporteerde bestand (${fileName}) lijkt geen Excel-bestand te zijn.
+        Het bestand moet einden op .xlsx`] };
     }
 
+    console.log('Worksheets in workbook:', workbook.worksheets.map(ws => ws.name), workbook);
     const worksheet = workbook.worksheets[0];
     if (!worksheet) {
       return { errors: ['Geen werkblad gevonden in het Excel-bestand.'] };
@@ -87,6 +90,10 @@ export class PlanregistratiesImportHelper {
         plancategorieList.push(planCategorie);
       }
     });
+
+    if (plancategorieList.length === 0) {
+      PlanregistratiesImportHelper.addError(errors, 'Er zijn geen plancategorieën gevonden in het Excel-bestand.');
+    }
 
     return { result: plancategorieList, errors };
   }

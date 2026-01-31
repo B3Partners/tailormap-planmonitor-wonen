@@ -56,7 +56,7 @@ export class PlancategorieListComponent implements OnInit {
   public trackByRowId: TrackByFunction<CategorieTableRowModel> = (idx, row) => row.id;
   public inputsDisabled = true;
 
-  protected acceptedDocumentTypes = [ 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel' ];
+  protected acceptedDocumentTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 
   public ngOnInit() {
     this.planregistratieService.getSelectedCategorieTable$()
@@ -117,7 +117,7 @@ export class PlancategorieListComponent implements OnInit {
     const fileInput = $event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files.length > 0) {
       const file = fileInput.files[0];
-      PlanregistratiesImportHelper.importExcelFile(file)
+      PlanregistratiesImportHelper.importExcelFile(file, file.name)
         .then(importResult => {
           if (importResult.errors.length > 0) {
             ImportErrorDialogComponent.open(this.dialog, importResult.errors);
