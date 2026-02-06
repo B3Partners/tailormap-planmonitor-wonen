@@ -19,6 +19,7 @@ import { AutofillDataService } from './services/autofill-data.service';
 import { PlanmonitorAuthenticationService } from './services/planmonitor-authentication.service';
 import { PlanregistratieExportComponent } from './planregistratie-export/planregistratie-export.component';
 import { PlanmonitorHelpComponent } from './planmonitor-help/planmonitor-help.component';
+import { ImportErrorDialogComponent } from './import-error-dialog/import-error-dialog.component';
 import { RouterModule } from '@angular/router';
 
 
@@ -31,6 +32,7 @@ import { RouterModule } from '@angular/router';
     PlanmonitorToggleComponent,
     PlanregistratieExportComponent,
     PlanmonitorHelpComponent,
+    ImportErrorDialogComponent,
   ],
   imports: [
     CommonModule,

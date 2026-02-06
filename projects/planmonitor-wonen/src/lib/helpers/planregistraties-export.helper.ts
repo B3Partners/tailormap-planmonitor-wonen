@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import { PlanregistratieModel } from '../models';
 import { CategorieRowModel, PlancategorieTableHelper } from './plancategorie-table.helper';
 import { ColumnHelper } from './column.helper';
+import { ExcelHelper } from './excel.helper';
 
 export enum ExportType {
   EENVOUDIG = "EENVOUDIG",
@@ -58,8 +59,7 @@ export class PlanregistratiesExportHelper {
     exportType: ExportType,
     registraties: PlanregistratieWithDetailsModel[],
   ) {
-    const excelJS = await import('exceljs');
-    const workbook = new excelJS.Workbook();
+    const workbook = await ExcelHelper.getNewWorkbook();
     const sheet = workbook.addWorksheet(EXPORT_TYPE_LABELS[exportType]);
     if (exportType === ExportType.EENVOUDIG) {
       PlanregistratiesExportHelper.addEenvoudigExport(sheet, registraties);

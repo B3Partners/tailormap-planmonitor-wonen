@@ -4,7 +4,13 @@
 
       <ng-container matColumnDef="label" [sticky]="true">
         <mat-header-cell *matHeaderCellDef>
-          <button mat-button (click)="createExport()">Exporteer naar Excel</button>
+          <button mat-stroked-button class="table-button" (click)="createExport()">Exporteer</button>
+          @if (!this.inputsDisabled) {
+            <button mat-stroked-button class="table-button" (click)="fileInput.click()">Importeer</button>
+            <div style="display: none">
+              <input type="file" #fileInput [accept]="acceptedDocumentTypes" (change)="onFileSelected($event)" class="hidden">
+            </div>
+          }
         </mat-header-cell>
         <mat-cell *matCellDef="let row">{{row.label}}</mat-cell>
       </ng-container>

@@ -84,14 +84,19 @@ export class PlanregistratiesMapComponent implements OnInit {
           manager.enableTool(tool.id, true);
         }),
         switchMap(({ tool }) => tool.selectedFeatures$),
-        withLatestFrom(this.planregistratieService.hasChanges$()),
+        withLatestFrom(
+          this.planregistratieService.hasChanges$(),
+          this.planregistratieService.getSelectedPlanregistratie$(),
+        ),
       )
-      .subscribe(([ selectedFeatures, hasChanges ]) => {
+      .subscribe(([ selectedFeatures, hasChanges, currentSelectedPlan ]) => {
+        const selectedPlan = selectedFeatures && selectedFeatures.length > 0 && selectedFeatures[0] ? selectedFeatures[0].attributes : null;
         if (hasChanges) {
-          this.showUnableToSelectMessage();
+          if (currentSelectedPlan?.id !== selectedPlan?.id) {
+            this.showUnableToSelectMessage();
+          }
           return;
         }
-        const selectedPlan = selectedFeatures && selectedFeatures.length > 0 && selectedFeatures[0] ? selectedFeatures[0].attributes : null;
         this.planregistratieService.setSelectedPlanregistratie(selectedPlan?.id || null);
       });
   }
