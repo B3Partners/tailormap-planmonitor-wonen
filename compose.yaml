@@ -69,12 +69,12 @@ services:
 
   geoserver:
     container_name: ${COMPOSE_PROJECT_NAME}-geoserver
-    image: docker.osgeo.org/geoserver:2.28.2
+    image: docker.osgeo.org/geoserver:2.28.4
     environment:
       SKIP_DEMO_DATA: true
       GEOSERVER_CSRF_WHITELIST: ${HOST}
       INSTALL_EXTENSIONS: false
-      STABLE_EXTENSIONS: web-resource,geopkg-output,excel,css
+      STABLE_EXTENSIONS: css
       PROXY_BASE_URL: https://${HOST}/geoserver
     volumes:
       - geoserver-data:/opt/geoserver_data
