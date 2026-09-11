@@ -1,4 +1,4 @@
-import { enableProdMode, ErrorHandler } from '@angular/core';
+import { enableProdMode, ErrorHandler, provideZoneChangeDetection } from '@angular/core';
 import { platformBrowser } from '@angular/platform-browser';
 
 import { AppModule } from './app/app.module';
@@ -44,7 +44,7 @@ const setupSentryProviders = async () => {
 const main = async () => {
   try {
     const sentryProviders = await setupSentryProviders();
-    await platformBrowser(sentryProviders).bootstrapModule(AppModule);
+    await platformBrowser(sentryProviders).bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()], });
   } catch (error) {
     console.error(error);
   }
