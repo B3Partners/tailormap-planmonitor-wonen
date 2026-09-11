@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
 
 export interface ImportErrorDialogData {
   errors: string[];
@@ -10,7 +12,13 @@ export interface ImportErrorDialogData {
     templateUrl: './import-error-dialog.component.html',
     styleUrls: ['./import-error-dialog.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    imports: [
+        MatDialogTitle,
+        CdkScrollable,
+        MatDialogContent,
+        MatDialogActions,
+        MatButton,
+    ],
 })
 export class ImportErrorDialogComponent {
   private dialogRef = inject<MatDialogRef<ImportErrorDialogComponent>>(MatDialogRef);

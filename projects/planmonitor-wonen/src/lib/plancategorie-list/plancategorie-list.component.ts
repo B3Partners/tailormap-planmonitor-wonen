@@ -11,6 +11,9 @@ import { PlanmonitorAuthenticationService } from '../services/planmonitor-authen
 import { CategorieImportResult, PlanregistratiesImportHelper } from '../helpers/planregistraties-import.helper';
 import { MatDialog } from '@angular/material/dialog';
 import { ImportErrorDialogComponent } from '../import-error-dialog/import-error-dialog.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 const INTEGER_REGEX = /^\d+$/;
 const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
@@ -37,7 +40,20 @@ const ALLOWED_KEYS_FOR_NUMBER_INPUT = new Set([
             `--sloop-color: ${ColorHelper.getGroupColor('sloop')};` +
             '}'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    imports: [
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatButton,
+        MatCellDef,
+        MatCell,
+        MatIcon,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+    ],
 })
 export class PlancategorieListComponent implements OnInit {
   private planregistratieService = inject(PlanregistratiesService);

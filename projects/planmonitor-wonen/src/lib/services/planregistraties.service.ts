@@ -211,7 +211,6 @@ export class PlanregistratiesService {
     if (updatedPlan === null || (!updatedPlan.isNew && (updatedCategorieen === null || updatedDetailplanningen === null))) {
       return of(false);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { isNew, ...planregistratie } = updatedPlan;
     return this.api.savePlanregistratie$({
       planregistratie,

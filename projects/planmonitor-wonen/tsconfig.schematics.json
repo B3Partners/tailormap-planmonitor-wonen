@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "lib": [
       "es2018",
       "dom"
@@ -24,9 +23,9 @@
     "types": ["node"]
   },
   "include": [
-    "schematics/**/*"
+    "./schematics/**/*"
   ],
   "exclude": [
-    "schematics/*/files/**/*"
+    "./schematics/*/files/**/*"
   ]
 }
