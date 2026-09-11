@@ -47,7 +47,7 @@
               "base": "dist/app"
             },
             "index": "projects/app/src/index.html",
-            "polyfills": ["projects/app/src/polyfills.ts", "@angular/localize/init"],
+            "polyfills": ["zone.js", "projects/app/src/polyfills.ts", "@angular/localize/init"],
             "tsConfig": "projects/app/tsconfig.app.json",
             "assets": [
               {
@@ -204,6 +204,14 @@
               "projects/app/**/*.html"
             ]
           }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "setupFiles": ["test-setup.ts"],
+            "runnerConfig": true,
+            "outputFile": "junit/app/junit.xml"
+          }
         }
       }
     },
@@ -235,6 +243,14 @@
               "projects/planmonitor-wonen/**/*.ts",
               "projects/planmonitor-wonen/**/*.html"
             ]
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "setupFiles": ["test-setup.ts"],
+            "runnerConfig": true,
+            "outputFile": "junit/planmonitor-wonen/junit.xml"
           }
         }
       }

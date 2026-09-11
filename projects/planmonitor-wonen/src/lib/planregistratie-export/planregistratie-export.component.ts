@@ -1,10 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { EXPORT_TYPE_LABELS, ExportType, PlanregistratiesExportHelper } from '../helpers/planregistraties-export.helper';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 
 
 @Component({
@@ -12,7 +18,19 @@ import { EXPORT_TYPE_LABELS, ExportType, PlanregistratiesExportHelper } from '..
     templateUrl: './planregistratie-export.component.html',
     styleUrls: ['./planregistratie-export.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    imports: [
+        MatDialogTitle,
+        CdkScrollable,
+        MatDialogContent,
+        MatProgressSpinner,
+        MatFormField,
+        MatSelect,
+        ReactiveFormsModule,
+        MatOption,
+        MatDialogActions,
+        MatButton,
+        AsyncPipe,
+    ],
 })
 export class PlanregistratieExportComponent implements OnInit {
   private planregistratieService = inject(PlanregistratiesService);

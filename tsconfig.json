@@ -3,8 +3,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
@@ -20,17 +18,13 @@
     "importHelpers": true,
     "paths": {
       "@b3p/planmonitor-wonen": [
-        "projects/planmonitor-wonen/src"
+        "./projects/planmonitor-wonen/src"
       ]
     },
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "target": "ES2022",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

@@ -4,19 +4,33 @@ import {
   StatusPlanologischEnum,
   VertrouwelijkheidEnum, WoonmilieuAbf13Enum,
 } from '../models';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, debounceTime, Observable, of, combineLatest, map } from 'rxjs';
 import { AutofillDataService } from '../services/autofill-data.service';
 import { GemeenteModel } from '../models/gemeente.model';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { AsyncPipe } from '@angular/common';
+import { ErrorMessageComponent } from '@tailormap-viewer/shared';
 
 @Component({
     selector: 'lib-planregistratie-form',
     templateUrl: './planregistratie-form.component.html',
     styleUrls: ['./planregistratie-form.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+  imports: [
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
+    AsyncPipe,
+    ErrorMessageComponent,
+  ],
 })
 export class PlanregistratieFormComponent implements OnInit {
   private destroyRef = inject(DestroyRef);

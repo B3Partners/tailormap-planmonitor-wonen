@@ -2,16 +2,18 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "esModuleInterop": true,
     "outDir": "../../out-tsc/spec",
+    "rootDir": "../..",
     "types": [
-      "jasmine"
+      "node",
+      "vitest/globals",
+      "@testing-library/jest-dom/vitest"
     ]
   },
-  "files": [
-    "src/test.ts"
-  ],
   "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts",
+    "../../test-setup.ts"
   ]
 }

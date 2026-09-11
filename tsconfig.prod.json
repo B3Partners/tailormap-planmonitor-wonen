@@ -3,9 +3,9 @@
   "compilerOptions": {
     "paths": {
       "@b3p/planmonitor-wonen": [
-        "dist/planmonitor-wonen/planmonitor-wonen",
-        "dist/planmonitor-wonen",
-        "projects/planmonitor-wonen/src"
+        "./dist/planmonitor-wonen/planmonitor-wonen",
+        "./dist/planmonitor-wonen",
+        "./projects/planmonitor-wonen/src"
       ]
     },
   }

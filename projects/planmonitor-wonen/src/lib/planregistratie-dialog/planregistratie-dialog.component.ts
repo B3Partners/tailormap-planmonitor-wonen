@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostListener, signal, DestroyRef, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, DestroyRef, inject } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import {
@@ -9,13 +9,35 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { MapService, ProjectionCodesEnum } from '@tailormap-viewer/map';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { PlanregistratieFormComponent } from '../planregistratie-form/planregistratie-form.component';
+import { PlancategorieListComponent } from '../plancategorie-list/plancategorie-list.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
+import { DialogComponent } from '@tailormap-viewer/core';
 
 @Component({
     selector: 'lib-planregistratie-dialog',
     templateUrl: './planregistratie-dialog.component.html',
     styleUrls: ['./planregistratie-dialog.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    host: {
+        'window:resize': 'onResize()',
+    },
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatIconButton,
+    PlanregistratieFormComponent,
+    PlancategorieListComponent,
+    MatButton,
+    MatProgressSpinner,
+    AsyncPipe,
+    DialogComponent,
+  ],
 })
 export class PlanregistratieDialogComponent {
   private planregistratieService = inject(PlanregistratiesService);
@@ -44,7 +66,6 @@ export class PlanregistratieDialogComponent {
   public isGemeenteGebruiker$: Observable<boolean>;
   private lastWindow: Window | undefined | null;
 
-  @HostListener('window:resize', ['$event'])
   public onResize() {
     this.panelWidth = this.getPanelWidth();
   }

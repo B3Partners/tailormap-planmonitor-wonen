@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatButtonToggleChange, MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { map, Observable } from 'rxjs';
 import { LayoutService } from '@tailormap-viewer/core';
@@ -7,13 +7,20 @@ import { PLANMONITOR_WONEN_COMPONENT_ID } from '../models';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { PlanregistratieExportComponent } from '../planregistratie-export/planregistratie-export.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'lib-planmonitor-toggle',
     templateUrl: './planmonitor-toggle.component.html',
     styleUrls: ['./planmonitor-toggle.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    imports: [
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        MatButton,
+        AsyncPipe,
+    ],
 })
 export class PlanmonitorToggleComponent {
   private planregistratieService = inject(PlanregistratiesService);

@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/angular';
 import { ImportErrorDialogComponent } from './import-error-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -5,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 describe('ImportErrorDialogComponent', () => {
   const renderComponent = async (errors: string[]) => {
-    const close = jest.fn();
+    const close = vi.fn();
     const renderResult = await render(ImportErrorDialogComponent, {
       declarations: [ImportErrorDialogComponent],
       imports: [ MatDialogModule, MatButtonModule ],
@@ -48,7 +49,7 @@ describe('ImportErrorDialogComponent', () => {
 
   it('should open dialog with correct configuration', () => {
     const mockDialog = {
-      open: jest.fn(),
+      open: vi.fn(),
     } as any;
     const errors = ['Test error'];
     ImportErrorDialogComponent.open(mockDialog, errors);
