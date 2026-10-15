@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 
 import { environment } from './environments/environment';
@@ -13,6 +13,7 @@ const main = async () => {
     await bootstrapApplication(AppComponent, {
       providers: [
         ...environment.providers,
+        provideZoneChangeDetection(),
         planmonitorWonenProvider(),
         provideCore({
           production: environment.production,
