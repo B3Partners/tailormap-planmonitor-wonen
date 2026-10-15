@@ -173,7 +173,8 @@
                 "@tailormap-viewer/core",
                 "@tailormap-viewer/map",
                 "@tailormap-viewer/shared",
-                "@tailormap-admin/admin-core"
+                "@tailormap-admin/admin-core",
+                "@tailormap-admin/admin-api"
               ]
             }
           },
