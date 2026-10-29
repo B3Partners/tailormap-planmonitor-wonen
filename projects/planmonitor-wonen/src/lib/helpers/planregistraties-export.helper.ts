@@ -1,4 +1,4 @@
-import type * as ExcelJS from 'exceljs';
+import type * as ExcelJS from 'exceljs-hardened';
 import { FileHelper } from '@tailormap-viewer/shared';
 import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
 import { DateTime } from 'luxon';

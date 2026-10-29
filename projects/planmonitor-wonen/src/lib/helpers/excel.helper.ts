@@ -1,9 +1,9 @@
-import type { Worksheet } from 'exceljs';
+import type { Worksheet } from 'exceljs-hardened';
 
 export class ExcelHelper {
 
   public static async getNewWorkbook() {
-    const excelJS = await import('exceljs');
+    const excelJS = await import('exceljs-hardened');
     if (excelJS.Workbook) {
       return new excelJS.Workbook();
     }

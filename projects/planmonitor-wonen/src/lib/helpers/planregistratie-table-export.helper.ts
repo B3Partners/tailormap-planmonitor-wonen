@@ -1,4 +1,4 @@
-import type * as ExcelJS from 'exceljs';
+import type * as ExcelJS from 'exceljs-hardened';
 import { FileHelper } from '@tailormap-viewer/shared';
 import { CategorieTableRowModel } from '../models/categorie-table-row.model';
 import { ColorHelper } from './color.helper';
