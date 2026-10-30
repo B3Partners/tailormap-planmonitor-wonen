@@ -35,10 +35,6 @@ export class PlanMonitorModelHelper {
   public static getNewPlancategorie(initialData: Partial<PlancategorieModel> & Pick<PlancategorieModel, 'planregistratieId'>): PlancategorieModel {
     return {
       id: uuidv4(),
-      creator: '',
-      createdAt: new Date(),
-      editor: null,
-      editedAt: null,
       woningType: null,
       nieuwbouw: null,
       sloop: null,
@@ -54,10 +50,6 @@ export class PlanMonitorModelHelper {
   public static getNewDetailplanning(initialData: Pick<DetailplanningModel, 'plancategorieId' | 'jaartal' | 'aantalGepland'>): DetailplanningModel {
     return {
       id: uuidv4(),
-      creator: '',
-      createdAt: new Date(),
-      editor: null,
-      editedAt: null,
       ...initialData,
     };
   }

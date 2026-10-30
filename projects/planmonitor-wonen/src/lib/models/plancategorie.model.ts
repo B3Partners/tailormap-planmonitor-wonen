@@ -8,10 +8,6 @@ import { FlexwoningenEnum } from './flexwoningen.enum';
 export interface PlancategorieModel {
   id: string;
   planregistratieId: string;
-  creator: string;
-  createdAt: string | Date;
-  editor: string | null;
-  editedAt: string | Date | null;
   nieuwbouw: NieuwbouwEnum | null;
   woningType: WoningtypeEnum | null;
   wonenEnZorg: WonenEnZorgEnum | null;
