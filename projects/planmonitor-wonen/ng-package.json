@@ -9,7 +9,7 @@
     "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
-    "exceljs",
+    "exceljs-hardened",
     "@lukeed/uuid"
   ]
 }

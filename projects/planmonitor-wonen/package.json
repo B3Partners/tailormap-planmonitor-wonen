@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "tslib": "^2.8.1",
-    "exceljs": "^4.4.0"
+    "exceljs-hardened": "^5.0.1"
   }
 }

@@ -1,4 +1,4 @@
-import type * as ExcelJS from 'exceljs';
+import type * as ExcelJS from 'exceljs-hardened';
 import { PlancategorieModel } from '../models/plancategorie.model';
 import { CategorieRowModel, PlancategorieTableHelper } from './plancategorie-table.helper';
 import { ExcelHelper } from './excel.helper';
