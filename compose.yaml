@@ -55,6 +55,8 @@ services:
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://pmw-db/planmonitor-wonen"
       - "TAILORMAP_DATASOURCE_URL=jdbc:postgresql://db/tailormap"
       - "SPRING_DATASOURCE_PASSWORD=${PMW_DB_PASSWORD:-planmonitor-wonen}"
+      # Set to false to disable the OpenAPI documentation and Swagger UI
+      - "PLANMONITOR_WONEN_API_OPENAPI_ENABLED=${PMW_OPENAPI_ENABLED:-true}"
     networks:
       - default
       - reverse-proxy
