@@ -16,7 +16,8 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   private http = inject(HttpClient);
 
 
-  private apiBaseUrl = '/api/planmonitor-wonen';
+  // Major version of the API, a new version has backwards-incompatible changes
+  private apiBaseUrl = '/api/planmonitor-wonen/v2';
 
   public getGemeentes$(args?: { provincie?: string }): Observable<GemeenteModel[]> {
     let params = new HttpParams();
