@@ -1,5 +1,6 @@
 volumes:
   pmw-data:
+  pmw-api-logs:
   geoserver-data:
 
 networks:
@@ -57,6 +58,10 @@ services:
       - "SPRING_DATASOURCE_PASSWORD=${PMW_DB_PASSWORD:-planmonitor-wonen}"
       # Set to false to disable the OpenAPI documentation and Swagger UI
       - "PLANMONITOR_WONEN_API_OPENAPI_ENABLED=${PMW_OPENAPI_ENABLED:-true}"
+    volumes:
+      # Keeps the log files in /home/cnb/logs when the container is recreated. The volume is on the home directory
+      # because a new mount point such as /home/cnb/logs would be owned by root and not writable
+      - pmw-api-logs:/home/cnb
     networks:
       - default
       - reverse-proxy
