@@ -4,6 +4,8 @@ import { AutofillDataModel, GemeenteModel, PlanregistratieModel, Planregistratie
 import { catchError, map, Observable, of } from 'rxjs';
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
 import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
+import { PlanregistratieApiModel } from '../models/planregistratie-api.model';
+import { PlanregistratieApiHelper } from '../helpers/planregistratie-api.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +30,17 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   }
 
   public getPlandetails$(id: string): Observable<PlanregistratieDetails> {
-    return this.http.get<PlanregistratieDetails>(`${this.apiBaseUrl}/planregistratie/${id}/details`);
+    return this.http.get<PlanregistratieApiModel>(`${this.apiBaseUrl}/planregistratie/${id}`).pipe(
+      map(planregistratie => {
+        const { plancategorieen, detailplanningen } = PlanregistratieApiHelper.fromApiModel(planregistratie);
+        return { plancategorieen, detailplanningen };
+      }),
+    );
   }
 
   public savePlanregistratie$(planRegistratieSaveModel: PlanregistratieSaveModel): Observable<boolean> {
-    return this.http.put(`${this.apiBaseUrl}/planregistratie/${planRegistratieSaveModel.planregistratie.id}`, planRegistratieSaveModel, {
+    const planregistratie = PlanregistratieApiHelper.toApiModel(planRegistratieSaveModel);
+    return this.http.put(`${this.apiBaseUrl}/planregistratie/${planregistratie.id}`, planregistratie, {
       observe: 'response',
     }).pipe(
       map(response => response.ok),
@@ -58,9 +66,14 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   }
 
   public getPlanregistratiesWithDetails$(): Observable<PlanregistratieWithDetailsModel[]> {
-    return this.http.get<PlanregistratieWithDetailsModel[]>(`${this.apiBaseUrl}/planregistraties`, {
+    return this.http.get<PlanregistratieApiModel[]>(`${this.apiBaseUrl}/planregistraties`, {
       params: { details: true },
-    });
+    }).pipe(
+      map(planregistraties => planregistraties.map(apiModel => {
+        const { planregistratie, plancategorieen, detailplanningen } = PlanregistratieApiHelper.fromApiModel(apiModel);
+        return { ...planregistratie, plancategorieList: plancategorieen, detailplanningList: detailplanningen };
+      })),
+    );
   }
 
 }
