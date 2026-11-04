@@ -9,7 +9,7 @@ import { BaseComponentConfigHelper } from '@tailormap-viewer/api';
 import { PLANMONITOR_WONEN_COMPONENT_ID } from './models';
 import { PlanregistratiesMapComponent } from './planregistraties-map/planregistraties-map.component';
 import { PlanmonitorToggleComponent } from './planmonitor-toggle/planmonitor-toggle.component';
-import { filter, take } from 'rxjs';
+import { distinctUntilChanged, filter, map, take } from 'rxjs';
 import { PlanmonitorAuthenticationService } from './services/planmonitor-authentication.service';
 import { PLANMONITOR_WONEN_API_SERVICE } from './api/planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service';
@@ -22,6 +22,7 @@ export function planmonitorWonenProvider(): Array<Provider | EnvironmentProvider
       const viewerRegistryService = inject(ComponentRegistrationService);
       const adminFieldRegistrationService = inject(AdminFieldRegistrationService);
       const autofillDataService = inject(AutofillDataService);
+      const planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
 
       BaseComponentConfigHelper.addDefaultDisabledComponent(PLANMONITOR_WONEN_COMPONENT_ID);
       adminRegistryService.registerConfigurationComponents(PLANMONITOR_WONEN_COMPONENT_ID, 'Planmonitor wonen', BaseComponentConfigComponent);
@@ -33,7 +34,14 @@ export function planmonitorWonenProvider(): Array<Provider | EnvironmentProvider
         type: PLANMONITOR_WONEN_COMPONENT_ID + '_toggle',
         component: PlanmonitorToggleComponent,
       }, true);
-      autofillDataService.loadGemeentes('Zeeland');
+      // The API requires a login for the gemeentes, so load them when a user logs in (also a Tailormap admin, for the group fields)
+      planmonitorAuthenticationService.gebruiker$.pipe(
+        map(gebruiker => gebruiker.isAuthenticated),
+        distinctUntilChanged(),
+        filter(isAuthenticated => isAuthenticated),
+      ).subscribe(() => {
+        autofillDataService.loadGemeentes('Zeeland');
+      });
       autofillDataService.getGemeentes$()
         .pipe(filter(g => g.length > 0), take(1))
         .subscribe(gemeentes => {
