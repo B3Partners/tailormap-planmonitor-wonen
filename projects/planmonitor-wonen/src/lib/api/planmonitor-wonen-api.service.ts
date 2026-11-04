@@ -1,9 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { AutofillDataModel, GemeenteModel, PlanregistratieModel, PlanregistratieSaveModel } from '../models';
+import { AutofillDataModel, GemeenteModel, PlanregistratieModel, PlanregistratieSaveModel, PlanregistratieSaveResultModel } from '../models';
 import { catchError, map, Observable, of } from 'rxjs';
 import { PlanmonitorWonenApiServiceModel, PlanregistratieDetails } from './planmonitor-wonen-api.service.model';
 import { PlanregistratieWithDetailsModel } from '../models/planregistratie-with-details.model';
+import { PlanregistratieApiModel } from '../models/planregistratie-api.model';
+import { PlanregistratieApiHelper } from '../helpers/planregistratie-api.helper';
+import { SaveErrorHelper } from '../helpers/save-error.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +16,8 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   private http = inject(HttpClient);
 
 
-  private apiBaseUrl = '/api/planmonitor-wonen';
+  // Major version of the API, a new version has backwards-incompatible changes
+  private apiBaseUrl = '/api/planmonitor-wonen/v2';
 
   public getGemeentes$(args?: { provincie?: string }): Observable<GemeenteModel[]> {
     let params = new HttpParams();
@@ -28,16 +32,22 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   }
 
   public getPlandetails$(id: string): Observable<PlanregistratieDetails> {
-    return this.http.get<PlanregistratieDetails>(`${this.apiBaseUrl}/planregistratie/${id}/details`);
+    return this.http.get<PlanregistratieApiModel>(`${this.apiBaseUrl}/planregistratie/${id}`).pipe(
+      map(planregistratie => {
+        const { plancategorieen, detailplanningen } = PlanregistratieApiHelper.fromApiModel(planregistratie);
+        return { plancategorieen, detailplanningen };
+      }),
+    );
   }
 
-  public savePlanregistratie$(planRegistratieSaveModel: PlanregistratieSaveModel): Observable<boolean> {
-    return this.http.put(`${this.apiBaseUrl}/planregistratie/${planRegistratieSaveModel.planregistratie.id}`, planRegistratieSaveModel, {
+  public savePlanregistratie$(planRegistratieSaveModel: PlanregistratieSaveModel): Observable<PlanregistratieSaveResultModel> {
+    const planregistratie = PlanregistratieApiHelper.toApiModel(planRegistratieSaveModel);
+    return this.http.put(`${this.apiBaseUrl}/planregistratie/${planregistratie.id}`, planregistratie, {
       observe: 'response',
     }).pipe(
-      map(response => response.ok),
-      catchError((_error: HttpErrorResponse) => {
-        return of(false);
+      map(response => ({ success: response.ok })),
+      catchError((error: HttpErrorResponse) => {
+        return of(SaveErrorHelper.getSaveResult(error));
       }),
     );
   }
@@ -58,9 +68,14 @@ export class PlanmonitorWonenApiService implements PlanmonitorWonenApiServiceMod
   }
 
   public getPlanregistratiesWithDetails$(): Observable<PlanregistratieWithDetailsModel[]> {
-    return this.http.get<PlanregistratieWithDetailsModel[]>(`${this.apiBaseUrl}/planregistraties`, {
+    return this.http.get<PlanregistratieApiModel[]>(`${this.apiBaseUrl}/planregistraties`, {
       params: { details: true },
-    });
+    }).pipe(
+      map(planregistraties => planregistraties.map(apiModel => {
+        const { planregistratie, plancategorieen, detailplanningen } = PlanregistratieApiHelper.fromApiModel(apiModel);
+        return { ...planregistratie, plancategorieList: plancategorieen, detailplanningList: detailplanningen };
+      })),
+    );
   }
 
 }

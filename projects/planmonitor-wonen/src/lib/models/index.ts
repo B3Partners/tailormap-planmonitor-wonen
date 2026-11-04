@@ -20,3 +20,4 @@ export * from './woonvisie.enum';
 export * from './planregistratie-save.model';
 export * from './autofill-data.model';
 export * from './gemeente.model';
+export * from './planregistratie-save-result.model';

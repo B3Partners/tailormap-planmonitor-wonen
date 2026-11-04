@@ -2,4 +2,4 @@
  * Public API Surface of planmonitor
  */
 
-export * from './lib/planmonitor-wonen.module';
+export * from './lib/planmonitor-wonen.provider';

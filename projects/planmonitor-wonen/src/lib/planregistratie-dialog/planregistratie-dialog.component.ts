@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostListener, signal, DestroyRef, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, DestroyRef, inject } from '@angular/core';
 import { PlanregistratiesService } from '../services/planregistraties.service';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import {
@@ -6,20 +6,46 @@ import {
 } from '@tailormap-viewer/shared';
 import { PlanregistratieModel } from '../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { MapService, ProjectionCodesEnum } from '@tailormap-viewer/map';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { PlanregistratieFormComponent } from '../planregistratie-form/planregistratie-form.component';
+import { PlancategorieListComponent } from '../plancategorie-list/plancategorie-list.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
+import { DialogComponent } from '@tailormap-viewer/core';
+import { ErrorListDialogComponent } from '../error-list-dialog/error-list-dialog.component';
+import { SaveErrorHelper } from '../helpers/save-error.helper';
 
 @Component({
     selector: 'lib-planregistratie-dialog',
     templateUrl: './planregistratie-dialog.component.html',
     styleUrls: ['./planregistratie-dialog.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    host: {
+        'window:resize': 'onResize()',
+    },
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatIconButton,
+    PlanregistratieFormComponent,
+    PlancategorieListComponent,
+    MatButton,
+    MatProgressSpinner,
+    AsyncPipe,
+    DialogComponent,
+  ],
 })
 export class PlanregistratieDialogComponent {
   private planregistratieService = inject(PlanregistratiesService);
   private matSnackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
   private confirmDialogService = inject(ConfirmDialogService);
   private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
   private mapService = inject(MapService);
@@ -44,7 +70,6 @@ export class PlanregistratieDialogComponent {
   public isGemeenteGebruiker$: Observable<boolean>;
   private lastWindow: Window | undefined | null;
 
-  @HostListener('window:resize', ['$event'])
   public onResize() {
     this.panelWidth = this.getPanelWidth();
   }
@@ -98,20 +123,28 @@ export class PlanregistratieDialogComponent {
     } else {
       this.saving.set(true);
     }
-    this.planregistratieService.save$().subscribe(success => {
+    this.planregistratieService.save$().subscribe(result => {
       if (closeAfterSaving) {
         this.savingAndClosing.set(false);
       } else {
         this.saving.set(false);
       }
+      if (!result.success && result.errors?.length) {
+        ErrorListDialogComponent.open(this.dialog, {
+          title: 'Planregistratie niet opgeslagen',
+          description: 'De planregistratie is niet opgeslagen vanwege de volgende fouten:',
+          errors: result.errors,
+        });
+        return;
+      }
       const config: SnackBarMessageOptionsModel = {
-        message: success ? 'Planregistratie opgeslagen' : 'Er is iets mis gegaan bij het opslaan van deze planregistratie. Probeer het opnieuw.',
+        message: result.success ? 'Planregistratie opgeslagen' : result.message || SaveErrorHelper.GENERIC_MESSAGE,
         duration: 5000,
         showDuration: true,
         showCloseButton: true,
       };
       SnackBarMessageComponent.open$(this.matSnackBar, config).subscribe();
-      if (success && closeAfterSaving) {
+      if (result.success && closeAfterSaving) {
         this.cancel();
       }
     });

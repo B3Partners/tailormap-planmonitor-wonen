@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { PLANMONITOR_WONEN_API_SERVICE } from '../api/planmonitor-wonen-api.service.injection-token';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, map, Observable, of, take, tap } from 'rxjs';
-import { DetailplanningModel, PlancategorieModel, PlanregistratieModel } from '../models';
+import { DetailplanningModel, PlancategorieModel, PlanregistratieModel, PlanregistratieSaveResultModel } from '../models';
 import { LoadingStateEnum } from '@tailormap-viewer/shared';
 import { PlancategorieTableHelper } from '../helpers/plancategorie-table.helper';
 import { PlanValidationHelper } from '../helpers/plan-validation.helper';
@@ -9,6 +9,7 @@ import { PlanregistratieTableExportHelper } from '../helpers/planregistratie-tab
 import { PlanMonitorModelHelper } from '../helpers/planmonitor-model.helper';
 import { CategorieTableModel } from '../models/categorie-table.model';
 import { AutofillDataService } from './autofill-data.service';
+import { SaveErrorHelper } from '../helpers/save-error.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -209,9 +210,8 @@ export class PlanregistratiesService {
     const updatedCategorieen = this.selectedPlanCategorieen.value;
     const updatedDetailplanningen = this.selectedDetailplanningen.value;
     if (updatedPlan === null || (!updatedPlan.isNew && (updatedCategorieen === null || updatedDetailplanningen === null))) {
-      return of(false);
+      return of<PlanregistratieSaveResultModel>({ success: false, message: SaveErrorHelper.GENERIC_MESSAGE });
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { isNew, ...planregistratie } = updatedPlan;
     return this.api.savePlanregistratie$({
       planregistratie,
@@ -219,8 +219,8 @@ export class PlanregistratiesService {
       detailplanningen: updatedDetailplanningen || [],
     })
       .pipe(
-        tap(success => {
-          if (success) {
+        tap(result => {
+          if (result.success) {
             this.updatePlanAfterSaving(planregistratie);
             if (isNew && !updatedCategorieen) {
               this.selectedPlanCategorieen.next([]);

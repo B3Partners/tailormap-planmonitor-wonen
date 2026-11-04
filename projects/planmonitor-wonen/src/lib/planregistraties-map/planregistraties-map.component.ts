@@ -13,6 +13,7 @@ import { FeatureModel } from '@tailormap-viewer/api';
 import { ColorHelper } from '../helpers/color.helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PrintService } from '@tailormap-viewer/core';
+import { PlanregistratieDialogComponent } from '../planregistratie-dialog/planregistratie-dialog.component';
 
 type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> & { selected?: boolean };
 
@@ -21,7 +22,7 @@ type PlanregistratieFeatureAttributes = Omit<PlanregistratieModel, 'geometrie'> 
     templateUrl: './planregistraties-map.component.html',
     styleUrls: ['./planregistraties-map.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    imports: [PlanregistratieDialogComponent],
 })
 export class PlanregistratiesMapComponent implements OnInit {
   private planregistratieService = inject(PlanregistratiesService);

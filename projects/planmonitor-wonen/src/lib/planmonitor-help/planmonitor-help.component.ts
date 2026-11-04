@@ -5,7 +5,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     templateUrl: './planmonitor-help.component.html',
     styleUrls: ['./planmonitor-help.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
 })
 export class PlanmonitorHelpComponent {
 }
