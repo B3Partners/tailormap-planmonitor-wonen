@@ -55,6 +55,8 @@ services:
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://pmw-db/planmonitor-wonen"
       - "TAILORMAP_DATASOURCE_URL=jdbc:postgresql://db/tailormap"
       - "SPRING_DATASOURCE_PASSWORD=${PMW_DB_PASSWORD:-planmonitor-wonen}"
+      # Set to false to disable the OpenAPI documentation and Swagger UI
+      - "PLANMONITOR_WONEN_API_OPENAPI_ENABLED=${PMW_OPENAPI_ENABLED:-true}"
     networks:
       - default
       - reverse-proxy
@@ -69,7 +71,7 @@ services:
 
   geoserver:
     container_name: ${COMPOSE_PROJECT_NAME}-geoserver
-    image: docker.osgeo.org/geoserver:2.28.4
+    image: docker.osgeo.org/geoserver:3.0.1
     environment:
       SKIP_DEMO_DATA: true
       GEOSERVER_CSRF_WHITELIST: ${HOST}
