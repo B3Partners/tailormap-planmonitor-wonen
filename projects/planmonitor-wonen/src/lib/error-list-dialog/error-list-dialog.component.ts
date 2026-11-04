@@ -3,14 +3,17 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogCont
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatButton } from '@angular/material/button';
 
-export interface ImportErrorDialogData {
+export interface ErrorListDialogData {
+  title: string;
+  /** Text above the errors */
+  description: string;
   errors: string[];
 }
 
 @Component({
-    selector: 'lib-import-error-dialog',
-    templateUrl: './import-error-dialog.component.html',
-    styleUrls: ['./import-error-dialog.component.css'],
+    selector: 'lib-error-list-dialog',
+    templateUrl: './error-list-dialog.component.html',
+    styleUrls: ['./error-list-dialog.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatDialogTitle,
@@ -20,13 +23,13 @@ export interface ImportErrorDialogData {
         MatButton,
     ],
 })
-export class ImportErrorDialogComponent {
-  private dialogRef = inject<MatDialogRef<ImportErrorDialogComponent>>(MatDialogRef);
-  public data = inject<ImportErrorDialogData>(MAT_DIALOG_DATA);
-  public static open(dialog: MatDialog, errors: string[]) {
-    dialog.open(ImportErrorDialogComponent, {
+export class ErrorListDialogComponent {
+  private dialogRef = inject<MatDialogRef<ErrorListDialogComponent>>(MatDialogRef);
+  public data = inject<ErrorListDialogData>(MAT_DIALOG_DATA);
+  public static open(dialog: MatDialog, data: ErrorListDialogData) {
+    dialog.open(ErrorListDialogComponent, {
       width: "600px",
-      data: { errors },
+      data,
     });
   }
   public close() {

@@ -4,7 +4,7 @@ import { concatMap, forkJoin, map, Observable, of } from 'rxjs';
 import {
   AutofillDataModel,
   BetaalbaarheidEnum, KnelpuntenMeerkeuzeEnum, OpdrachtgeverEnum,
-  PlanregistratieModel, PlanregistratieSaveModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum,
+  PlanregistratieModel, PlanregistratieSaveModel, PlanregistratieSaveResultModel, PlantypeEnum, ProjectstatusEnum, StatusPlanologischEnum, VertrouwelijkheidEnum,
   WonenEnZorgEnum, GemeenteModel,
   WoningtypeEnum, WoonmilieuAbf13Enum,
 } from '../models';
@@ -112,8 +112,8 @@ export class PlanmonitorWonenApiMockService implements PlanmonitorWonenApiServic
     return of({ plancategorieen: [], detailplanningen: [] });
   }
 
-  public savePlanregistratie$(_planRegistratieSaveModel: PlanregistratieSaveModel) {
-    return of(true);
+  public savePlanregistratie$(_planRegistratieSaveModel: PlanregistratieSaveModel): Observable<PlanregistratieSaveResultModel> {
+    return of({ success: true });
   }
 
   public deletePlanregistratie$(_id: string) {
