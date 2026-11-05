@@ -58,6 +58,16 @@ services:
       - "SPRING_DATASOURCE_PASSWORD=${PMW_DB_PASSWORD:-planmonitor-wonen}"
       # Set to false to disable the OpenAPI documentation and Swagger UI
       - "PLANMONITOR_WONEN_API_OPENAPI_ENABLED=${PMW_OPENAPI_ENABLED:-true}"
+      # For the health checker binary in the image (the image has no shell or curl)
+      - "THC_PORT=8081"
+      - "THC_PATH=/api/planmonitor-wonen/actuator/health"
+    healthcheck:
+      interval: 1m
+      timeout: 5s
+      retries: 2
+      start_period: 1m
+      start_interval: 5s
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc"]
     volumes:
       # Keeps the log files in /home/cnb/logs when the container is recreated. The volume is on the home directory
       # because a new mount point such as /home/cnb/logs would be owned by root and not writable
