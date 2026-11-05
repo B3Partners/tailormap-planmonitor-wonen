@@ -6,6 +6,7 @@ import {
 } from '@tailormap-viewer/shared';
 import { PlanregistratieModel } from '../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { PlanmonitorAuthenticationService } from '../services/planmonitor-authentication.service';
 import { MapService, ProjectionCodesEnum } from '@tailormap-viewer/map';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +17,9 @@ import { PlancategorieListComponent } from '../plancategorie-list/plancategorie-
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
 import { DialogComponent } from '@tailormap-viewer/core';
+import { ErrorListDialogComponent } from '../error-list-dialog/error-list-dialog.component';
+import { SaveErrorHelper } from '../helpers/save-error.helper';
+import { PLANMONITOR_HELP_PATH } from '../planmonitor-wonen.routes';
 
 @Component({
     selector: 'lib-planregistratie-dialog',
@@ -42,6 +46,7 @@ import { DialogComponent } from '@tailormap-viewer/core';
 export class PlanregistratieDialogComponent {
   private planregistratieService = inject(PlanregistratiesService);
   private matSnackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
   private confirmDialogService = inject(ConfirmDialogService);
   private planmonitorAuthenticationService = inject(PlanmonitorAuthenticationService);
   private mapService = inject(MapService);
@@ -119,20 +124,28 @@ export class PlanregistratieDialogComponent {
     } else {
       this.saving.set(true);
     }
-    this.planregistratieService.save$().subscribe(success => {
+    this.planregistratieService.save$().subscribe(result => {
       if (closeAfterSaving) {
         this.savingAndClosing.set(false);
       } else {
         this.saving.set(false);
       }
+      if (!result.success && result.errors?.length) {
+        ErrorListDialogComponent.open(this.dialog, {
+          title: 'Planregistratie niet opgeslagen',
+          description: 'De planregistratie is niet opgeslagen vanwege de volgende fouten:',
+          errors: result.errors,
+        });
+        return;
+      }
       const config: SnackBarMessageOptionsModel = {
-        message: success ? 'Planregistratie opgeslagen' : 'Er is iets mis gegaan bij het opslaan van deze planregistratie. Probeer het opnieuw.',
+        message: result.success ? 'Planregistratie opgeslagen' : result.message || SaveErrorHelper.GENERIC_MESSAGE,
         duration: 5000,
         showDuration: true,
         showCloseButton: true,
       };
       SnackBarMessageComponent.open$(this.matSnackBar, config).subscribe();
-      if (success && closeAfterSaving) {
+      if (result.success && closeAfterSaving) {
         this.cancel();
       }
     });
@@ -176,7 +189,7 @@ export class PlanregistratieDialogComponent {
       this.lastWindow.close();
     }
     const baseUrl = window.location.protocol + "//" + window.location.host;
-    this.lastWindow = window.open(baseUrl + '/ext/planmonitor/planmonitor-help', '', 'width=600,height=300');
+    this.lastWindow = window.open(baseUrl + '/' + PLANMONITOR_HELP_PATH, '', 'width=600,height=300');
   }
 
 }

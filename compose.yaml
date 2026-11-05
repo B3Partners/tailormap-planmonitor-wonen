@@ -1,5 +1,6 @@
 volumes:
   pmw-data:
+  pmw-api-logs:
   geoserver-data:
 
 networks:
@@ -13,7 +14,7 @@ networks:
 services:
   pmw-db:
     container_name: ${COMPOSE_PROJECT_NAME}-pmw-db
-    image: postgis/postgis:16-3.5
+    image: postgis/postgis:16-3.6
     restart: unless-stopped
     environment:
       POSTGRES_USER: planmonitor-wonen
@@ -67,6 +68,10 @@ services:
       start_period: 1m
       start_interval: 5s
       test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc"]
+    volumes:
+      # Keeps the log files in /home/cnb/logs when the container is recreated. The volume is on the home directory
+      # because a new mount point such as /home/cnb/logs would be owned by root and not writable
+      - pmw-api-logs:/home/cnb
     networks:
       - default
       - reverse-proxy
