@@ -19,6 +19,7 @@ import { AsyncPipe } from '@angular/common';
 import { DialogComponent } from '@tailormap-viewer/core';
 import { ErrorListDialogComponent } from '../error-list-dialog/error-list-dialog.component';
 import { SaveErrorHelper } from '../helpers/save-error.helper';
+import { PLANMONITOR_HELP_PATH } from '../planmonitor-wonen.routes';
 
 @Component({
     selector: 'lib-planregistratie-dialog',
@@ -188,7 +189,7 @@ export class PlanregistratieDialogComponent {
       this.lastWindow.close();
     }
     const baseUrl = window.location.protocol + "//" + window.location.host;
-    this.lastWindow = window.open(baseUrl + '/ext/planmonitor/planmonitor-help', '', 'width=600,height=300');
+    this.lastWindow = window.open(baseUrl + '/' + PLANMONITOR_HELP_PATH, '', 'width=600,height=300');
   }
 
 }

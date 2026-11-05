@@ -13,10 +13,13 @@ import { distinctUntilChanged, filter, map, take } from 'rxjs';
 import { PlanmonitorAuthenticationService } from './services/planmonitor-authentication.service';
 import { PLANMONITOR_WONEN_API_SERVICE } from './api/planmonitor-wonen-api.service.injection-token';
 import { PlanmonitorWonenApiService } from './api/planmonitor-wonen-api.service';
+import { ROUTES } from '@angular/router';
+import { planmonitorWonenRoutes } from './planmonitor-wonen.routes';
 
 export function planmonitorWonenProvider(): Array<Provider | EnvironmentProviders> {
   return [
     { provide: PLANMONITOR_WONEN_API_SERVICE, useClass: PlanmonitorWonenApiService },
+    { provide: ROUTES, multi: true, useValue: planmonitorWonenRoutes },
     provideEnvironmentInitializer(() => {
       const adminRegistryService = inject(ConfigurationComponentRegistryService);
       const viewerRegistryService = inject(ComponentRegistrationService);
