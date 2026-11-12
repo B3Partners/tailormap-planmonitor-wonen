@@ -5,17 +5,38 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# All runs deploy to the same Docker Compose project, so run one deployment at a time. Two pushes to main in quick succession
+# (merging two PRs) would otherwise deploy in parallel and fail on Docker container name conflicts. Do not cancel a running
+# deployment, that could leave the containers half stopped. When another run is already waiting, GitHub replaces it with the
+# newer one.
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
 jobs:
   deploy-backend:
     name: 'Deploy backend'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    if: vars.DEPLOY == 'true' && ${{ github.author != 'dependabot[bot]' }}
+    if: ${{ vars.DEPLOY == 'true' && github.actor != 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v7
 
+      - name: 'Check commit is still the head of main'
+        # When a newer commit was pushed to main while this run was waiting for the concurrency group, skip the
+        # deployment: the run for the newer commit has deployed already or will deploy after this one. This avoids an older
+        # commit overwriting a newer deployment, and a needless restart of the containers.
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          HEAD_SHA=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [ "${HEAD_SHA}" != "${GITHUB_SHA}" ]; then
+            echo "::notice::Skipping deployment of ${GITHUB_SHA}, main has moved on to ${HEAD_SHA}"
+            echo "SKIP_DEPLOY=true" >> $GITHUB_ENV
+          fi
+
       - name: 'Set Docker context for deployment'
+        if: ${{ env.SKIP_DEPLOY != 'true' }}
         uses: arwynfr/actions-docker-context@v2
         with:
           docker_host: ${{ secrets.DEPLOY_DOCKER_HOST }}
@@ -25,11 +46,13 @@ jobs:
           use_context: true
 
       - name: 'Add known hosts'
+        if: ${{ env.SKIP_DEPLOY != 'true' }}
         run: |
           DEPLOY_DOCKER_HOST=${{ secrets.DEPLOY_DOCKER_HOST }}
           ssh-keyscan -H ${DEPLOY_DOCKER_HOST##*@} > $HOME/.ssh/known_hosts
 
       - name: 'Update backend deployment using Docker Compose'
+        if: ${{ env.SKIP_DEPLOY != 'true' }}
         env:
           COMPOSE_PROJECT_NAME: ${{ vars.DEPLOY_PROJECT_NAME }}-backend
           TAILORMAP_COMPOSE_PROJECT_NAME: ${{ vars.DEPLOY_PROJECT_NAME }}-snapshot
