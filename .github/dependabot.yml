@@ -25,4 +25,4 @@ updates:
           - '>= 17'
       - dependency-name: node
         versions:
-          - '>= 25'
+          - '>= 27'
