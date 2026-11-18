@@ -61,6 +61,9 @@ services:
       # For the health checker binary in the image (the image has no shell or curl)
       - "THC_PORT=8081"
       - "THC_PATH=/api/planmonitor-wonen/actuator/health"
+      # Disable the JVM Base64 intrinsics as mitigation for CVE-2026-114938 (Java4Shell), memory corruption in the
+      # AVX-512 Base64 decoder on x86-64. The image appends its own JVM options to this variable, so those are kept.
+      - "JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics"
     healthcheck:
       interval: 1m
       timeout: 5s
@@ -86,13 +89,16 @@ services:
 
   geoserver:
     container_name: ${COMPOSE_PROJECT_NAME}-geoserver
-    image: docker.osgeo.org/geoserver:3.0.1
+    image: docker.osgeo.org/geoserver:3.0.2
     environment:
       SKIP_DEMO_DATA: true
       GEOSERVER_CSRF_WHITELIST: ${HOST}
       INSTALL_EXTENSIONS: false
       STABLE_EXTENSIONS: css
       PROXY_BASE_URL: https://${HOST}/geoserver
+      # Disable the JVM Base64 intrinsics as mitigation for CVE-2026-114938 (Java4Shell), memory corruption in the
+      # AVX-512 Base64 decoder on x86-64. Separate from EXTRA_JAVA_OPTS, so the image's default JVM options are kept.
+      JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"
     volumes:
       - geoserver-data:/opt/geoserver_data
     networks:
